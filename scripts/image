@@ -357,6 +357,8 @@ fi
           UUID_STORAGE="$(uuidgen)" \
           UBOOT_SYSTEM="$UBOOT_SYSTEM" \
           EXTRA_CMDLINE="$EXTRA_CMDLINE" \
+          SYSTEM_SIZE="$SYSTEM_SIZE" \
+          SYSTEM_PART_START="$SYSTEM_PART_START" \
           $SCRIPTS/mkimage
       fi
 

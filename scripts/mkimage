@@ -27,7 +27,8 @@
   OE_TMP=$(mktemp -d)
   SAVE_ERROR="$OE_TMP/save_error"
 
-  SYSTEM_SIZE=512
+  SYSTEM_SIZE=${SYSTEM_SIZE:-512}
+  SYSTEM_PART_START=${SYSTEM_PART_START:-2048} # Sector start 2048 = 1MB, 3072 = 1.5MB, 4096 = 2MB
   STORAGE_SIZE=32 # STORAGE_SIZE must be >= 32 !
 
   DISK_SIZE=$(( $SYSTEM_SIZE + $STORAGE_SIZE + 4 ))
@@ -75,7 +76,7 @@ trap cleanup SIGINT
 # create part1
   echo "image: creating part1..."
   SYSTEM_PART_END=$(( $SYSTEM_SIZE * 1024 * 1024 / 512 + 2048 ))
-  parted -s "$DISK" -a min unit s mkpart primary fat32 2048 $SYSTEM_PART_END
+  parted -s "$DISK" -a min unit s mkpart primary fat32 $SYSTEM_PART_START $SYSTEM_PART_END
   if [ "$BOOTLOADER" = "syslinux" ]; then
     parted -s "$DISK" set 1 legacy_boot on
   else
@@ -100,11 +101,11 @@ fi
 
 # create filesystem on part1
   echo "image: creating filesystem on part1..."
-  OFFSET=$(( 2048 * 512 ))
+  OFFSET=$(( $SYSTEM_PART_START * 512 ))
   HEADS=4
   TRACKS=32
   SECTORS=$(( $SYSTEM_SIZE * 1024 * 1024 / 512 / $HEADS / $TRACKS ))
-  
+
   shopt -s expand_aliases  # enables alias expansion in script
   alias mformat="mformat -i $DISK@@$OFFSET -h $HEADS -t $TRACKS -s $SECTORS"
   alias mcopy="mcopy -i $DISK@@$OFFSET"
