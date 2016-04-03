@@ -16,25 +16,37 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="libmpeg2"
-PKG_VERSION="0.5.1"
+PKG_NAME="screensaver.asterwave"
+PKG_VERSION="0dc2c48"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://libmpeg2.sourceforge.net/"
-PKG_URL="http://libmpeg2.sourceforge.net/files/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain"
+PKG_SITE="https://github.com/notspiff/screensaver.asterwave"
+PKG_URL="https://github.com/notspiff/screensaver.asterwave/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain kodi-platform soil"
 PKG_PRIORITY="optional"
-PKG_SECTION="multimedia"
-PKG_SHORTDESC="libmpeg2: The MPEG Library - version 2"
-PKG_LONGDESC="The MPEG Library is a collection of C routines to decode MPEG-1 and MPEG-2 movies and dither them in a variety of colour schemes."
-PKG_IS_ADDON="no"
+PKG_SECTION=""
+PKG_SHORTDESC="screensaver.asterwave"
+PKG_LONGDESC="screensaver.asterwave"
+PKG_AUTORECONF="no"
 
-PKG_AUTORECONF="yes"
+PKG_IS_ADDON="yes"
+PKG_ADDON_TYPE="xbmc.ui.screensaver"
 
-PKG_CONFIGURE_OPTS_TARGET="--disable-sdl --without-x"
+if [ "$OPENGL" = "no" ] ; then
+  exit 0
+fi
 
-post_makeinstall_target() {
-  rm -rf $INSTALL/usr/bin
+configure_target() {
+  cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_CONF \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
+        -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr \
+        ..
 }
 
+addon() {
+  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
+  cp -PR $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
+  cp -PL $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/*.so $ADDON_BUILD/$PKG_ADDON_ID/
+}
