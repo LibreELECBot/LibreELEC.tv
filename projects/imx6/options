@@ -71,6 +71,9 @@
       LINUX="imx6-4.4-xbian"
     fi
 
+  # libcec type for kernel 4.4 (native/xbian)
+    LIBCEC_TYPE="xbian"
+
 
 ################################################################################
 # setup build defaults
