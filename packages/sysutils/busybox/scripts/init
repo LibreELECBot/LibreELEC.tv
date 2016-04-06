@@ -612,7 +612,7 @@
 
     echo "UPGRADE IN PROGRESS"
     echo ""
-    echo "This procedure may take a while - please do NOT reboot or turn off your computer!"
+    echo "Please do not reboot or turn off your LibreELEC device!"
     echo ""
 
     if [ -f "$UPDATE_TAR" ] ; then
@@ -650,7 +650,7 @@
 
       LOOP=$(losetup -f)
       LOOP_NUM=$(echo $LOOP | sed 's|/dev/loop||')
-      mknod $LOOP b 7 $LOOP_NUM
+      mknod $LOOP b 7 $LOOP_NUM &>/dev/null
       losetup $LOOP $IMG_FILE
 
       # check for MBR partititon
