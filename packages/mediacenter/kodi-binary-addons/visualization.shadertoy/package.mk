@@ -22,9 +22,8 @@ PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/notspiff/visualization.shadertoy"
-PKG_GIT_URL="https://github.com/notspiff/visualization.shadertoy"
-PKG_GIT_BRANCH="master"
-PKG_DEPENDS_TARGET="toolchain kodi-platform $OPENGL glew"
+PKG_URL="https://github.com/notspiff/visualization.shadertoy/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_PRIORITY="optional"
 PKG_SECTION=""
 PKG_SHORTDESC="visualization.shadertoy"
@@ -34,7 +33,24 @@ PKG_AUTORECONF="no"
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.player.musicviz"
 
+if [ ! "$OPENGL" = "no" ]; then
+# for OpenGL (GLX) support
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $OPENGL glew"
+fi
+
+if [ "$OPENGLES_SUPPORT" = yes ]; then
+# for OpenGL-ES support
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $OPENGLES"
+fi
+
 configure_target() {
+  if [ "$KODIPLAYER_DRIVER" = bcm2835-driver ]; then
+    BCM2835_INCLUDES="-I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads/ \
+                      -I$SYSROOT_PREFIX/usr/include/interface/vmcs_host/linux"
+    export CFLAGS="$CFLAGS $BCM2835_INCLUDES"
+    export CXXFLAGS="$CXXFLAGS $BCM2835_INCLUDES"
+  fi
+
   cmake -DCMAKE_TOOLCHAIN_FILE=$CMAKE_CONF \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
