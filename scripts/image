@@ -20,6 +20,10 @@
 
 . config/options $1
 
+if [ -f $DISTRO_DIR/$DISTRO/scripts/image ]; then
+  . $DISTRO_DIR/$DISTRO/scripts/image
+fi
+
 show_config
 
 $SCRIPTS/checkdeps
