@@ -191,7 +191,7 @@ class MyUtility(object):
     urlfields = package_url.split("/")
     urlapi = "https://api.github.com/repos/%s/%s/commits" % (urlfields[3], urlfields[4])
     tmpfile_data = "%s/%s" % (SCRATCH_DIR, threading.current_thread().name)
-    curl_args = "curl --verbose --silent --fail --location --connect-timeout 15 --retry 3 --write-out __HTTP_CODE__@%%{http_code}@ --output %s --url %s" % (tmpfile_data, urlapi)
+    curl_args = "curl --verbose --silent --fail --location --connect-timeout 15 --max-time 60 --retry 3 --write-out __HTTP_CODE__@%%{http_code}@ --output %s --url %s" % (tmpfile_data, urlapi)
 
     if os.path.exists(tmpfile_data):
       os.remove(tmpfile_data)
@@ -236,7 +236,7 @@ class MyUtility(object):
     result = 0
     HEAD_supported = True
     ts = datetime.datetime.now()
-    curl_args = "curl --verbose --silent --fail --location --connect-timeout 15 --retry 3 --write-out __HTTP_CODE__@%{http_code}@"
+    curl_args = "curl --verbose --silent --fail --location --connect-timeout 15 --max-time 60 --retry 0 --write-out __HTTP_CODE__@%{http_code}@"
     http_code = ""
 
     MyUtility.logmsg(msgs, 3, "Remote headers for %s..." % url)
@@ -246,6 +246,7 @@ class MyUtility(object):
     # request - limit total number of retries as ${retry} * 3.
     while retry > 0 and maxattempts > 0:
       if stopped.is_set(): break
+      ts_cmd = datetime.datetime.now()
       if HEAD_supported:
         (result, headers) = MyUtility.runcommand(msgs, "%s --head --output - --url %s" % (curl_args, url))
       else:
@@ -254,7 +255,8 @@ class MyUtility(object):
       search_obj = MyUtility.search_HTTP_CODE.search(headers)
       http_code = search_obj.group(1) if search_obj else ""
 
-      MyUtility.logmsg(msgs, 3, "CURL exit code: %d, http_code: %s, remaining retries %d" % (result, http_code, retry))
+      tDelta = (datetime.datetime.now() - ts_cmd)
+      MyUtility.logmsg(msgs, 3, "CURL exit code: %d, http_code: %s, remaining retries %d, time taken %f seconds" % (result, http_code, retry, tDelta.total_seconds()))
 
       if result == 22:
         # 404 Not Found
@@ -266,9 +268,20 @@ class MyUtility(object):
           HEAD_supported = False
           continue
 
-      if result in [0, 9, 10, 19]:
+      # Success or fatal error - no point continuing
+      #  0: CURLE_OK
+      #  6: CURLE_COULDNT_RESOLVE_HOST
+      #  7: CURLE_COULDNT_CONNECT
+      #  9: CURLE_REMOTE_ACCESS_DENIED
+      # 10: CURLE_FTP_ACCEPT_FAILED
+      # 19: CURLE_FTP_COULDNT_RETR_FILE
+      # 28: CURLE_OPERATION_TIMEDOUT
+      if result in [0, 6, 7, 9, 10, 19, 28]:
         break
 
+      # Keep retrying following errors until success or failure.
+      # 35: CURLE_SSL_CONNECT_ERROR
+      # 56: CURLE_RECV_ERROR
       if result not in [35, 56]:
         retry -= 1
 
