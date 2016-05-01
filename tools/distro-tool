@@ -254,7 +254,7 @@ class MyUtility(object):
       search_obj = MyUtility.search_HTTP_CODE.search(headers)
       http_code = search_obj.group(1) if search_obj else ""
 
-      MyUtility.logmsg(msgs, 3, "CURL exit code: %d, http_code: %s, retries %d" % (result, http_code, retry))
+      MyUtility.logmsg(msgs, 3, "CURL exit code: %d, http_code: %s, remaining retries %d" % (result, http_code, retry))
 
       if result == 22:
         # 404 Not Found
@@ -868,8 +868,6 @@ if [ ${VERBOSE} -gt 2 ]; then
   echo "  Worker Threads: ${WORKER_THREADS}"
 fi
 echo
-
-[ -z "${NODELAY}" ] && echo -n "Sync starts in 5 seconds..." && sleep 5 && echo -en "\n\n"
 
 if [ ${VERBOSE} -gt 2 -a -n "${DEBUG_LOG}" ]; then
   generate_work "${PACKAGE}" "${REVISION}" | exec_worker_prog 2>${DEBUG_LOG}
