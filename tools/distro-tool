@@ -694,6 +694,8 @@ generate_work() {
       [ ${c} -lt ${pcount} ] && echo "  }," || echo "  }"
     done
     echo "]"
+
+    end_progress
   )
 }
 
@@ -739,6 +741,10 @@ init_progress() {
 progress() {
   PCOUNT=$((PCOUNT + 1))
   printf "Generating workload... %3d%%\r" $((PCOUNT * 100 / $1)) >&2
+}
+
+end_progress() {
+  printf "\033[K\r" >&2
 }
 
 exec_worker_prog() {
