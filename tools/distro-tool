@@ -43,6 +43,7 @@ import sys, os, json, codecs, re, threading, subprocess, glob, datetime, shutil
 
 if sys.version_info >= (3, 0):
   import queue as Queue
+  basestring = (str, bytes)
 else:
   import Queue
 
@@ -396,6 +397,29 @@ class MyUtility(object):
         MyUtility.show(msgs, 0, "yellow" if is_git_rev else "magenta", "New package available", "%s (%s => %s) %s" % (package_name, package_ver, newver, url))
         break
 
+  @staticmethod
+  def toUnicode(data):
+    if MyUtility.isPython3: return data
+
+    if isinstance(data, basestring):
+      if not isinstance(data, unicode):
+        try:
+          data = unicode(data, encoding="utf-8", errors="ignore")
+        except UnicodeDecodeError:
+          pass
+
+    return data
+
+  @staticmethod
+  def printout(data, end="\n"):
+    sys.stdout.write("%s%s" % (MyUtility.toUnicode(data), end))
+    sys.stdout.flush()
+
+  @staticmethod
+  def printerr(data, end="\n"):
+    sys.stderr.write("%s%s" % (MyUtility.toUnicode(data), end))
+    sys.stderr.flush()
+
 #
 # Thread
 #
@@ -516,29 +540,29 @@ def main():
           finished = True
           if VERBOSE >= msg["level"]:
             if msg["level"] <= 2:
-              print(msg["text"])
+              MyUtility.printout(msg["text"])
             else:
-              print(msg["text"], file=sys.stderr)
+              MyUtility.printerr(msg["text"])
 
       if not stopping and stopped.is_set():
         stopping = True
-        print(MyUtility.colour("red", "** STOPPING DUE TO FAILURE - WAITING FOR %d THREADS TO FINISH **" % threadcount))
+        MyUtility.printout(MyUtility.colour("red", "** STOPPING DUE TO FAILURE - WAITING FOR %d THREADS TO FINISH **" % threadcount))
 
       # Do not enable progress when detailed debug logging is enabled as
       # this will most likely be redirected to a file
       if finished and PROGRESS and VERBOSE <= 2:
         pcount += 1
-        print("Processing... %3d%% (%d threads active)\x1b[K\r" % ((pcount * 100 / pmax), threadcount), end="", file=sys.stderr)
+        MyUtility.printerr("Processing... %3d%% (%d threads active)\x1b[K\r" % ((pcount * 100 / pmax), threadcount), end="")
 
     except Queue.Empty:
       if VERBOSE >= 3 and len(running) != 0:
-        print("============ WAITING ON FOLLOWING %d THREADS ============" % len(running), file=sys.stderr)
+        MyUtility.printerr("============ WAITING ON FOLLOWING %d THREADS ============" % len(running))
         for t in running:
           data = running[t]
-          print("SLOW RUNNING THREAD %s for %f secs: %s" % (t, (datetime.datetime.now() - data["tstamp"]).total_seconds(), data["url"]), file=sys.stderr)
+          MyUtility.printerr("SLOW RUNNING THREAD %s for %f secs: %s" % (t, (datetime.datetime.now() - data["tstamp"]).total_seconds(), data["url"]))
 
   if PROGRESS and VERBOSE <= 2:
-    print("\r\x1b[K", end="", file=sys.stderr)
+    MyUtility.printerr("\r\x1b[K", end="")
 
   sys.exit(1 if stopped.is_set() else 0)
 
