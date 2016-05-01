@@ -262,8 +262,8 @@ class MyUtility(object):
         # 404 Not Found
         if http_code == "404" or MyUtility.search_HTTP_NOT_FOUND.search(headers):
           break
-        # 405 Server does not support HEAD
-        elif HEAD_supported and (http_code == "405" or MyUtility.search_HTTP_NOT_ALLOWED.search(headers)):
+        # 403/405 Server does not support HEAD
+        elif HEAD_supported and (http_code in ["403", "405"] or MyUtility.search_HTTP_NOT_ALLOWED.search(headers)):
           MyUtility.logmsg(msgs, 3, "HEAD not supported - retrying with range-limited GET")
           HEAD_supported = False
           continue
@@ -287,8 +287,8 @@ class MyUtility(object):
 
     MyUtility.logmsg(msgs, 3, "[\n%s]" % headers)
 
-    # Success if HTTP 200
-    if http_code == "200" or MyUtility.search_HTTP_OK.search(headers):
+    # Success if HTTP 200 or 206 (partial content when using ranged request)
+    if http_code in ["200", "206"] or MyUtility.search_HTTP_OK.search(headers):
       result = True
     elif http_code == "350" and url.startswith("ftp:"):
       result = True
