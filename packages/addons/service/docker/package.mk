@@ -18,7 +18,7 @@
 
 PKG_NAME="docker"
 PKG_VERSION="1.11.0"
-PKG_REV="101"
+PKG_REV="102"
 PKG_ARCH="any"
 PKG_ADDON_PROJECTS="Generic RPi RPi2"
 PKG_LICENSE="ASL"
@@ -53,7 +53,7 @@ configure_target() {
         arm1176jzf-s)
           export GOARM=6
           ;;
-        cortex-a7)
+        cortex-a7|cortex-a9)
          export GOARM=7
          ;;
       esac
