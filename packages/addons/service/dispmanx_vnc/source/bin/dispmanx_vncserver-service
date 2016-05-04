@@ -17,7 +17,7 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 . /etc/profile
-oe_setup_addon service.system.dispmanx_vnc
+oe_setup_addon service.dispmanx_vnc
 
 if [ -f "$ADDON_HOME/dispmanx_vncserver.conf" ]; then
   rm "$ADDON_HOME/dispmanx_vncserver.conf"
