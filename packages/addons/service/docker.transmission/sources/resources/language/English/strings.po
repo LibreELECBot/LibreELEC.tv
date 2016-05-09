@@ -1,0 +1,38 @@
+msgid ""
+msgstr ""
+
+msgctxt "#30000"
+msgid "Settings"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Folders"
+msgstr ""
+
+msgctxt "#30002"
+msgid "config"
+msgstr ""
+
+msgctxt "#30003"
+msgid "downloads"
+msgstr ""
+
+msgctxt "#30004"
+msgid "incomplete"
+msgstr ""
+
+msgctxt "#30005"
+msgid "watch"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Ports"
+msgstr ""
+
+msgctxt "#30007"
+msgid "peer"
+msgstr ""
+
+msgctxt "#30008"
+msgid "rpc"
+msgstr ""
