@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="libdvdread"
-PKG_VERSION=`git ls-remote git://github.com/xbmc/libdvdread | grep refs/heads/master | cut -c1-7`
+PKG_VERSION="17d99db"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/libdvdread"
-PKG_URL="https://github.com/xbmc/libdvdread/archive/master.tar.gz"
+PKG_URL="https://github.com/xbmc/libdvdread/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libdvdcss"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
@@ -36,9 +36,4 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-static --with-libdvdcss"
 
 pre_configure_target() {
   export CFLAGS="-D_XBMC $CFLAGS"
-}
-
-unpack() {
-  tar xzf "$SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz" -C $BUILD
-  mv $BUILD/$PKG_NAME-* $BUILD/$PKG_NAME-${PKG_VERSION}
 }

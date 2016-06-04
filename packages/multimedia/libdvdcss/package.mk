@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="libdvdcss"
-PKG_VERSION=`git ls-remote https://github.com/xbmc/libdvdcss | grep refs/heads/master | cut -c1-7`
+PKG_VERSION="2f12236"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/libdvdcss"
-PKG_URL="https://github.com/xbmc/libdvdcss/archive/master.tar.gz"
+PKG_URL="https://github.com/xbmc/libdvdcss/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
@@ -33,8 +33,3 @@ PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-static"
-
-unpack() {
-  tar xzf "$SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz" -C $BUILD
-  mv $BUILD/$PKG_NAME-* $BUILD/$PKG_NAME-${PKG_VERSION}
-}

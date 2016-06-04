@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="libdvdnav"
-PKG_VERSION=`git ls-remote https://github.com/xbmc/libdvdnav | grep refs/heads/master | cut -c1-7`
+PKG_VERSION="43b5f81"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/libdvdnav"
-PKG_URL="https://github.com/xbmc/libdvdnav/archive/master.tar.gz"
+PKG_URL="https://github.com/xbmc/libdvdnav/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libdvdread"
 PKG_PRIORITY="optional"
 PKG_SECTION="multimedia"
@@ -33,11 +33,6 @@ PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-static"
-
-unpack() {
-  tar xzf "$SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz" -C $BUILD
-  mv $BUILD/$PKG_NAME-* $BUILD/$PKG_NAME-${PKG_VERSION}
-}
 
 pre_configure_target() {
   export CFLAGS="-D_XBMC -DHAVE_DVDCSS_DVDCSS_H $CFLAGS"
