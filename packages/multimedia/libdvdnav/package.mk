@@ -32,7 +32,7 @@ PKG_LONGDESC="libdvdnav is a library that allows easy use of sophisticated DVD n
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="yes"
 
-PKG_CONFIGURE_OPTS_TARGET="--disable-shared --enable-static"
+PKG_CONFIGURE_OPTS_TARGET="--disable-static"
 
 pre_configure_target() {
   export CFLAGS="-D_XBMC -DHAVE_DVDCSS_DVDCSS_H $CFLAGS"
