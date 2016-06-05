@@ -40,5 +40,5 @@ pre_configure_target() {
 
 post_makeinstall_target() {
   mkdir -p $INSTALL/usr/lib/kodi/system/players/VideoPlayer/
-    ln -s ../../../../libdvdnav.so $INSTALL/usr/lib/kodi/system/players/VideoPlayer/libdvdnav-$TARGET_ARCH-linux.so
+    ln -s /usr/lib/libdvdnav.so $INSTALL/usr/lib/kodi/system/players/VideoPlayer/libdvdnav.so
 }
