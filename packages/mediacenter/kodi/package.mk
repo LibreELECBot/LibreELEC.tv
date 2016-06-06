@@ -114,6 +114,7 @@ else
 fi
 
 if [ "$KODI_DVDCSS_SUPPORT" = yes ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libdvdnav"
   KODI_DVDCSS="--enable-dvdcss"
 else
   KODI_DVDCSS="--disable-dvdcss"

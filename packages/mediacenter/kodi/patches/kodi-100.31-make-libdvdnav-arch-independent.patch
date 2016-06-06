@@ -1,0 +1,12 @@
+diff -Naur kodi-17.0-alpha2-4e90409.orig/xbmc/DllPaths_generated.h.in kodi-17.0-alpha2-4e90409/xbmc/DllPaths_generated.h.in
+--- kodi-17.0-alpha2-4e90409.orig/xbmc/DllPaths_generated.h.in	2016-05-05 11:08:45.000000000 +0200
++++ kodi-17.0-alpha2-4e90409/xbmc/DllPaths_generated.h.in	2016-06-05 11:35:54.571848302 +0200
+@@ -41,7 +41,7 @@
+ 
+ /* VideoPlayer */
+ #define DLL_PATH_LIBASS        "@ASS_SONAME@"
+-#define DLL_PATH_LIBDVDNAV     "special://xbmcbin/system/players/VideoPlayer/libdvdnav-@ARCH@.so"
++#define DLL_PATH_LIBDVDNAV     "special://xbmcbin/system/players/VideoPlayer/libdvdnav.so"
+ #define DLL_PATH_LIBMPEG2      "@MPEG2_SONAME@"
+ 
+ /* libbluray */
