@@ -272,6 +272,7 @@ fi
       mkdir -p $RELEASE_DIR
       # remove n previous created release image
         rm -rf $TARGET_IMG/$IMAGE_NAME.img.gz
+        rm -rf $TARGET_IMG/$IMAGE_NAME.img.gz.sha256
         if [ -n "$BOOTLOADER" ]; then
 
           BOOTLOADER_DIR=""
@@ -341,9 +342,13 @@ fi
 
     # remove an previous created release tarball
       rm -rf $TARGET_IMG/$IMAGE_NAME.tar
+      rm -rf $TARGET_IMG/$IMAGE_NAME.tar.sha256
 
     # create release tarball
       tar cf $TARGET_IMG/$IMAGE_NAME.tar -C target $IMAGE_NAME
+
+    # create sha256
+      sha256sum $TARGET_IMG/$IMAGE_NAME.tar | sed 's, .*/, ,' > $TARGET_IMG/$IMAGE_NAME.tar.sha256
 
     # create image files if requested
       if [[ ( "$1" = "amlpkg" || "$1" = "noobs" || "$1" = "mkimage" ) && -n "$BOOTLOADER" ]]; then
@@ -537,9 +542,13 @@ fi
 
         # remove an previous created release tarball
           rm -rf $TARGET_IMG/${IMAGE_NAME}-$1.tar
+          rm -rf $TARGET_IMG/${IMAGE_NAME}-$1.tar.sha256
 
         # create release tarball
           tar cf $TARGET_IMG/${IMAGE_NAME}-$1.tar -C $TARGET ${IMAGE_NAME}-$1
+
+        # create sha256
+          sha256sum $TARGET_IMG/${IMAGE_NAME}-$1.tar | sed 's, .*/, ,' > $TARGET_IMG/${IMAGE_NAME}-$1.tar.sha256
       fi
     # cleanup release dir
       rm -rf $RELEASE_DIR
