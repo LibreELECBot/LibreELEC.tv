@@ -280,6 +280,9 @@ fi # bootloader
   echo "image: compressing..."
   gzip $DISK
 
+# create sha256
+  sha256sum $DISK.gz | sed 's, .*/, ,' > $DISK.gz.sha256
+
 # set owner
   if [ -n "$SUDO_USER" ] ; then
     chown $SUDO_USER: $DISK.gz
