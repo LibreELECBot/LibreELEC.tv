@@ -44,7 +44,7 @@ logger -t Xorg "### setup xorg.conf paths ###"
   XORG_CONF_USER_DRV="/storage/.config/xorg-$1.conf"
   XORG_CONF_DEFAULT="/etc/X11/xorg.conf"
   XORG_CONF_DEFAULT_DRV="/etc/X11/xorg-$1.conf"
-  XORG_ARGS_USER="/storage/.config/xorg-args.conf"
+  XORG_ARGS_USER="/storage/.config/xorgargs.conf"
 
 ##############################################################################
 # creating start options
