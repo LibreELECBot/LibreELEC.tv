@@ -67,7 +67,7 @@ logger -t Xorg "### creating start options ###"
   
   # load user defined xorg args, if exist
   if [ -f "$XORG_ARGS_USER" ]; then
-    XORG_ARGS="$XORG_ARGS $XORG_ARGS_USER)"
+    XORG_ARGS="$XORG_ARGS $(cat $XORG_ARGS_USER)"
   fi
   
 ##############################################################################
