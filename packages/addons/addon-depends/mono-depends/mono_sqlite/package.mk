@@ -16,7 +16,10 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-. $ROOT/$PACKAGES/databases/sqlite/package.mk
+if [ -n "$ROOT" ]
+then 
+  . $ROOT/$PACKAGES/databases/sqlite/package.mk
+fi
 
 PKG_NAME="mono_sqlite"
 PKG_URL=""
