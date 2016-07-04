@@ -25,7 +25,7 @@ TEMP=0
 
 isAmlThermal="no";
 if [ -d '/sys/bus/platform/devices/aml_thermal' ]; then
- isAmlThermal="yes";
+  isAmlThermal="yes";
 fi
 
 if [ $(basename "$0") = "gputemp" -o "$1" = "gpu" ]; then
@@ -38,9 +38,9 @@ fi
 
 if [ "$isAmlThermal" = "yes" -a "$TEMP" = "0" ]; then
   if [ -f /sys/class/thermal/thermal_zone1/temp ]; then
-    TEMP=`cat /sys/class/thermal/thermal_zone0/temp`
+    TEMP=`cat /sys/class/thermal/thermal_zone1/temp`
   fi
-  
+
   if [ "$TEMP" = "0" -a -f /sys/class/thermal/thermal_zone0/temp ]; then
     TEMP=`cat /sys/class/thermal/thermal_zone0/temp`
   fi  
@@ -75,12 +75,12 @@ if [ "$1" = "cpu" -o "$TEMP" = "0" ]; then
   if [ "$TEMP" = "0" -a -f /sys/bus/acpi/devices/LNXTHERM\:00/thermal_zone/temp ]; then
     TEMP=`cat /sys/bus/acpi/devices/LNXTHERM\:00/thermal_zone/temp`
   fi
-  
+
   # used on some intel systems
   if [ "$TEMP" = "0" -a -f /sys/devices/virtual/thermal/thermal_zone0/temp ]; then
     TEMP=`cat /sys/devices/virtual/thermal/thermal_zone0/temp`
   fi
-  
+
   # used on RaspberryPi
   if [ "$TEMP" = "0" -a -f /sys/class/thermal/thermal_zone0/temp ]; then
     TEMP=`cat /sys/class/thermal/thermal_zone0/temp`
