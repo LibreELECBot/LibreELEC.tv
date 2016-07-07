@@ -142,7 +142,7 @@ configure_target() {
               --disable-devices \
               --enable-pthreads \
               --disable-w32threads \
-              --disable-x11grab \
+              --enable-x11grab \
               --enable-network \
               --disable-gnutls --enable-openssl \
               --disable-gray \
