@@ -35,7 +35,7 @@ PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Raspberry Pi VNC"
 PKG_ADDON_TYPE="xbmc.service"
 PKG_ADDON_REPOVERSION="8.0"
-PKG_MAINTAINER="Anton Voyl (awiouy at gmail dot com)"
+PKG_MAINTAINER="Anton Voyl (awiouy)"
 
 pre_make_target() {
   export SYSROOT_PREFIX
