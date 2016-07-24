@@ -29,15 +29,13 @@ PKG_PRIORITY="optional"
 PKG_SECTION="tools"
 PKG_SHORTDESC="Cross platform, open source .NET framework"
 PKG_LONGDESC="Mono ($PKG_VERSION) is a software platform designed to allow developers to easily create cross platform applications part of the .NET Foundation"
-PKG_MAINTAINER="Anton Voyl (awiouy)"
+PKG_AUTORECONF="yes"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Mono (beta)"
 PKG_ADDON_TYPE="xbmc.python.script"
-PKG_ADDON_PROVIDES=""
 PKG_ADDON_REPOVERSION="8.0"
-
-PKG_AUTORECONF="yes"
+PKG_MAINTAINER="Anton Voyl (awiouy)"
 
 prefix="/storage/.kodi/addons/$PKG_SECTION.$PKG_NAME"
 configure_opts="--prefix=$prefix         \
