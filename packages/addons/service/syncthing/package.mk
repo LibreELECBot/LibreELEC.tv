@@ -29,14 +29,13 @@ PKG_SECTION="service/system"
 
 PKG_SHORTDESC="Open Source Continuous File Synchronization"
 PKG_LONGDESC="Syncthing replaces proprietary sync and cloud services with something open, trustworthy and decentralized. Your data is your data alone and you deserve to choose where it is stored, if it is shared with some third party and how it's transmitted over the Internet."
-PKG_MAINTAINER="Anton Voyl (awiouy at gmail dot com)"
-PKG_ADDON_REPOVERSION="8.0"
+PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Syncthing"
 PKG_ADDON_TYPE="xbmc.service"
-PKG_ADDON_PROVIDES=""
-PKG_AUTORECONF="no"
+PKG_ADDON_REPOVERSION="8.0"
+PKG_MAINTAINER="Anton Voyl (awiouy)"
 
 configure_target() {
 
