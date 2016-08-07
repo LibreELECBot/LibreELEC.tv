@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="syncthing"
-PKG_VERSION="0.13.10"
-PKG_REV="103"
+PKG_VERSION="0.14.3"
+PKG_REV="104"
 PKG_ARCH="any"
 PKG_LICENSE="MPLv2"
 PKG_SITE="https://syncthing.net/"
