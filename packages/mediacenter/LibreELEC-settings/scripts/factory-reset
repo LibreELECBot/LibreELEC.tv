@@ -2,6 +2,7 @@
 ################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
 #      Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
+#      Copyright (C) 2016-     Team LibreELEC
 #
 #  OpenELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,56 +18,74 @@
 #  along with OpenELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-get_target() {
+. /usr/lib/libreelec/functions
+
+hidecursor
+
+get_hddinfo() {
   for arg in $(cat /proc/cmdline); do
     case $arg in
       disk=*)
-        disk="${arg#*=}"
-        case $disk in
+        local _disk="${arg#*=}"
+        case $_disk in
           LABEL=*)
-            label="${disk#*=}"
-            target=`blkid -L $label`
+            label="${_disk#*=}"
+            part=`blkid -L $label`
             ;;
           UUID=*)
-            uuid="${disk#*=}"
-            target=`blkid -U $uuid`
+            uuid="${_disk#*=}"
+            part=`blkid -U $uuid`
             ;;
           /*)
-            target=$disk
+            part=$_disk
             ;;
         esac
         ;;
     esac
   done
+  case $part in
+    /dev/mmcblk*)
+      part_num="${part#*mmcblk*p}"
+      disk="${part%p${part_num}}"
+      ;;
+    *)
+      part_num="${part//[!0-9]/}"
+      disk="${part%${part_num}}"
+      ;;
+  esac
 }
 
 if [ -f /storage/.cache/reset_oe ] ; then
   # hard reset
   rm -f /storage/.cache/reset_oe
-  get_target
-  if [ ! -z $target ] ; then
-    echo "hard resetting..."
-    umount /storage
-    mke2fs -t ext4 -m 0 $target 2>&1 >/dev/null
-    if [ ! -z $label ] ; then
-      tune2fs -U random -L $label $target
+  get_hddinfo
+  if [ ! -z $part ] ; then
+    StartProgress spinner "Resetting System (hard)..."
+    # get storage partition start
+    part_start=$(parted -s -m $disk unit b print |grep -v ^/dev |grep -v BYT | grep ^$part_num: |  cut -f2 -d ":")
+    # failed to get partition start offset ?
+    if [ -n "$part_start" ] ; then
+      umount $part
+
+      parted -s -m $disk rm $part_num 2>&1 >/dev/null
+      parted -s -m $disk unit b mkpart primary $part_start 100% 2>&1 >/dev/null
+      mke2fs -F -t ext4 -m 0 $part 2>&1 >/dev/null
+      if [ ! -z $label ] ; then
+        tune2fs -U random -L $label $part 2>&1 >/dev/null
+      fi
+      if [ ! -z $uuid ] ; then
+        tune2fs -U $uuid $part 2>&1 >/dev/null
+      fi
     fi
-    if [ ! -z $uuid ] ; then
-      tune2fs -U $uuid $target
-    fi
-    echo "done"
-    sleep 5
   fi
 elif [ -f /storage/.cache/reset_xbmc ] ; then
   # soft reset
   rm -f /storage/.cache/reset_xbmc
-  get_target
-  if [ ! -z $target ] ; then
-    echo "soft resetting..."
-    rm -rf /storage/.??* 2>&1 >/dev/null
-    echo "done"
-    sleep 5
+  get_hddinfo
+  if [ ! -z $part ] ; then
+    StartProgress spinner "Resetting System (soft)..." "rm -rf /storage/.??* 2>&1 >/dev/null"
   fi
 fi
 sync
+StartProgress countdown "Rebooting in " "5"
 reboot -f
