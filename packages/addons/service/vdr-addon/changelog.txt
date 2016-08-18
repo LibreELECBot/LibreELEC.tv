@@ -1,6 +1,7 @@
 8.0.102
+- add VDR HEVC parser patch
+- add sat-ip devices option
 - update VNSI to 1.5.0
-- added VDR HEVC parser patch
 - update dvbapi to latest
 
 8.0.101
