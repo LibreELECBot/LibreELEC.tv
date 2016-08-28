@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - https://libreelec.tv
+#      This file is part of LibreELEC - https://LibreELEC.tv
 #      Copyright (C) 2016 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -16,28 +16,37 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="gcc-linaro-aarch64-none-elf"
-PKG_VERSION="4.9-2014.11-x86_64"
-PKG_REV="1"
+PKG_NAME="repository.kodinerds"
+PKG_VERSION="8.0"
+PKG_REV="100"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE=""
-PKG_URL="https://releases.linaro.org/14.11/components/toolchain/binaries/aarch64-none-elf/gcc-linaro-${PKG_VERSION}_aarch64-elf.tar.xz"
-PKG_SOURCE_DIR="gcc-linaro-${PKG_VERSION}_aarch64-elf"
-PKG_DEPENDS_HOST="toolchain"
+PKG_SITE="http://www.kodinerds.net"
+PKG_URL=""
+PKG_DEPENDS_TARGET="toolchain xmlstarlet"
 PKG_PRIORITY="optional"
-PKG_SECTION="lang"
-PKG_SHORTDESC=""
-PKG_LONGDESC=""
-
-PKG_IS_ADDON="no"
+PKG_SECTION=""
+PKG_SHORTDESC="Kodinerds add-on repository"
+PKG_LONGDESC="Kodinerds add-on repository"
 PKG_AUTORECONF="no"
 
-make_host() {
-  :
+PKG_IS_ADDON="yes"
+PKG_ADDON_NAME="Kodinerds Repository"
+PKG_ADDON_TYPE="xbmc.addon.repository"
+PKG_ADDON_REPOVERSION="8.0"
+
+
+make_target() {
+  $SED -e "s|@PKG_VERSION@|$PKG_VERSION|g" \
+       -e "s|@PKG_REV@|$PKG_REV|g" \
+       -i addon.xml
 }
 
-makeinstall_host() {
-  mkdir -p $ROOT/$TOOLCHAIN/lib/gcc-linaro-aarch64-none-elf/
-    cp -a * $ROOT/$TOOLCHAIN/lib/gcc-linaro-aarch64-none-elf
+makeinstall_target() {
+  : # nop
+}
+
+addon() {
+  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID
+  cp -R $PKG_BUILD/* $ADDON_BUILD/$PKG_ADDON_ID
 }
