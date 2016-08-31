@@ -1,0 +1,62 @@
+From aa85a71297117fe84c9e5f60c7ff38eddd77765a Mon Sep 17 00:00:00 2001
+From: kszaq <kszaquitto@gmail.com>
+Date: Fri, 26 Aug 2016 20:42:50 +0200
+Subject: [PATCH] [aml] AESinkALSA: Set digital_codec parameter to notify HDMI
+ about audio format
+
+---
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp | 31 ++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+index 6a9066b..272d9d6 100644
+--- a/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
++++ b/xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp
+@@ -38,6 +38,7 @@
+ #include "settings/AdvancedSettings.h"
+ #if defined(HAS_LIBAMCODEC)
+ #include "utils/AMLUtils.h"
++#include "utils/SysfsUtils.h"
+ #endif
+ 
+ #ifdef TARGET_POSIX
+@@ -538,7 +539,35 @@ bool CAESinkALSA::Initialize(AEAudioFormat &format, std::string &device)
+   if (aml_present())
+   {
+     aml_set_audio_passthrough(m_passthrough);
+-    device = "default";
++
++    int aml_digital_codec;
++    switch(format.m_streamInfo.m_type)
++    {
++      case CAEStreamInfo::STREAM_TYPE_AC3:
++        aml_digital_codec = 2;
++        break;
++      case CAEStreamInfo::STREAM_TYPE_DTS_512:
++      case CAEStreamInfo::STREAM_TYPE_DTS_1024:
++      case CAEStreamInfo::STREAM_TYPE_DTS_2048:
++      case CAEStreamInfo::STREAM_TYPE_DTSHD_CORE:
++        aml_digital_codec = 3;
++        break;
++      case CAEStreamInfo::STREAM_TYPE_EAC3:
++        aml_digital_codec = 4;
++        break;
++      case CAEStreamInfo::STREAM_TYPE_DTSHD:
++        aml_digital_codec = 8;
++        break;
++      case CAEStreamInfo::STREAM_TYPE_TRUEHD:
++        aml_digital_codec = 7;
++        break;
++      default:
++        if (inconfig.channels > 2)
++          aml_digital_codec = 6;
++        else
++          aml_digital_codec = 0;
++    }
++    SysfsUtils::SetInt("/sys/class/audiodsp/digital_codec", aml_digital_codec);
+   }
+ #endif
+ 
+-- 
+1.8.3.1
+
