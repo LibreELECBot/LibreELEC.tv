@@ -16,27 +16,27 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="brcmap6xxx-aml"
+PKG_NAME="bcmdhd-sdio-aml"
 PKG_REV="1"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
 PKG_SITE="http://openlinux.amlogic.com:8000/download/ARM/wifi/"
-PKG_VERSION="1.201.59.5-b82e63f"
-PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_VERSION="8bb6b4d"
+PKG_URL="https://github.com/Extro-development/bcmdhd-sdio-aml/archive/$PKG_VERSION.tar.gz"
+PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain linux wlan-firmware-aml"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
 PKG_PRIORITY="optional"
 PKG_SECTION="driver"
-PKG_SHORTDESC="brcmap6xxx-aml: Linux drivers for AP6xxx WLAN chips used in some devices based on Amlogic SoCs"
-PKG_LONGDESC="brcmap6xxx-aml: Linux drivers for AP6xxx WLAN chips used in some devices based on Amlogic SoCs"
+PKG_SHORTDESC="bcmdhd-sdio-aml: Linux drivers for Ampak Broadcom based WLAN chips used in some devices based on Amlogic SoCs"
+PKG_LONGDESC="bcmdhd-sdio-aml: Linux drivers for Ampak Broadcom based WLAN chips used in some devices based on Amlogic SoCs"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
 make_target() {
-  cd bcmdhd_1_201_59_x
   LDFLAGS="" make V=1 \
-    -C $(kernel_path) M=$ROOT/$PKG_BUILD/bcmdhd_1_201_59_x \
+    -C $(kernel_path) M=$ROOT/$PKG_BUILD \
     ARCH=$TARGET_KERNEL_ARCH \
     CROSS_COMPILE=$TARGET_PREFIX
 }
