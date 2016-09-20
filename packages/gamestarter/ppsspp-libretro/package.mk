@@ -18,7 +18,7 @@
 #  http://www.gnu.org/copyleft/gpl.html
 ################################################################################
 
-PKG_NAME="ppsspp-libretro"
+PKG_NAME="PSP1"
 PKG_VERSION="edf1cb7"
 PKG_REV="1"
 PKG_ARCH="any"
