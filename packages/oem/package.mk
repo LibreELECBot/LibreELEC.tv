@@ -36,7 +36,7 @@ PKG_AUTORECONF="no"
 OEM_GAMESTARTER=" \
   retroarch \
   uae4arm \
-  ppsspp \
+  ppsspp-libretro \
   uae4arm-libretro"
 
 
