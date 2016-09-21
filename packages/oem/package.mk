@@ -23,7 +23,8 @@ PKG_ARCH="any"
 PKG_LICENSE="various"
 PKG_SITE="http://www.openelec.tv"
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain $PROJECT"
+# PKG_DEPENDS_TARGET="toolchain $PROJECT"
+PKG_DEPENDS_TARGET="toolchain"
 PKG_PRIORITY="optional"
 PKG_SECTION="virtual"
 PKG_SHORTDESC="OEM: Metapackage for various OEM packages"
@@ -31,3 +32,22 @@ PKG_LONGDESC="OEM: Metapackage for various OEM packages"
 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
+
+OEM_GAMESTARTER=" \
+  retroarch \
+  uae4arm \
+  ppsspp \
+  uae4arm-libretro"
+
+
+if [ ! "$OEM_GAMESTARTER" = "no" ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $OEM_GAMESTARTER"
+  # case $PROJECT in
+    # Generic)
+    #  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $OEM_EMU_GENERIC"
+    #  ;;
+  #  RPi*)
+  #    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $OEM_EMU_RPI"
+  #    ;;
+  #esac
+fi
