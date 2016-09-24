@@ -16,7 +16,7 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="ppsspp"
+PKG_NAME="libretro-ppsspp"
 # PKG_VERSION="2ddea9a" -> OUTDATED VERSION
 PKG_VERSION="e1bb9da" 
 PKG_REV="1"
