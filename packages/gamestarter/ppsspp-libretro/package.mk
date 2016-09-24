@@ -41,28 +41,39 @@ PKG_AUTORECONF="no"
 #  git clone --depth 1 https://github.com/Kingcom/armips.git $BUILD/$PKG_NAME-$PKG_VERSION/ext/armips
 #}
 
-pre_configure_target() {
-  strip_lto
-}
+#pre_configure_target() {
+#  strip_lto
+#}
+
+#make_target() {
+#  cd $ROOT/$PKG_BUILD/libretro
+#  if [ "$OPENGLES" == "gpu-viv-bin-mx6q" ]; then
+#    CFLAGS="$CFLAGS -DLINUX -DEGL_API_FB"
+#    CXXFLAGS="$CXXFLAGS -DLINUX -DEGL_API_FB"
+#  fi
+#  if [ "$OPENGLES" == "bcm2835-driver" ]; then
+#    CFLAGS="$CFLAGS -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads"
+#    CXXFLAGS="$CXXFLAGS -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads"
+#  fi
+#  if [ "$ARCH" == "arm" ]; then
+#    SYSROOT_PREFIX=$SYSROOT_PREFIX make platform=imx6
+#  else
+#    make
+#  fi
+#}
+
+# makeinstall_target() {
+#  mkdir -p $INSTALL/usr/lib/libretro
+#  cp ../libretro/ppsspp_libretro.so $INSTALL/usr/lib/libretro/
+#}
 
 make_target() {
-  cd $ROOT/$PKG_BUILD/libretro
-  if [ "$OPENGLES" == "gpu-viv-bin-mx6q" ]; then
-    CFLAGS="$CFLAGS -DLINUX -DEGL_API_FB"
-    CXXFLAGS="$CXXFLAGS -DLINUX -DEGL_API_FB"
-  fi
-  if [ "$OPENGLES" == "bcm2835-driver" ]; then
-    CFLAGS="$CFLAGS -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads"
-    CXXFLAGS="$CXXFLAGS -I$SYSROOT_PREFIX/usr/include/interface/vcos/pthreads"
-  fi
-  if [ "$ARCH" == "arm" ]; then
-    SYSROOT_PREFIX=$SYSROOT_PREFIX make platform=imx6
-  else
-    make
-  fi
+  make platform=rpi2 CC=$CC CXX=$CXX -j3
 }
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/lib/libretro
-  cp ../libretro/ppsspp_libretro.so $INSTALL/usr/lib/libretro/
+  cp uae4arm_libretro.so $INSTALL/usr/lib/libretro/
 }
+
+
