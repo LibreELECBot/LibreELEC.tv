@@ -67,8 +67,12 @@ PKG_AUTORECONF="no"
 #  cp ../libretro/ppsspp_libretro.so $INSTALL/usr/lib/libretro/
 #}
 
+# make_target() {
+ # make platform=rpi2 CC=$CC CXX=$CXX -j3
+#}
+
 make_target() {
-  make platform=rpi2 CC=$CC CXX=$CXX -j3
+  make platform=rpi2 CC=$CC CXX=$CXX
 }
 
 makeinstall_target() {
