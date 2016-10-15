@@ -1,0 +1,41 @@
+From: Eric Gandt <gandteric@yahoo.com>
+Date: Fri, 14 Oct 2016
+Subject: Allow overriding of the EDID resultion detection, as it does not find many valid modes set in the EDID, this can be teh chipset or the device connected, if no over-ride is provided use the generated version
+
+---
+
+diff --git a/xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp b/xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp
+index 67f9984..b096308 100644
+--- a/xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp
++++ b/xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp
+@@ -29,6 +29,7 @@
+ #include <linux/fb.h>
+ #include <sys/ioctl.h>
+ #include <EGL/egl.h>
++#include <fstream>
+ 
+ CEGLNativeTypeAmlogic::CEGLNativeTypeAmlogic()
+ {
+@@ -154,10 +155,21 @@ bool CEGLNativeTypeAmlogic::SetNativeResolution(const RESOLUTION_INFO &res)
+   return result;
+ }
+ 
++// detect if a file exists requires unistd.h
++bool fexists(const char *filename) {
++  std::ifstream ifile(filename);
++  return (bool)ifile;
++}
++
+ bool CEGLNativeTypeAmlogic::ProbeResolutions(std::vector<RESOLUTION_INFO> &resolutions)
+ {
+   std::string valstr;
+-  SysfsUtils::GetString("/sys/class/amhdmitx/amhdmitx0/disp_cap", valstr);
++  if(fexists("/storage/.config/disp_cap")) {      
++    SysfsUtils::GetString("/storage/.config/disp_cap", valstr);
++  } else {
++    SysfsUtils::GetString("/sys/class/amhdmitx/amhdmitx0/disp_cap", valstr);
++  }
++    
+   std::vector<std::string> probe_str = StringUtils::Split(valstr, "\n");
+ 
+   resolutions.clear();
