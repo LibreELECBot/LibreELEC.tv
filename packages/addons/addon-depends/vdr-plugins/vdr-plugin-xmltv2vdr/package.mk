@@ -36,7 +36,7 @@ pre_configure_target() {
   export CFLAGS="$CFLAGS -fPIC"
   export CXXFLAGS="$CXXFLAGS -fPIC"
   export LDFLAGS="$LDFLAGS -fPIC"
-  export LIBS="-L$SYSROOT_PREFIX/usr/lib/iconv"
+  export LIBS="-L$SYSROOT_PREFIX/usr/lib/iconv -L$SYSROOT_PREFIX/usr/lib"
 }
 
 make_target() {
