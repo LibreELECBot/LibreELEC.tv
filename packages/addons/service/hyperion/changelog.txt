@@ -1,3 +1,7 @@
+8.0.104
+- Allow running with hyperion-x11
+- Add reload option to service.hyperion
+
 8.0.103
 - Update to version 355a324
 - Build with QT5
