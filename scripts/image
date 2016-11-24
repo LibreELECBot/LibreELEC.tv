@@ -22,6 +22,10 @@ unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL
 
 . config/options $1
 
+if [ -f $DISTRO_DIR/$DISTRO/scripts/image ]; then
+  . $DISTRO_DIR/$DISTRO/scripts/image
+fi
+
 show_config
 
 setup_toolchain target
