@@ -1,0 +1,71 @@
+diff -Naur lcdproc-0.5.7-cvs20140217.orig/server/drivers/NoritakeVFD.c lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.c
+--- lcdproc-0.5.7-cvs20140217.orig/server/drivers/NoritakeVFD.c	2015-07-30 22:29:22.874956699 +0200
++++ lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.c	2015-07-30 22:30:00.039228818 +0200
+@@ -412,7 +412,7 @@
+  * \param string   String that gets written.
+  */
+ MODULE_EXPORT void
+-NoritakeVFD_string (Driver *drvthis, int x, int y, const char string[])
++NoritakeVFD_string (Driver *drvthis, int x, int y, unsigned char string[])
+ {
+ 	PrivateData *p = drvthis->private_data;
+ 	int i;
+@@ -636,9 +636,8 @@
+  * \param y        Vertical cursor position (row).
+  * \param state    New cursor state.
+  */
+-/*
+ MODULE_EXPORT void
+-CFontzPacket_cursor (Driver *drvthis, int x, int y, int state)
++NoritakeVFD_cursor (Driver *drvthis, int x, int y, int state)
+ {
+ 	PrivateData *p = drvthis->private_data;
+ 	char out[2] = { 0x15 };
+@@ -659,9 +658,8 @@
+ 	}
+ 	write(p->fd, out, 1);
+ 
+-	NoritakeVFD_cursor_goto(x, y);
++	NoritakeVFD_cursor_goto(drvthis, x, y);
+ }
+-*/
+ 
+ 
+ /**
+@@ -747,7 +745,7 @@
+ 	else {
+ 		p->offbrightness = promille;
+ 	}
+-	//Noritake_backlight(drvthis, state);
++	NoritakeVFD_backlight(drvthis, state);
+ }
+ 
+ 
+@@ -832,7 +830,7 @@
+ NoritakeVFD_cursor_goto(Driver *drvthis, int x, int y)
+ {
+ 	PrivateData *p = drvthis->private_data;
+-	unsigned char out[4] = { 0x1B, 0x48, 0 };
++	unsigned char out[3] = { 0x1B, 0x48, 0 };
+ 
+ 	/* set cursor position */
+ 	if ((x > 0) && (x <= p->width) && (y > 0) && (y <= p->height))
+@@ -836,7 +836,7 @@
+ 
+ 	/* set cursor position */
+ 	if ((x > 0) && (x <= p->width) && (y > 0) && (y <= p->height))
+-		out[2] = (x-1) * p->width + (y-1);
++		out[2] = (y-1) * p->width + (x-1);
+ 	write(p->fd, out, 3);
+ }
+
+diff -Naur lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.h /home/lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.h
+--- lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.h	2014-02-17 22:36:35.000000000 +0100
++++ /home/lcdproc-0.5.7-cvs20140217/server/drivers/NoritakeVFD.h	2016-01-04 11:13:07.839044280 +0100
+@@ -39,7 +39,7 @@
+ MODULE_EXPORT int  NoritakeVFD_cellheight (Driver *drvthis);
+ MODULE_EXPORT void NoritakeVFD_clear (Driver *drvthis);
+ MODULE_EXPORT void NoritakeVFD_flush (Driver *drvthis);
+-MODULE_EXPORT void NoritakeVFD_string (Driver *drvthis, int x, int y, const char string[]);
++MODULE_EXPORT void NoritakeVFD_string (Driver *drvthis, int x, int y, unsigned char string[]);
+ MODULE_EXPORT void NoritakeVFD_chr (Driver *drvthis, int x, int y, char c);
