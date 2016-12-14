@@ -1,0 +1,12 @@
+Welcome to the Zoo
+
+This folder collects exotic packages and addons that are not included in
+LibreELEC images or repositories. These packages and addons are kept for
+documentation purposes only, and are not maintained continuously.
+
+Unless specified otherwise, all files in this folder are (c) Team LibreELEC at
+their commit date and can be redistributed and/or modified under the terms of
+the GNU General Public License as published by the Free Software Foundation,
+either version 2 of the License, or (at your option) any later version.
+
+Contributions are welcome.
