@@ -53,7 +53,7 @@ def install_flash():
       oe.execute('tar zxf ' + __tmp__ + __file__ + ' -C ' + __tmp__ + '')
     if not os.path.isdir(__path__ + 'PepperFlash'):
       os.mkdir(__path__ + 'PepperFlash')
-    oe.copy_file(__tmp__ + __lib__, __path__ + 'PepperFlash/' + __lib__.split('/')[-1])
+    oe.copy_file(__tmp__ + __lib__, __path__ + 'PepperFlash/' + __lib__)
     oe.notify('Chromium', 'Installation of libpepflashplayer.so succeeded')
   except Exception, e:
     oe.notify('Chromium', 'Installation of libpepflashplayer.so failed')
