@@ -4,11 +4,17 @@ Date:   Sun Sep 25 15:26:18 2016 -0700
 
     [cmake][IMX] fix imx cmake build
 
-diff --git a/project/cmake/CMakeLists.txt b/project/cmake/CMakeLists.txt
-index 76870a4..8602a52 100644
+---
+ project/cmake/CMakeLists.txt        |    2 ++
+ project/cmake/modules/FindIMX.cmake |   35 +++++++++++++++++++++++++++++++++++
+ xbmc/linux/CMakeLists.txt           |    4 ++++
+ xbmc/video/videosync/CMakeLists.txt |    5 +++++
+ xbmc/windowing/egl/CMakeLists.txt   |    7 ++++++-
+ 5 files changed, 52 insertions(+), 1 deletion(-)
+
 --- a/project/cmake/CMakeLists.txt
 +++ b/project/cmake/CMakeLists.txt
-@@ -56,6 +56,7 @@ if(UNIX)
+@@ -55,6 +55,7 @@ if(UNIX)
    if(CORE_SYSTEM_NAME STREQUAL linux OR CORE_SYSTEM_NAME STREQUAL freebsd)
      option(ENABLE_X11         "Enable X11 support?" ON)
      option(ENABLE_AML         "Enable AML?" OFF)
@@ -16,7 +22,7 @@ index 76870a4..8602a52 100644
    endif()
  endif()
  # System options
-@@ -216,6 +217,7 @@ endif()
+@@ -213,6 +214,7 @@ endif()
  
  if(CORE_SYSTEM_NAME STREQUAL android OR CORE_SYSTEM_NAME STREQUAL linux)
    core_optional_dep(AML)
@@ -24,9 +30,6 @@ index 76870a4..8602a52 100644
  elseif(CORE_SYSTEM_NAME STREQUAL rbpi)
    core_require_dep(MMAL)
  endif()
-diff --git a/project/cmake/modules/FindIMX.cmake b/project/cmake/modules/FindIMX.cmake
-new file mode 100644
-index 0000000..4e1e838
 --- /dev/null
 +++ b/project/cmake/modules/FindIMX.cmake
 @@ -0,0 +1,35 @@
@@ -65,8 +68,6 @@ index 0000000..4e1e838
 +list(APPEND IMXVPU_DEFINITIONS -DHAS_IMXVPU=1 -DLINUX -DEGL_API_FB)
 +
 +mark_as_advanced(IMX_INCLUDE_DIR IMX_LIBRARIES IMX_DEFINITIONS)
-diff --git a/xbmc/linux/CMakeLists.txt b/xbmc/linux/CMakeLists.txt
-index 754cc1e..931c10d 100644
 --- a/xbmc/linux/CMakeLists.txt
 +++ b/xbmc/linux/CMakeLists.txt
 @@ -40,4 +40,8 @@ if(OMXLIB_FOUND)
@@ -78,8 +79,6 @@ index 754cc1e..931c10d 100644
 +endif()
 +
  core_add_library(linuxsupport)
-diff --git a/xbmc/video/videosync/CMakeLists.txt b/xbmc/video/videosync/CMakeLists.txt
-index 421af44..82f7169 100644
 --- a/xbmc/video/videosync/CMakeLists.txt
 +++ b/xbmc/video/videosync/CMakeLists.txt
 @@ -35,6 +35,11 @@ if(CORE_SYSTEM_NAME STREQUAL android)
@@ -94,8 +93,6 @@ index 421af44..82f7169 100644
  if(SOURCES AND HEADERS)
    core_add_library(video_sync)
  endif()
-diff --git a/xbmc/windowing/egl/CMakeLists.txt b/xbmc/windowing/egl/CMakeLists.txt
-index 3ab603e..51e13ab 100644
 --- a/xbmc/windowing/egl/CMakeLists.txt
 +++ b/xbmc/windowing/egl/CMakeLists.txt
 @@ -1,4 +1,4 @@
