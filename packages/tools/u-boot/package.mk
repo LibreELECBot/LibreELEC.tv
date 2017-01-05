@@ -19,27 +19,31 @@
 PKG_NAME="u-boot"
 PKG_DEPENDS_TARGET="toolchain"
 case "$UBOOT_VERSION" in
-    "imx6-cuboxi")
-      PKG_VERSION="imx6-408544d"
-      PKG_SITE="http://imx.solid-run.com/wiki/index.php?title=Building_the_kernel_and_u-boot_for_the_CuBox-i_and_the_HummingBoard"
-      # https://github.com/SolidRun/u-boot-imx6.git
-      PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
-      [ -n "$UBOOT_CONFIG_V2" ] && PKG_DEPENDS_TARGET="toolchain u-boot-v2"
-      ;;
-    "hardkernel")
-      PKG_VERSION="6e4e886"
-      PKG_SITE="https://github.com/hardkernel/u-boot"
-      PKG_URL="https://github.com/hardkernel/u-boot/archive/$PKG_VERSION.tar.gz"
-      PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET gcc-linaro-aarch64-elf:host gcc-linaro-arm-eabi:host"
-      ;;
-    "mainline"|*)
-      PKG_VERSION="2016.11"
-      PKG_SITE="http://www.denx.de/wiki/U-Boot/WebHome"
-      PKG_URL="ftp://ftp.denx.de/pub/u-boot/u-boot-$PKG_VERSION.tar.bz2"
-      PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET dtc:host"
-      ;;
+  "imx6-cuboxi")
+    PKG_VERSION="imx6-408544d"
+    PKG_SITE="http://imx.solid-run.com/wiki/index.php?title=Building_the_kernel_and_u-boot_for_the_CuBox-i_and_the_HummingBoard"
+    # https://github.com/SolidRun/u-boot-imx6.git
+    PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+    [ -n "$UBOOT_CONFIG_V2" ] && PKG_DEPENDS_TARGET="toolchain u-boot-v2"
+    ;;
+  "hardkernel")
+    PKG_VERSION="6e4e886"
+    PKG_SITE="https://github.com/hardkernel/u-boot"
+    PKG_URL="https://github.com/hardkernel/u-boot/archive/$PKG_VERSION.tar.gz"
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET gcc-linaro-aarch64-elf:host gcc-linaro-arm-eabi:host"
+    ;;
+  "mainline"|*)
+    PKG_VERSION="2016.11"
+    PKG_SITE="http://www.denx.de/wiki/U-Boot/WebHome"
+    PKG_URL="ftp://ftp.denx.de/pub/u-boot/u-boot-$PKG_VERSION.tar.bz2"
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET dtc:host"
+    ;;
 esac
-[ "$PROJECT" = "Odroid_U2" ] && PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET odroid-u2-bootloader"
+case "$PROJECT" in
+  "Odroid_U2")
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET odroid-u2-bootloader"
+    ;;
+esac
 PKG_REV="1"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
@@ -66,7 +70,7 @@ pre_configure_target() {
   MAKEFLAGS=-j1
 
 # copy compiler-gcc5.h to compiler-gcc6. for fake building
-  if [ "$UBOOT_VERSION" != "mainline" -o -z "$UBOOT_VERSION" ]; then
+  if [ "$UBOOT_VERSION" != "mainline" ]; then
     cp include/linux/compiler-gcc5.h include/linux/compiler-gcc6.h
   fi
 }
@@ -142,7 +146,7 @@ makeinstall_target() {
   mk_u-boot_splash()
   {
   if [ -f $PROJECT_DIR/$PROJECT/splash/boot-logo.bmp.gz ]; then
-     cp -PRv $PROJECT_DIR/$PROJECT/splash/boot-logo.bmp.gz $INSTALL/usr/share/bootloader
+    cp -PRv $PROJECT_DIR/$PROJECT/splash/boot-logo.bmp.gz $INSTALL/usr/share/bootloader
   elif [ -f $DISTRO_DIR/$DISTRO/splash/boot-logo.bmp.gz ]; then
     cp -PRv $DISTRO_DIR/$DISTRO/splash/boot-logo.bmp.gz $INSTALL/usr/share/bootloader
   fi
