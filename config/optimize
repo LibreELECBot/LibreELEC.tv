@@ -1,4 +1,10 @@
-GCC_OPTIM="-Os"
+if [ "$SIZE_OPTIM" = yes ]; then
+  GCC_OPTIM="-Os"
+  BUILD_TYPE="MinSizeRel"
+else
+  GCC_OPTIM="-O2"
+  BUILD_TYPE="Release"
+fi
 LD_OPTIM="-Wl,--as-needed"
 
 if [ "$LTO_SUPPORT" = yes ];then
