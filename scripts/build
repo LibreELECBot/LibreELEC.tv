@@ -130,7 +130,7 @@ if [ ! -f $STAMP ]; then
     if [ "$DEBUG" = "yes" ]; then
       CMAKE_BUILD_TYPE="Debug"
     else
-      CMAKE_BUILD_TYPE="MinSizeRel"
+      CMAKE_BUILD_TYPE=$BUILD_TYPE
     fi
 
     TARGET_CMAKE_OPTS="-DCMAKE_TOOLCHAIN_FILE=$CMAKE_CONF \
@@ -151,7 +151,7 @@ if [ ! -f $STAMP ]; then
 
     HOST_CMAKE_OPTS="-DCMAKE_TOOLCHAIN_FILE=$CMAKE_CONF \
                      -DCMAKE_INSTALL_PREFIX=$ROOT/$TOOLCHAIN \
-                     -DCMAKE_BUILD_TYPE=Release"
+                     -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE"
 
   # configure INIT build defaults
     INIT_CONFIGURE_OPTS="$TARGET_CONFIGURE_OPTS"
