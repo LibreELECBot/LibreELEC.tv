@@ -151,7 +151,7 @@ if [ ! -f $STAMP ]; then
 
     HOST_CMAKE_OPTS="-DCMAKE_TOOLCHAIN_FILE=$CMAKE_CONF \
                      -DCMAKE_INSTALL_PREFIX=$ROOT/$TOOLCHAIN \
-                     -DCMAKE_BUILD_TYPE=$CMAKE_BUILD_TYPE"
+                     -DCMAKE_BUILD_TYPE=Release"
 
   # configure INIT build defaults
     INIT_CONFIGURE_OPTS="$TARGET_CONFIGURE_OPTS"
