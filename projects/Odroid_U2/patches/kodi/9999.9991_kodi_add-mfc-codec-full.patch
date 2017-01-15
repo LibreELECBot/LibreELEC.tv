@@ -1,32 +1,32 @@
 ---
- configure.ac                                                |   41 
- m4/xbmc_arch.m4                                             |    2 
- project/cmake/CMakeLists.txt                                |    1 
- project/cmake/scripts/common/ArchSetup.cmake                |    8 
- xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp                 |   39 
- xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp        |    5 
- xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp         |   35 
- xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt       |    5 
- xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.cpp |  579 ++++++++++++
- xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.h   |   63 +
- xbmc/cores/VideoPlayer/DVDCodecs/Video/Makefile.in          |    5 
- xbmc/linux/CMakeLists.txt                                   |    2 
- xbmc/linux/LinuxV4l2Sink.cpp                                |  311 ++++++
- xbmc/linux/LinuxV4l2Sink.h                                  |   71 +
- xbmc/linux/Makefile.in                                      |    1 
- xbmc/system_gl.h                                            |    4 
- xbmc/utils/AMLUtils.cpp                                     |   93 +
- xbmc/utils/CPUInfo.cpp                                      |   25 
- xbmc/windowing/X11/WinSystemX11.cpp                         |    2 
- xbmc/windowing/egl/CMakeLists.txt                           |    6 
- xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp                 |   93 +
- xbmc/windowing/egl/EGLNativeTypeAmlogic.h                   |   19 
- xbmc/windowing/egl/EGLNativeTypeFbdev.cpp                   |  183 +++
- xbmc/windowing/egl/EGLNativeTypeFbdev.h                     |   68 +
- xbmc/windowing/egl/EGLNativeTypeHybris.cpp                  |  279 +++++
- xbmc/windowing/egl/EGLNativeTypeHybris.h                    |   77 +
- xbmc/windowing/egl/EGLWrapper.cpp                           |   17 
- xbmc/windowing/egl/Makefile.in                              |    4 
+ configure.ac                                                |   41 	40 +	1 -	0 !
+ m4/xbmc_arch.m4                                             |    2 	1 +	1 -	0 !
+ project/cmake/CMakeLists.txt                                |    1 	1 +	0 -	0 !
+ project/cmake/scripts/common/ArchSetup.cmake                |    8 	8 +	0 -	0 !
+ xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp                 |   39 	26 +	13 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp        |    5 	5 +	0 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp         |   35 	27 +	8 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt       |    5 	5 +	0 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.cpp |  579 	579 +	0 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.h   |   63 	63 +	0 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/Makefile.in          |    5 	4 +	1 -	0 !
+ xbmc/linux/CMakeLists.txt                                   |    2 	2 +	0 -	0 !
+ xbmc/linux/LinuxV4l2Sink.cpp                                |  311 	311 +	0 -	0 !
+ xbmc/linux/LinuxV4l2Sink.h                                  |   71 	71 +	0 -	0 !
+ xbmc/linux/Makefile.in                                      |    1 	1 +	0 -	0 !
+ xbmc/system_gl.h                                            |    4 	4 +	0 -	0 !
+ xbmc/utils/AMLUtils.cpp                                     |   93 	87 +	6 -	0 !
+ xbmc/utils/CPUInfo.cpp                                      |   25 	13 +	12 -	0 !
+ xbmc/windowing/X11/WinSystemX11.cpp                         |    2 	1 +	1 -	0 !
+ xbmc/windowing/egl/CMakeLists.txt                           |    6 	4 +	2 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeAmlogic.cpp                 |   93 	67 +	26 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeAmlogic.h                   |   19 	17 +	2 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeFbdev.cpp                   |  183 	183 +	0 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeFbdev.h                     |   68 	68 +	0 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeHybris.cpp                  |  279 	279 +	0 -	0 !
+ xbmc/windowing/egl/EGLNativeTypeHybris.h                    |   77 	77 +	0 -	0 !
+ xbmc/windowing/egl/EGLWrapper.cpp                           |   17 	12 +	5 -	0 !
+ xbmc/windowing/egl/Makefile.in                              |    4 	4 +	0 -	0 !
  28 files changed, 1960 insertions(+), 78 deletions(-)
 
 --- a/configure.ac
@@ -134,7 +134,7 @@
    *)
 --- a/project/cmake/scripts/common/ArchSetup.cmake
 +++ b/project/cmake/scripts/common/ArchSetup.cmake
-@@ -149,6 +149,14 @@ if(NOT DEFINED NEON OR NEON)
+@@ -150,6 +150,14 @@ if(NOT DEFINED NEON OR NEON)
    endif()
  endif()
  
@@ -2699,7 +2699,7 @@
  LIB = windowing_egl.a
 --- a/project/cmake/CMakeLists.txt
 +++ b/project/cmake/CMakeLists.txt
-@@ -205,6 +205,7 @@ if(NOT WIN32)
+@@ -203,6 +203,7 @@ if(NOT WIN32)
      if(OPENGLES_FOUND)
        core_optional_dep(X ENABLE_X11)
        core_optional_dep(LibDRM ENABLE_X11)
