@@ -5,7 +5,7 @@
  project/cmake/scripts/common/ArchSetup.cmake                |    8 	8 +	0 -	0 !
  xbmc/cores/AudioEngine/Sinks/AESinkALSA.cpp                 |   39 	26 +	13 -	0 !
  xbmc/cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.cpp        |    5 	5 +	0 -	0 !
- xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp         |   35 	27 +	8 -	0 !
+ xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp         |   29 	24 +	5 -	0 !
  xbmc/cores/VideoPlayer/DVDCodecs/Video/CMakeLists.txt       |    5 	5 +	0 -	0 !
  xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.cpp |  579 	579 +	0 -	0 !
  xbmc/cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodecMFC.h   |   63 	63 +	0 -	0 !
@@ -27,7 +27,7 @@
  xbmc/windowing/egl/EGLNativeTypeHybris.h                    |   77 	77 +	0 -	0 !
  xbmc/windowing/egl/EGLWrapper.cpp                           |   17 	12 +	5 -	0 !
  xbmc/windowing/egl/Makefile.in                              |    4 	4 +	0 -	0 !
- 28 files changed, 1960 insertions(+), 78 deletions(-)
+ 28 files changed, 1957 insertions(+), 75 deletions(-)
 
 --- a/configure.ac
 +++ b/configure.ac
@@ -287,7 +287,7 @@
        return pCodec;
 --- a/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp
 +++ b/xbmc/cores/VideoPlayer/DVDCodecs/Video/AMLCodec.cpp
-@@ -398,7 +398,25 @@ void dumpfile_write(am_private_t *para,
+@@ -427,7 +427,25 @@ void dumpfile_write(am_private_t *para,
    }
  
    if (para->dumpdemux && para->dumpfile != -1)
@@ -314,16 +314,7 @@
  }
  
  static vformat_t codecid_to_vformat(enum AVCodecID id)
-@@ -713,7 +731,7 @@ int write_av_packet(am_private_t *para,
-         }
-         pkt->newflag = 0;
-     }
--	
-+
-     buf = pkt->data;
-     size = pkt->data_size ;
-     if (size == 0 && pkt->isvalid) {
-@@ -1564,7 +1582,7 @@ bool CAMLCodec::OpenDecoder(CDVDStreamIn
+@@ -1582,7 +1600,7 @@ bool CAMLCodec::OpenDecoder(CDVDStreamIn
        // h264 in an avi file
        if (m_hints.ptsinvalid)
          am_private->gcodec.param = (void*)(EXTERNAL_PTS | SYNC_OUTSIDE);
@@ -332,28 +323,16 @@
      case VFORMAT_REAL:
        am_private->stream_type = AM_STREAM_RM;
        am_private->vcodec.noblock = 1;
-@@ -1629,7 +1647,7 @@ bool CAMLCodec::OpenDecoder(CDVDStreamIn
- 
-   Create();
+@@ -1646,7 +1664,7 @@ bool CAMLCodec::OpenDecoder(CDVDStreamIn
+   am_private->am_pkt.codec = &am_private->vcodec;
+   pre_header_feeding(am_private, &am_private->am_pkt);
  
 -  m_display_rect = CRect(0, 0, CDisplaySettings::GetInstance().GetCurrentResolutionInfo().iWidth, CDisplaySettings::GetInstance().GetCurrentResolutionInfo().iHeight);
 +  m_display_rect = CRect(0, 0, CDisplaySettings::GetInstance().GetCurrentResolutionInfo().iScreenWidth, CDisplaySettings::GetInstance().GetCurrentResolutionInfo().iScreenHeight);
  
    std::string strScaler;
    SysfsUtils::GetString("/sys/class/ppmgr/ppscaler", strScaler);
-@@ -1852,9 +1870,9 @@ int CAMLCodec::Decode(uint8_t *pData, si
- 
-   // if we have still frames, demux size will be small
-   // and we need to pre-buffer more.
--  double target_timesize = 1.0;
-+  double target_timesize = 1.5;
-   if (iSize < 20)
--    target_timesize = 2.0;
-+    target_timesize += 1.0;
- 
-   int rtn = 0;
- 
-@@ -2155,7 +2173,6 @@ void CAMLCodec::SetVideoRect(const CRect
+@@ -2200,7 +2218,6 @@ void CAMLCodec::SetVideoRect(const CRect
          int diff = (int) ((dst_rect.Height() - dst_rect.Width()) / 2);
          dst_rect = CRect(DestRect.x1 - diff, DestRect.y1, DestRect.x2 + diff, DestRect.y2);
        }
@@ -361,7 +340,7 @@
    }
  
    if (m_dst_rect != dst_rect)
-@@ -2177,7 +2194,7 @@ void CAMLCodec::SetVideoRect(const CRect
+@@ -2222,7 +2239,7 @@ void CAMLCodec::SetVideoRect(const CRect
  #ifdef TARGET_ANDROID
    display = m_display_rect;
  #else
@@ -370,7 +349,7 @@
  #endif
    if (gui != display)
    {
-@@ -2249,6 +2266,8 @@ void CAMLCodec::SetVideoRect(const CRect
+@@ -2294,6 +2311,8 @@ void CAMLCodec::SetVideoRect(const CRect
    std::string s_gui = StringUtils::Format("%i,%i,%i,%i",
      (int)gui.x1, (int)gui.y1,
      (int)gui.Width(), (int)gui.Height());
