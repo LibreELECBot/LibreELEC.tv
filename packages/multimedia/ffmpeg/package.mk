@@ -18,7 +18,8 @@
 
 PKG_NAME="ffmpeg"
 # Current branch is: release/3.1-xbmc
-PKG_VERSION="33c167d"
+# 64bb329afa9a2fdeeff514a5fe7a89d08552bf42
+PKG_VERSION="64bb329afa9a2fdeeff514a5fe7a89d08552bf42"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="LGPLv2.1+"
@@ -189,7 +190,6 @@ configure_target() {
               --disable-libopencore-amrwb \
               --disable-libopencv \
               --disable-libdc1394 \
-              --disable-libfaac \
               --disable-libfreetype \
               --disable-libgsm \
               --disable-libmp3lame \
