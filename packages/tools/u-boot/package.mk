@@ -44,7 +44,6 @@ case "$PROJECT" in
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET odroid-u2-bootloader"
     ;;
 esac
-PKG_REV="1"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
 PKG_SECTION="tools"
