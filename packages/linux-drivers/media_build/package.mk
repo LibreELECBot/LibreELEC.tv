@@ -31,12 +31,43 @@ PKG_LONGDESC="DVB drivers that replace the version shipped with the kernel"
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
+if [ "$TARGET_KERNEL_ARCH" = "arm64" -a "$TARGET_ARCH" = "arm" ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET gcc-linaro-aarch64-linux-gnu:host"
+  export PATH=$ROOT/$TOOLCHAIN/lib/gcc-linaro-aarch64-linux-gnu/bin/:$PATH
+  TARGET_PREFIX=aarch64-linux-gnu-
+fi
+
 pre_make_target() {
   export KERNEL_VER=$(get_module_dir)
   export LDFLAGS=""
 }
 
 make_target() {
+
+  # Amlogic AMLVIDEO driver
+  if [ -e "$(kernel_path)/drivers/amlogic/video_dev" ]; then
+
+    # Copy, patch and enable amlvideodri module
+    cp -a "$(kernel_path)/drivers/amlogic/video_dev" "media/drivers/media/"
+    sed -i 's,common/,,g; s,"trace/,",g' $(find media/drivers/media/video_dev/ -type f)
+    sed -i 's,\$(CONFIG_V4L_AMLOGIC_VIDEO),m,g' "media/drivers/media/video_dev/Makefile"
+    echo "obj-y += video_dev/" >> "media/drivers/media/Makefile"
+    echo "source drivers/media/video_dev/Kconfig " >> "media/drivers/media/Kconfig"
+
+    # Copy and enable videobuf-res module
+    cp -a "$(kernel_path)/drivers/media/v4l2-core/videobuf-res.c" "media/drivers/media/v4l2-core/"
+    cp -a "$(kernel_path)/include/media/videobuf-res.h" "media/include/media/"
+    echo "obj-m += videobuf-res.o" >> "media/drivers/media/v4l2-core/Makefile"
+
+    # Use meson-ir module from kernel tree, patch it and force to be built
+    if [ -e "$(kernel_path)/drivers/media/rc/meson-ir.c" ]; then
+      cp -a "$(kernel_path)/drivers/media/rc/meson-ir.c" "media/drivers/media/rc/"
+      sed -i 's,allowed_protos,allowed_protocols,g' "media/drivers/media/rc/meson-ir.c"
+      echo "obj-m += meson-ir.o" >> "media/drivers/media/rc/Makefile"
+    fi
+
+  fi
+
   cd media_build
   make dir DIR=../media
   make VER=$KERNEL_VER SRCDIR=$(kernel_path) allyesconfig
