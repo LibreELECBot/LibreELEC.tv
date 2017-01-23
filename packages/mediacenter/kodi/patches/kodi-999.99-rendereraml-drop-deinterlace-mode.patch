@@ -1,0 +1,46 @@
+From d4dd3cfb5c222f107f0cdecfcb9b5a094d723e0f Mon Sep 17 00:00:00 2001
+From: Alex Deryskyba <alex@codesnake.com>
+Date: Tue, 2 Aug 2016 12:55:44 +0200
+Subject: [PATCH 4/4] rendereraml: Drop deinterlace mode
+
+---
+ .../VideoPlayer/VideoRenderers/HwDecRender/RendererAML.cpp   |   10 ----------
+ .../VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h     |    1 -
+ 2 files changed, 11 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.cpp b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.cpp
+index d0baa27..d8674c8 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.cpp
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.cpp
+@@ -81,16 +81,6 @@ bool CRendererAML::Supports(EINTERLACEMETHOD method)
+   return false;
+ }
+ 
+-bool CRendererAML::Supports(EDEINTERLACEMODE mode)
+-{
+-  if(mode == VS_DEINTERLACEMODE_OFF
+-  || mode == VS_DEINTERLACEMODE_AUTO
+-  || mode == VS_DEINTERLACEMODE_FORCE)
+-    return true;
+-
+-  return false;
+-}
+-
+ bool CRendererAML::Supports(ESCALINGMETHOD method)
+ {
+   return false;
+diff --git a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h
+index 819f6e3..828f584 100644
+--- a/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h
++++ b/xbmc/cores/VideoPlayer/VideoRenderers/HwDecRender/RendererAML.h
+@@ -41,7 +41,6 @@ public:
+ 
+   // Feature support
+   virtual bool Supports(EINTERLACEMETHOD method);
+-  virtual bool Supports(EDEINTERLACEMODE mode);
+   virtual bool Supports(ESCALINGMETHOD method);
+   virtual bool Supports(ERENDERFEATURE feature);
+ 
+-- 
+1.7.10.4
+
