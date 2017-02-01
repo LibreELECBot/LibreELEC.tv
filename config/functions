@@ -167,18 +167,25 @@ require_eglibc() {
 add_user() {
   # Usage: add_user "username" "password" "userid" "groupid" "description" "home" "shell"
   mkdir -p ${INSTALL}/etc
-  touch ${INSTALL}/etc/passwd
-  if [ -z "`grep "$1:" ${INSTALL}/etc/passwd`" ]; then
-    echo "$1:x:$3:$4:$5:$6:$7" >> ${INSTALL}/etc/passwd
+  touch ${INSTALL}/etc/passwd.ro
+  if [ -z "`grep "$1:" ${INSTALL}/etc/passwd.ro`" ]; then
+    echo "$1:x:$3:$4:$5:$6:$7" >> ${INSTALL}/etc/passwd.ro
   fi
 
-  touch ${INSTALL}/etc/shadow
-  PASSWORD="$2"
-  if [ "$PASSWORD" = "x" ]; then
-    PASSWORD="*"
+  if [ ! -h ${INSTALL}/etc/passwd ]; then
+    ln -s /storage/.cache/passwd ${INSTALL}/etc/passwd
   fi
-  if [ -z "`grep "$1:" ${INSTALL}/etc/shadow`" ]; then
-    echo "$1:$PASSWORD:::::::" >> ${INSTALL}/etc/shadow
+
+  PASSWORD="$2"
+  [ "$PASSWORD" = "x" ] && PASSWORD="*"
+
+  touch ${INSTALL}/etc/shadow.ro
+  if [ -z "`grep "$1:" ${INSTALL}/etc/shadow.ro`" ]; then
+    echo "$1:$PASSWORD:::::::" >> ${INSTALL}/etc/shadow.ro
+  fi
+
+  if [ ! -h ${INSTALL}/etc/shadow ]; then
+    ln -s /storage/.cache/shadow ${INSTALL}/etc/shadow
   fi
 }
 
