@@ -2,15 +2,14 @@
 # setup system defaults
 ################################################################################
 
+  # set TARGET_ARCH
+    TARGET_ARCH="arm"
+
   # The TARGET_CPU variable controls which processor should be targeted for
   # generated code.
-    case $TARGET_ARCH in
-      arm)
-        TARGET_CPU="cortex-a9"
-        TARGET_FLOAT="hard"
-        TARGET_FPU="neon"
-        ;;
-    esac
+    TARGET_CPU="cortex-a9"
+    TARGET_FLOAT="hard"
+    TARGET_FPU="neon"
 
   # Bootloader to use (syslinux / u-boot / bcm2835-bootloader)
     BOOTLOADER="u-boot"
