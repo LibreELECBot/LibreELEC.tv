@@ -39,6 +39,7 @@ post_makeinstall_host() {
 # setup ccache
   if [ -z "$CCACHE_DISABLE" ]; then
     $ROOT/$TOOLCHAIN/bin/ccache --max-size=$CCACHE_CACHE_SIZE
+    $ROOT/$TOOLCHAIN/bin/ccache --set-config=compiler_check=string:$(gcc -dumpversion)-$(get_pkg_version gcc)
   fi
 
   cat > $ROOT/$TOOLCHAIN/bin/host-gcc <<EOF
