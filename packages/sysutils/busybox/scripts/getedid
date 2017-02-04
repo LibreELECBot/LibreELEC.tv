@@ -34,8 +34,6 @@ help() {
   echo ""
   echo "To create a custom EDID, just use this script like: getedid create"
   echo ""
-  echo "If you have already used this script and wish to restore original behaviour, use: getedid default"
-  echo ""
   echo "If you don't want to use the created EDID file anymore use: getedid delete"
   echo ""
   echo "If you hardware has changed and you want to have a custom EDID again, then you have to delete the old EDID first."
