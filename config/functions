@@ -172,9 +172,7 @@ add_user() {
     echo "$1:x:$3:$4:$5:$6:$7" >> ${INSTALL}/etc/passwd.ro
   fi
 
-  if [ ! -h ${INSTALL}/etc/passwd ]; then
-    ln -s /storage/.cache/passwd ${INSTALL}/etc/passwd
-  fi
+  ln -sf /storage/.cache/passwd ${INSTALL}/etc/passwd
 
   PASSWORD="$2"
   [ "$PASSWORD" = "x" ] && PASSWORD="*"
@@ -184,9 +182,7 @@ add_user() {
     echo "$1:$PASSWORD:::::::" >> ${INSTALL}/etc/shadow.ro
   fi
 
-  if [ ! -h ${INSTALL}/etc/shadow ]; then
-    ln -s /storage/.cache/shadow ${INSTALL}/etc/shadow
-  fi
+  ln -sf /storage/.cache/shadow ${INSTALL}/etc/shadow
 }
 
 add_group() {
