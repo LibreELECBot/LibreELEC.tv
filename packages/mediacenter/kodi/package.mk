@@ -215,6 +215,7 @@ PKG_CMAKE_OPTS_TARGET="-DNATIVEPREFIX=$TOOLCHAIN \
                        -DGIT_VERSION=$PKG_VERSION \
                        -DENABLE_INTERNAL_FFMPEG=OFF \
                        -DFFMPEG_INCLUDE_DIRS=$SYSROOT_PREFIX/usr \
+                       -DKODI_DEPENDSBUILD=ON \
                        -DENABLE_INTERNAL_CROSSGUID=OFF \
                        -DENABLE_SDL=OFF \
                        -DENABLE_OPENSSL=ON \
