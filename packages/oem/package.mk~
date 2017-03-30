@@ -18,6 +18,7 @@
 
 PKG_NAME="oem"
 PKG_VERSION=""
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="various"
 PKG_SITE="http://www.libreelec.tv"
@@ -32,19 +33,19 @@ PKG_LONGDESC="OEM: Metapackage for various OEM packages"
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-OEM_EMU_COMMON=""
-  	# glupen64-libretro \
-  	# mame2003-libretro \
-  	# emulationstation"
+OEM_EMU_COMMON=" \
+  	glupen64-libretro \
+  	mame2003-libretro \
+  	emulationstation"
 
-OEM_EMU_GENERIC=""
-	# mame2010-libretro"
+OEM_EMU_GENERIC=" \
+	mame2010-libretro"
 
-OEM_EMU_RPI="retroarch"
- #	\
-#	desmume-libretro \
-#	yabause-libretro \
-#	uae4arm-libretro \
+OEM_EMU_RPI=" \
+	desmume-libretro \
+	yabause-libretro \
+	uae4arm-libretro \
+  	retroarch"
 
 # Errors compiling:
 # Generic 7: uae4arm-libretro, retroarch (vulkan)
