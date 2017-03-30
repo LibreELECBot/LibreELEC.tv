@@ -356,7 +356,7 @@ show_config() {
 
   # Build options
 
-  config_message="$config_message\n\n Buildoptions:"
+  config_message="$config_message\n\n Build options:"
   config_message="$config_message\n $dashes$dashes"
 
   config_message="$config_message\n - CPU (ARCH):\t\t\t\t $TARGET_CPU ($TARGET_ARCH)"
@@ -365,6 +365,7 @@ show_config() {
   config_message="$config_message\n - SIMD support:\t\t\t $SIMD_SUPPORT"
   config_message="$config_message\n - LTO (Link Time Optimization) support: $LTO_SUPPORT"
   config_message="$config_message\n - GOLD (Google Linker) Support:\t $GOLD_SUPPORT"
+  config_message="$config_message\n - Size optimization:\t\t\t $SIZE_OPTIM"
   config_message="$config_message\n - LLVM support:\t\t\t $LLVM_SUPPORT"
 
   # config_message="$config_message\n - CFLAGS:\t $TARGET_CFLAGS"

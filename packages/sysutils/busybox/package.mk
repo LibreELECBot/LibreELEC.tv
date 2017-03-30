@@ -32,16 +32,18 @@ PKG_LONGDESC="BusyBox combines tiny versions of many common UNIX utilities into 
 PKG_IS_ADDON="no"
 PKG_AUTORECONF="no"
 
-PKG_MAKE_OPTS_HOST="ARCH=$TARGET_ARCH CROSS_COMPILE= KBUILD_VERBOSE=1 install"
+PKG_MAKE_OPTS_HOST="ARCH=$TARGET_ARCH CROSS_COMPILE= KBUILD_VERBOSE=1 EXTRA_CFLAGS=$GCC_OPTIM install"
 PKG_MAKE_OPTS_TARGET="ARCH=$TARGET_ARCH \
                       HOSTCC=$HOST_CC \
                       CROSS_COMPILE=$TARGET_PREFIX \
                       KBUILD_VERBOSE=1 \
+                      EXTRA_CFLAGS=$GCC_OPTIM \
                       install"
 PKG_MAKE_OPTS_INIT="ARCH=$TARGET_ARCH \
                     HOSTCC=$HOST_CC \
                     CROSS_COMPILE=$TARGET_PREFIX \
                     KBUILD_VERBOSE=1 \
+                    EXTRA_CFLAGS=$GCC_OPTIM \
                     install"
 
 # nano text editor
@@ -116,10 +118,6 @@ configure_target() {
       sed -i -e "s|^CONFIG_FEATURE_MOUNT_CIFS=.*$|# CONFIG_FEATURE_MOUNT_CIFS is not set|" .config
     fi
 
-    # optimize for size
-    CFLAGS=`echo $CFLAGS | sed -e "s|-Ofast|-Os|"`
-    CFLAGS=`echo $CFLAGS | sed -e "s|-O.|-Os|"`
-
     # busybox fails to build with GOLD support enabled with binutils-2.25
     strip_gold
 
@@ -134,10 +132,6 @@ configure_init() {
 
     # set install dir
     sed -i -e "s|^CONFIG_PREFIX=.*$|CONFIG_PREFIX=\"$INSTALL/usr\"|" .config
-
-    # optimize for size
-    CFLAGS=`echo $CFLAGS | sed -e "s|-Ofast|-Os|"`
-    CFLAGS=`echo $CFLAGS | sed -e "s|-O.|-Os|"`
 
     # busybox fails to build with GOLD support enabled with binutils-2.25
     strip_gold

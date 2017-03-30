@@ -4,6 +4,10 @@
 # GOLD (Google Linker) support
   GOLD_SUPPORT="yes"
 
+# Build with size optimization
+# yes: build with -Os/MinSizeRel, no: build with -O2/Release
+  SIZE_OPTIM="yes"
+
 # Name of the Distro to build (full name, without special characters)
   DISTRONAME="LibreELEC"
 
