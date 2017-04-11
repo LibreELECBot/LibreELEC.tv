@@ -1,6 +1,6 @@
 [Unit]
 Description=Lirc with %I
-After=lircd-defaults.service
+After=lircd-defaults.service systemd-modules-load.service
 Requires=lircd-defaults.service
 
 ConditionPathExists=/storage/.cache/services/lircd.conf
