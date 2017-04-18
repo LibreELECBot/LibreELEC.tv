@@ -1,0 +1,11 @@
+--- a/os_dep/linux/usb_intf.c	2016-08-01 19:40:06.000000000 +0100
++++ b/os_dep/linux/usb_intf.c	2017-04-16 14:49:38.532439631 +0100
+@@ -218,6 +218,8 @@ static struct usb_device_id rtw_usb_id_t
+ 	{USB_DEVICE(0x2357, 0x0107),.driver_info = RTL8192E}, /* TP-Link - Cameo */
+ 	{USB_DEVICE(0x2357, 0x0108),.driver_info = RTL8192E}, /* TP-Link - Cameo */
+ 	{USB_DEVICE(0x2357, 0x0109),.driver_info = RTL8192E}, /* TP-Link - Cameo */
++        /*=== UNBRANDED ===*/
++	{USB_DEVICE(0x0bda, 0x818b),.driver_info = RTL8192E}, /* Unbranded device */
+ #endif
+ 
+ #ifdef CONFIG_RTL8723B
