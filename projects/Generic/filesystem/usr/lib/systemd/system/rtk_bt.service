@@ -1,0 +1,11 @@
+[Unit]
+Description=Realtek RTL8723BS bluetooth service
+ConditionPathExists=/dev/ttyS1
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=-/bin/sh "/usr/bin/start_bt.sh"
+
+[Install]
+WantedBy=graphical.target
