@@ -44,6 +44,7 @@ logger -t Xorg "### setup xorg.conf paths ###"
   XORG_CONF_USER_DRV="/storage/.config/xorg-$1.conf"
   XORG_CONF_DEFAULT="/etc/X11/xorg.conf"
   XORG_CONF_DEFAULT_DRV="/etc/X11/xorg-$1.conf"
+  XORG_ARGS_USER="/storage/.config/xorgargs.conf"
 
 ##############################################################################
 # creating start options
@@ -63,7 +64,12 @@ logger -t Xorg "### creating start options ###"
   elif [ -f "$XORG_CONF_DEFAULT_DRV" ]; then
     XORG_ARGS="$XORG_ARGS -config $XORG_CONF_DEFAULT_DRV"
   fi
-
+  
+  # load user defined xorg args, if exist
+  if [ -f "$XORG_ARGS_USER" ]; then
+    XORG_ARGS="$XORG_ARGS $(cat $XORG_ARGS_USER)"
+  fi
+  
 ##############################################################################
 # creating needed directories and symlinks
 ##############################################################################
