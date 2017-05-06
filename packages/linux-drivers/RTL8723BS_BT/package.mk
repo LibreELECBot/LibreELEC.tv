@@ -46,8 +46,8 @@ make_target() {
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/lib/firmware/rtl_bt
-    cp -p rtlbt_config $INSTALL/usr/lib/firmware/rtl_bt
-    cp -p rtlbt_fw $INSTALL/usr/lib/firmware/rtl_bt
+    cp -p firmware/rtl8723bs_btcnfg.bin $INSTALL/usr/lib/firmware/rtl_bt
+    cp -p firmware/rtl8723bs_btfw.bin $INSTALL/usr/lib/firmware/rtl_bt
 
   mkdir -p $INSTALL/usr/bin
     cp rtk_hciattach $INSTALL/usr/bin
