@@ -1,6 +1,6 @@
 [Unit]
 Description=Realtek RTL8723BS bluetooth service
-ConditionPathExists=/dev/ttyS1
+ConditionPathExists=/sys/devices/platform/80860F0A:00/OBDA8723:00
 After=multi-user.target
 
 [Service]
