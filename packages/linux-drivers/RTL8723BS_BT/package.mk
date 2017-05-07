@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="RTL8723BS_BT"
-PKG_VERSION="BOXSTCK1A8LFC"
+PKG_VERSION="ed8dddc7"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/sorhtyre/rtl8723bs_bt"
@@ -52,4 +52,9 @@ makeinstall_target() {
   mkdir -p $INSTALL/usr/bin
     cp rtk_hciattach $INSTALL/usr/bin
     cp start_bt.sh $INSTALL/usr/bin
+}
+
+post_install() {
+  enable_service rtk_bt.service
+  enable_service rtk_bt.timer
 }
