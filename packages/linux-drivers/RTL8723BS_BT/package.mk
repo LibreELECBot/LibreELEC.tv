@@ -56,5 +56,4 @@ makeinstall_target() {
 
 post_install() {
   enable_service rtk_bt.service
-  enable_service rtk_bt.timer
 }

@@ -1,8 +1,0 @@
-[Unit]
-Description=Realtek RTL8723BS bluetooth service startup after delay
-
-[Timer]
-OnBootSec=10
-
-[Install]
-WantedBy=graphical.target
