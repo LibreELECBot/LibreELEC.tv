@@ -1,0 +1,11 @@
+--- vdr-plugin-streamdev-fc52e92/common.h.orig	2015-10-04 21:41:35.000000000 +0200
++++ vdr-plugin-streamdev-fc52e92/common.h	2016-12-13 13:23:28.967779478 +0100
+@@ -22,7 +22,7 @@
+ #define Dprintf(fmt, x...) {\
+ 	struct timespec ts;\
+ 	clock_gettime(CLOCK_MONOTONIC, &ts);\
+-	fprintf(stderr, "%ld.%.3ld [%d] "fmt,\
++	fprintf(stderr, "%ld.%.3ld [%d] " fmt,\
+ 		ts.tv_sec, ts.tv_nsec / 1000000, cThread::ThreadId(), ##x);\
+ }
+ #else

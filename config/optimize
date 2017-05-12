@@ -38,6 +38,10 @@ HOST_LIBDIR="$TOOLCHAIN/lib"
 HOST_CFLAGS="$HOST_CFLAGS -Wno-format-security"
 HOST_CXXFLAGS="$HOST_CXXFLAGS -Wno-format-security" 
 
+# work around C++11 warning
+TARGET_CXXFLAGS="$TARGET_CXXFLAGS -Wno-literal-suffix"
+HOST_CXXFLAGS="$HOST_CXXFLAGS -Wno-literal-suffix"
+
 # add distro specific library dirs
   # ubuntu/debian specific "multiarch support"
     FAMILY_TRIPLET=$(echo $HOST_NAME | sed -e "s,$(uname -m),$(uname -i),")
