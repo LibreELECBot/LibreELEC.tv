@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+   <category   label="30000">
+      <setting label="30001" type="lsep" />
+      <setting label="30002" type="folder" id="tx_config"     default="/storage/downloads/transmission/config"          option="writeable" />
+      <setting label="30003" type="folder" id="tx_downloads"  default="/storage/downloads/transmission/downloads"       option="writeable" />
+      <setting label="30004" type="folder" id="tx_incomplete" default="/storage/downloads/transmission/incomplete"      option="writeable" />
+      <setting label="30005" type="folder" id="tx_watch"      default="/storage/downloads/transmission/watch"           option="writeable" />
+      <setting label="30006" type="lsep" />
+      <setting label="30007" type="number" id="tx_peer" default="45555" />
+      <setting label="30008" type="number" id="tx_rpc"  default="9091"  />
+   </category>
+</settings>
