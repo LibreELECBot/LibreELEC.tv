@@ -36,7 +36,10 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_func_forkpty=no \
                            --enable-devinput \
                            --localstatedir=/ \
                            --with-gnu-ld \
-                           --without-x"
+                           --without-x \
+                           HAVE_UINPUT=no \
+                           HAVE_PYMOD_YAML=no \
+                           HAVE_WORKING_POLL=yes"
 
 pre_configure_target() {
   export HAVE_WORKING_POLL=yes
