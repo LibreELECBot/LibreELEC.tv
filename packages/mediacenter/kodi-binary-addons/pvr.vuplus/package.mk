@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="pvr.vuplus"
-PKG_VERSION="6ff2eb2"
-PKG_REV="1"
+PKG_VERSION="78df030"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"

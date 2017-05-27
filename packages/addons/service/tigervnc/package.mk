@@ -1,5 +1,5 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
+#      This file is part of LibreELEC - https://libreelec.tv
 #      Copyright (C) 2016-2017 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 PKG_NAME="tigervnc"
 PKG_VERSION="1.7.1"
-PKG_REV="101"
+PKG_REV="102"
 PKG_ARCH="x86_64"
 PKG_LICENSE="GPLv2"
 PKG_SITE="http://www.tigervnc.org"

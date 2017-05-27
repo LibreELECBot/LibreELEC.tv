@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="pvr.vbox"
-PKG_VERSION="dea8335"
-PKG_REV="1"
+PKG_VERSION="6001735"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"

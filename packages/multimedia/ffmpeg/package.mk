@@ -17,14 +17,14 @@
 ################################################################################
 
 PKG_NAME="ffmpeg"
-# Current branch is: release/3.1-xbmc
-PKG_VERSION="33c167d"
+# Current branch is: release/3.3-kodi
+PKG_VERSION="eb0819c"
 PKG_ARCH="any"
 PKG_LICENSE="LGPLv2.1+"
 PKG_SITE="https://ffmpeg.org"
 PKG_URL="https://github.com/xbmc/FFmpeg/archive/${PKG_VERSION}.tar.gz"
 PKG_SOURCE_DIR="FFmpeg-${PKG_VERSION}*"
-PKG_DEPENDS_TARGET="toolchain yasm:host zlib bzip2 libressl speex"
+PKG_DEPENDS_TARGET="toolchain yasm:host zlib bzip2 openssl speex"
 PKG_SECTION="multimedia"
 PKG_SHORTDESC="FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."
 PKG_LONGDESC="FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."
@@ -36,7 +36,7 @@ PKG_AUTORECONF="no"
 get_graphicdrivers
 
 if [ "$VAAPI_SUPPORT" = "yes" ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libva-intel-driver"
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET intel-vaapi-driver"
   FFMPEG_VAAPI="--enable-vaapi"
 else
   FFMPEG_VAAPI="--disable-vaapi"
@@ -68,14 +68,11 @@ case "$TARGET_ARCH" in
     ;;
 esac
 
-case "$TARGET_FPU" in
-  neon*)
-    FFMPEG_FPU="--enable-neon"
-    ;;
-  *)
-    FFMPEG_FPU="--disable-neon"
-    ;;
-esac
+if echo "$TARGET_FPU" | grep -q '^neon' || [[ "$TARGET_ARCH" = "aarch64" ]]; then
+  FFMPEG_FPU="--enable-neon"
+else
+  FFMPEG_FPU="--disable-neon"
+fi
 
 if [ "$DISPLAYSERVER" = "x11" ]; then
   FFMPEG_X11GRAB="--enable-indev=x11grab_xcb"
@@ -123,7 +120,7 @@ configure_target() {
               --enable-shared \
               --enable-gpl \
               --disable-version3 \
-              --disable-nonfree \
+              --enable-nonfree \
               --enable-logging \
               --disable-doc \
               $FFMPEG_DEBUG \
@@ -159,7 +156,6 @@ configure_target() {
               --disable-dxva2 \
               --enable-runtime-cpudetect \
               $FFMPEG_TABLES \
-              --disable-memalign-hack \
               --disable-encoders \
               --enable-encoder=ac3 \
               --enable-encoder=aac \
@@ -188,7 +184,6 @@ configure_target() {
               --disable-libopencore-amrwb \
               --disable-libopencv \
               --disable-libdc1394 \
-              --disable-libfaac \
               --disable-libfreetype \
               --disable-libgsm \
               --disable-libmp3lame \
