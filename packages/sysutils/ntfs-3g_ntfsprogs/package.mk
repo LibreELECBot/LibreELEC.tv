@@ -1,4 +1,4 @@
-################################################################################
+7################################################################################
 #      This file is part of OpenELEC - http://www.openelec.tv
 #      Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
 #
@@ -17,7 +17,7 @@
 ################################################################################
 
 PKG_NAME="ntfs-3g_ntfsprogs"
-PKG_VERSION="2016.2.22"
+PKG_VERSION="2017.3.23"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.ntfs-3g.org/"
