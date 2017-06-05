@@ -1,0 +1,79 @@
+1 PKG_PRIORITY
+
+None of the current scripts use the PKG_PRIORITY variable.
+All but three packages set PKG_PRIORITY="optional". busybox, dbus and systemd
+set PKG_PRIORITY="required".
+The effect of PKG_PRIORITY is unknown.
+
+Proposal:
+Deprecate the PKG_PRIORITY variable
+
+
+2 PKG_SITE, PKG_LONGDESC, PKG_SHORTDESC
+
+None of the current scripts use the PKG_SITE variable.
+create_addon is the only script that uses the PKG_LONGDESC and PKG_SHORTDESC
+variables.
+In other words, the PKG_LONGDESC and PKG_SHORTDESC are only used for
+addons. For other packages, the PKG_SITE, PKG_LONGDESC and PKG_SHORTDESC are
+merely informative and redundant.
+
+Proposal:
+Deprecate PKG_LONGDESC and/or PKG_SHORTDESC for normal packages
+
+
+3 PKG_AUTORECONF
+
+More than 330 packages set PKG_AUTORECONF="no", whereas about 230 packages set
+PKG_AUTORECONF="yes".
+build is the only script that uses the PKG_AUTORECONF variable.
+
+Proposal: 
+Modify build to set PKG_AUTORECONF="no" if PKG_AUTORECONF is not set in
+in package.mk
+
+
+4 PKG_LICENCE
+
+Values of PKG_LICENSE are inconsistent among themselves and with the licenses in
+/licenses.
+
+Proposal:
+Update PKG_LICENSE and /licenses
+
+
+5 PKG_ADDON_REPOVERSION
+
+The PKG_ADDON_REPOVERSION is set individually in the package.mk file of each
+addon. The PKG_ADDON_REPOVERSION however pertains to the release of LibreELEC.
+create_addon is the only script that uses the PKG_ADDON_REPOVERSION.
+
+Proposal:
+Define PKG_ADDON_REPOVERSION centrally with LibreELEC, modify create_addon
+accordingly, deprecate PKG_ADDON_REPOVERSION in package.mk.
+
+6 PKG_SECTION
+The PKG_SECTION variable is only used by the build and uninstall scripts.
+The build and uninstall scripts merely test if the PKG_SECTION variable is set
+to virtual. 22 packages set PKG_SECTION="virtual".
+When the value of PKG_SECTION is not virtual, it is arbitrary and inconsistent
+with how the packages are grouped in the file system hierarchy.
+
+Proposal:
+Deprecate PKG_SECTION if not set to virtual
+
+7 PKG_IS_ADDON
+The PKG_IS_ADDON variable is only used by the create_addon script.
+The create_addon script merely tests if the PKG_IS_ADDON is set to yes.
+The PKG_IS_ADDON variable is therefore relevant for addons
+
+Proposal:
+Deprecate PKG_IS_ADDON if not set to yes
+
+8 PKG_ARCH
+The PKG_ARCH variable is used by scripts build, create_addon, install and
+uninstall. These scripts test if the PKG_ARCH variable is set to a value
+different of any, ie any is assumed by default.
+
+Proposal:
+Deprecate PKG_ARCH if set to any
