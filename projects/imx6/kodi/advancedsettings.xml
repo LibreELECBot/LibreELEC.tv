@@ -5,4 +5,10 @@
   <samba>
     <clienttimeout>30</clienttimeout>
   </samba>
+  <musiclibrary>
+    <artistseparators>
+      <separator> feat. </separator>
+      <separator> ft. </separator>
+    </artistseparators>
+  </musiclibrary>
 </advancedsettings>
