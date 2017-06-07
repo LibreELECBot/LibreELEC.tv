@@ -1,0 +1,179 @@
+From e04fdd677c4434dd36f6321fd2f7cbe883dd332f Mon Sep 17 00:00:00 2001
+From: Phil Elwell <phil@raspberrypi.org>
+Date: Mon, 13 Feb 2017 17:20:08 +0000
+Subject: [PATCH 1/2] clk-bcm2835: Mark used PLLs and dividers CRITICAL
+
+The VPU configures and relies on several PLLs and dividers. Mark all
+enabled dividers and their PLLs as CRITICAL to prevent the kernel from
+switching them off.
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+---
+ drivers/clk/bcm/clk-bcm2835.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 21e2a538..0f0397e 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1214,6 +1214,11 @@ bcm2835_register_pll_divider(struct bcm2835_cprman *cprman,
+ 	divider->div.hw.init = &init;
+ 	divider->div.table = NULL;
+ 
++	if (!(cprman_read(cprman, data->cm_reg) & data->hold_mask)) {
++		init.flags |= CLK_IS_CRITICAL;
++		divider->div.flags |= CLK_IS_CRITICAL;
++	}
++
+ 	divider->cprman = cprman;
+ 	divider->data = data;
+ 
+-- 
+2.1.4
+
+
+From 2514075bda556a20a775ab66cfb8bb3dd6d072cb Mon Sep 17 00:00:00 2001
+From: Matthias Reichl <hias@horus.com>
+Date: Fri, 24 Feb 2017 15:53:12 +0100
+Subject: [PATCH 2/2] clk-bcm2835: Add claim-clocks property
+
+backport of commit 204050d0eafb565b68abf512710036c10ef1bd23
+
+Author: Phil Elwell <phil@raspberrypi.org>
+Date:   Mon Feb 13 17:20:08 2017 +0000
+
+clk-bcm2835: Add claim-clocks property
+
+The claim-clocks property can be used to prevent PLLs and dividers
+from being marked as critical. It contains a vector of clock IDs,
+as defined by dt-bindings/clock/bcm2835.h.
+
+Use this mechanism to claim PLLD_DSI0, PLLD_DSI1, PLLH_AUX and
+PLLH_PIX for the vc4_kms_v3d driver.
+---
+ arch/arm/boot/dts/overlays/vc4-kms-v3d-overlay.dts | 14 +++++++++
+ drivers/clk/bcm/clk-bcm2835.c                      | 34 ++++++++++++++++++++--
+ 2 files changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/overlays/vc4-kms-v3d-overlay.dts b/arch/arm/boot/dts/overlays/vc4-kms-v3d-overlay.dts
+index 4f1cc20..a6e2f54 100644
+--- a/arch/arm/boot/dts/overlays/vc4-kms-v3d-overlay.dts
++++ b/arch/arm/boot/dts/overlays/vc4-kms-v3d-overlay.dts
+@@ -5,6 +5,8 @@
+ /dts-v1/;
+ /plugin/;
+ 
++#include <dt-bindings/clock/bcm2835.h>
++
+ / {
+ 	compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+ 
+@@ -126,6 +128,18 @@
+ 		};
+ 	};
+ 
++	fragment@16 {
++		target = <&clocks>;
++		__overlay__  {
++			claim-clocks = <
++				BCM2835_PLLD_DSI0
++				BCM2835_PLLD_DSI1
++				BCM2835_PLLH_AUX
++				BCM2835_PLLH_PIX
++			>;
++		};
++	};
++
+ 	__overrides__ {
+ 		cma-256 = <0>,"+0-1-2-3-4";
+ 		cma-192 = <0>,"-0+1-2-3-4";
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 0f0397e..f2a88f6 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1146,6 +1146,8 @@ static const struct clk_ops bcm2835_vpu_clock_clk_ops = {
+ 	.debug_init = bcm2835_clock_debug_init,
+ };
+ 
++static bool bcm2835_clk_is_claimed(const char *name);
++
+ static struct clk_hw *bcm2835_register_pll(struct bcm2835_cprman *cprman,
+ 					   const struct bcm2835_pll_data *data)
+ {
+@@ -1162,6 +1164,9 @@ static struct clk_hw *bcm2835_register_pll(struct bcm2835_cprman *cprman,
+ 	init.ops = &bcm2835_pll_clk_ops;
+ 	init.flags = CLK_IGNORE_UNUSED;
+ 
++	if (!bcm2835_clk_is_claimed(data->name))
++		init.flags |= CLK_IS_CRITICAL;
++
+ 	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+ 	if (!pll)
+ 		return NULL;
+@@ -1215,8 +1220,10 @@ bcm2835_register_pll_divider(struct bcm2835_cprman *cprman,
+ 	divider->div.table = NULL;
+ 
+ 	if (!(cprman_read(cprman, data->cm_reg) & data->hold_mask)) {
+-		init.flags |= CLK_IS_CRITICAL;
+-		divider->div.flags |= CLK_IS_CRITICAL;
++		if (!bcm2835_clk_is_claimed(data->source_pll))
++			init.flags |= CLK_IS_CRITICAL;
++		if (!bcm2835_clk_is_claimed(data->name))
++			divider->div.flags |= CLK_IS_CRITICAL;
+ 	}
+ 
+ 	divider->cprman = cprman;
+@@ -1846,6 +1853,8 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.ctl_reg = CM_PERIICTL),
+ };
+ 
++static bool bcm2835_clk_claimed[ARRAY_SIZE(clk_desc_array)];
++
+ /*
+  * Permanently take a reference on the parent of the SDRAM clock.
+  *
+@@ -1865,6 +1874,19 @@ static int bcm2835_mark_sdc_parent_critical(struct clk *sdc)
+ 	return clk_prepare_enable(parent);
+ }
+ 
++static bool bcm2835_clk_is_claimed(const char *name)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(clk_desc_array); i++) {
++		const char *clk_name = *(const char **)(clk_desc_array[i].data);
++		if (!strcmp(name, clk_name))
++			return bcm2835_clk_claimed[i];
++	}
++
++	return false;
++}
++
+ static int bcm2835_clk_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1874,6 +1896,7 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
+ 	const struct bcm2835_clk_desc *desc;
+ 	const size_t asize = ARRAY_SIZE(clk_desc_array);
+ 	size_t i;
++	u32 clk_id;
+ 	int ret;
+ 
+ 	cprman = devm_kzalloc(dev, sizeof(*cprman) +
+@@ -1889,6 +1912,13 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
+ 	if (IS_ERR(cprman->regs))
+ 		return PTR_ERR(cprman->regs);
+ 
++	memset(bcm2835_clk_claimed, 0, sizeof(bcm2835_clk_claimed));
++	for (i = 0;
++	     !of_property_read_u32_index(pdev->dev.of_node, "claim-clocks",
++					 i, &clk_id);
++	     i++)
++		bcm2835_clk_claimed[clk_id]= true;
++
+ 	cprman->osc_name = of_clk_get_parent_name(dev->of_node, 0);
+ 	if (!cprman->osc_name)
+ 		return -ENODEV;
+-- 
+2.1.4
+
