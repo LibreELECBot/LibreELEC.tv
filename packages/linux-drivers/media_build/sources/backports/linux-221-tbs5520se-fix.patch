@@ -1,0 +1,60 @@
+From 803d6f092b4c971b38b0fa8d0853158d7b1c0835 Mon Sep 17 00:00:00 2001
+From: CrazyCat <crazycat69@narod.ru>
+Date: Mon, 17 Apr 2017 00:01:04 +0300
+Subject: [PATCH] Fixed TBS5520SE driver.
+
+---
+ drivers/media/usb/dvb-usb/Kconfig     | 10 ++++++++++
+ drivers/media/usb/dvb-usb/Makefile    |  3 +++
+ drivers/media/usb/dvb-usb/tbs5520se.c |  6 +++++-
+ 3 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index d54a3b0..0464304 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -439,3 +439,13 @@ config DVB_USB_TBS5927
+ 	select MEDIA_TUNER_STV6120 if MEDIA_SUBDRV_AUTOSELECT
+ 	help
+ 	  Say Y here to support the TurboSight TBS5927 DVB-S USB2.0 receivers
++
++config DVB_USB_TBS5520SE
++	tristate "Turbosight TBS5520SE DVB-T/T2/C/C2/S/S2/ISDB-T USB2.0 support"
++	depends on DVB_USB
++	select DVB_PLL if MEDIA_SUBDRV_AUTOSELECT
++	select MEDIA_TUNER_AV201X if MEDIA_SUBDRV_AUTOSELECT
++	select MEDIA_TUNER_SI2157 if MEDIA_SUBDRV_AUTOSELECT
++	select DVB_SI2183 if MEDIA_SUBDRV_AUTOSELECT
++	help
++	  Say Y here to support the Turbosight TBS5520SE USB2 DVB-T/T2/C/C2/S/S2/ISDB-T device
+diff --git a/drivers/media/usb/dvb-usb/Makefile b/drivers/media/usb/dvb-usb/Makefile
+index 6b48da0..06b0732 100644
+--- a/drivers/media/usb/dvb-usb/Makefile
++++ b/drivers/media/usb/dvb-usb/Makefile
+@@ -115,6 +115,9 @@ obj-$(CONFIG_DVB_USB_TBS5520) += dvb-usb-tbs5520.o
+ dvb-usb-tbs5927-objs = tbs5927.o
+ obj-$(CONFIG_DVB_USB_TBS5927) += dvb-usb-tbs5927.o
+ 
++dvb-usb-tbs5520se-objs := tbs5520se.o
++obj-$(CONFIG_DVB_USB_TBS5520SE) += dvb-usb-tbs5520se.o
++
+ ccflags-y += -I$(srctree)/drivers/media/dvb-core
+ ccflags-y += -I$(srctree)/drivers/media/dvb-frontends/
+ # due to tuner-xc3028
+diff --git a/drivers/media/usb/dvb-usb/tbs5520se.c b/drivers/media/usb/dvb-usb/tbs5520se.c
+index 0454d2d..b12f7e2 100644
+--- a/drivers/media/usb/dvb-usb/tbs5520se.c
++++ b/drivers/media/usb/dvb-usb/tbs5520se.c
+@@ -228,7 +228,11 @@ static int tbs5520se_frontend_attach(struct dvb_usb_adapter *adap)
+ 	si2183_config.ts_clock_gapped = true;
+ 	si2183_config.rf_in = 0;
+ 	si2183_config.RF_switch = NULL;
+-	si2183_config.agc_mode = 0x5 ;
++	si2183_config.fef_pin = SI2183_MP_B;
++	si2183_config.fef_inv = 0;
++	si2183_config.agc_pin = SI2183_MP_D;
++	si2183_config.ter_agc_inv = 0;
++	si2183_config.sat_agc_inv = 1;
+ 	memset(&info, 0, sizeof(struct i2c_board_info));
+ 	strlcpy(info.type, "si2183", I2C_NAME_SIZE);
+ 	info.addr = 0x67;
