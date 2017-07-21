@@ -32,9 +32,10 @@ pre_make_target() {
 }
 
 make_target() {
-  make HOSTCC="$HOST_CC" PREFIX=/usr all-static
+  make HOSTCC="$HOST_CC" PREFIX=/usr all-dynamic
 }
 
 makeinstall_target() {
-  make HOSTCC="$HOST_CC" PREFIX=$SYSROOT_PREFIX/usr install-static
+  make PREFIX=$SYSROOT_PREFIX/usr install-dynamic
+  make PREFIX=$INSTALL/usr install-dynamic
 }
