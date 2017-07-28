@@ -169,9 +169,9 @@ pre_make_target() {
 
 make_target() {
   LDFLAGS="" make modules
-  LDFLAGS="" make INSTALL_MOD_PATH=$INSTALL/usr DEPMOD="$TOOLCHAIN/bin/depmod" modules_install
-  rm -f $INSTALL/usr/lib/modules/*/build
-  rm -f $INSTALL/usr/lib/modules/*/source
+  LDFLAGS="" make INSTALL_MOD_PATH=$INSTALL/usr/lib/module-overlays/base/ DEPMOD="$TOOLCHAIN/bin/depmod" modules_install
+  rm -f $INSTALL/usr/lib/module-overlays/base/lib/modules/*/build
+  rm -f $INSTALL/usr/lib/module-overlays/base/lib/modules/*/source
 
   ( cd $ROOT
     rm -rf $BUILD/initramfs
@@ -222,7 +222,7 @@ makeinstall_init() {
     mkdir -p $INSTALL/usr/lib/modules
 
     for i in $INITRAMFS_MODULES; do
-      module=`find .install_pkg/usr/lib/modules/$(get_module_dir)/kernel -name $i.ko`
+      module=`find .install_pkg/$(get_full_module_dir)/kernel -name $i.ko`
       if [ -n "$module" ]; then
         echo $i >> $INSTALL/etc/modules
         cp $module $INSTALL/usr/lib/modules/`basename $module`
@@ -232,7 +232,7 @@ makeinstall_init() {
 
   if [ "$UVESAFB_SUPPORT" = yes ]; then
     mkdir -p $INSTALL/usr/lib/modules
-      uvesafb=`find .install_pkg/usr/lib/modules/$(get_module_dir)/kernel -name uvesafb.ko`
+      uvesafb=`find .install_pkg/$(get_full_module_dir)/kernel -name uvesafb.ko`
       cp $uvesafb $INSTALL/usr/lib/modules/`basename $uvesafb`
   fi
 }
