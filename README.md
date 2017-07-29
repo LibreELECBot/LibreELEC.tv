@@ -1,3 +1,11 @@
+# LibreELEC - Dual Audio Support
+
+A kodi dual audio patch created from [Kodi_dualaudio](https://github.com/xhbl/Kodi_dualaudio) project for LibreELEC.
+
+**About**
+
+Any feedback or support for this project, Please send email to: [newxhbl@hotmail.com](mailto:newxhbl@hotmail.com)
+
 # LibreELEC
 
 LibreELEC is a 'Just enough OS' Linux distribution for running the award-winning [Kodi](http://kodi.tv) software on popular mediacentre hardware. LibreELEC is a conservative fork of the popular [OpenELEC](http://openelec.tv) project with a stronger focus on pre-release testing and post-release change management. Further information on the project can be found on the [LibreELEC website](https://libreelec.tv).
