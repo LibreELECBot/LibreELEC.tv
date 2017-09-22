@@ -34,6 +34,11 @@ test_libjson-perl()
   perl -MJSON -e 'exit(0);' 2>/dev/null
 }
 
+test_perl-json()
+{
+  test_libjson-perl
+}
+
 if  [ -f /etc/lsb-release ]; then
   DISTRO=$(grep DISTRIB_ID /etc/lsb-release | cut -d "=" -f 2 | tr A-Z a-z)
 fi
