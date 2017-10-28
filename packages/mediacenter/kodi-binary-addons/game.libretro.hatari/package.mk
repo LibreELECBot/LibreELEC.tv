@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="game.libretro.hatari"
-PKG_VERSION="65a81b3"
-PKG_SHA256="4e73bb6998c241a8559b915e00197ef98c93c694b6b21623703a0561369d35e4"
+PKG_VERSION="6c63bd4"
+PKG_SHA256="a6261a342b6881191872402b36da59510b6ccd08a18e1a918bd768a44eae46b1"
 PKG_REV="103"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
