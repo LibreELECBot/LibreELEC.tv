@@ -1,5 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
+#      Copyright (C) 2017-present Team LibreELEC
 #      Copyright (C) 2009-2016 Lukas Rusak (lrusak@libreelec.tv)
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
@@ -16,16 +17,15 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="qtbase"
-PKG_VERSION="5.6.2"
-PKG_SHA256="2f6eae93c5d982fe0a387a01aeb3435571433e23e9d9d9246741faf51f1ee787"
+PKG_NAME="qt-everywhere"
+PKG_VERSION="5.9.2"
+PKG_SHA256="6c6171a4d1ea3fbd4212d6a04899650218583df3ec583a8a6a4a589fe18620ff"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://qt-project.org"
-PKG_URL="http://download.qt.io/official_releases/qt/5.6/$PKG_VERSION/submodules/$PKG_NAME-opensource-src-$PKG_VERSION.tar.xz"
-PKG_DEPENDS_TARGET="pcre zlib"
+PKG_URL="http://download.qt.io/official_releases/qt/5.9/$PKG_VERSION/single/$PKG_NAME-opensource-src-$PKG_VERSION.tar.xz"
+PKG_DEPENDS_TARGET="pcre2 zlib"
 PKG_SOURCE_DIR="$PKG_NAME-opensource-src-$PKG_VERSION"
-PKG_SHORTDESC="A cross-platform application and UI framework"
 PKG_LONGDESC="A cross-platform application and UI framework"
 PKG_AUTORECONF="no"
 
@@ -45,15 +45,12 @@ PKG_CONFIGURE_OPTS_TARGET="-prefix /usr
                            -system-zlib
                            -no-mtdev
                            -no-gif
-                           -no-libpng
                            -no-libjpeg
                            -no-harfbuzz
                            -no-openssl
                            -no-libproxy
                            -system-pcre
                            -no-glib
-                           -no-pulseaudio
-                           -no-alsa
                            -silent
                            -no-cups
                            -no-iconv
@@ -66,11 +63,46 @@ PKG_CONFIGURE_OPTS_TARGET="-prefix /usr
                            -no-opengl
                            -no-libudev
                            -no-libinput
-                           -no-gstreamer
-                           -no-eglfs"
+                           -no-eglfs
+                           -skip qt3d
+                           -skip qtactiveqt
+                           -skip qtandroidextras
+                           -skip qtcanvas3d
+                           -skip qtcharts
+                           -skip qtconnectivity
+                           -skip qtdatavis3d
+                           -skip qtdeclarative
+                           -skip qtdoc
+                           -skip qtgamepad
+                           -skip qtgraphicaleffects
+                           -skip qtimageformats
+                           -skip qtlocation
+                           -skip qtmacextras
+                           -skip qtmultimedia
+                           -skip qtnetworkauth
+                           -skip qtpurchasing
+                           -skip qtquickcontrols
+                           -skip qtquickcontrols2
+                           -skip qtremoteobjects
+                           -skip qtscript
+                           -skip qtscxml
+                           -skip qtsensors
+                           -skip qtserialbus
+                           -skip qtspeech
+                           -skip qtsvg
+                           -skip qttranslations
+                           -skip qtvirtualkeyboard
+                           -skip qtwayland
+                           -skip qtwebchannel
+                           -skip qtwebengine
+                           -skip qtwebsockets
+                           -skip qtwebview
+                           -skip qtwinextras
+                           -skip qtx11extras
+                           -skip qtxmlpatterns"
 
 configure_target() {
-  QMAKE_CONF_DIR="mkspecs/devices/linux-libreelec-g++"
+  QMAKE_CONF_DIR="qtbase/mkspecs/devices/linux-libreelec-g++"
   QMAKE_CONF="${QMAKE_CONF_DIR}/qmake.conf"
 
   cd ..
