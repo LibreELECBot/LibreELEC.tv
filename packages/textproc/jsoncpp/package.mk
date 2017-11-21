@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="jsoncpp"
-PKG_VERSION="src-0.5.0"
-PKG_SHA256="22b14ecd0de8cdad2b6b6839f6d0804d3b84e91f42861ebd843832a26a927433"
+PKG_VERSION="svn-release-0.5.0"
+PKG_SHA256="a51ae31ccebf4a3cb2e1387ae22ea4c2c4bf67165f9bab7c6aa29451305e2595"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
-PKG_URL="http://sources.openelec.tv/mirror/jsoncpp/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_URL="https://github.com/open-source-parsers/jsoncpp/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="multimedia"
 PKG_SHORTDESC="jsoncpp"
