@@ -44,6 +44,13 @@ case "$LINUX" in
     PKG_SOURCE_DIR="$PKG_NAME-amlogic-$PKG_VERSION*"
     PKG_PATCH_DIRS="amlogic-3.14"
     ;;
+  amlogic-3.14-nougat)
+    PKG_VERSION="99798df"
+    PKG_SHA256="ffc872f142ce62e49d48e13b6ecdb7fd4b99417aab9ec097b3a0edd01d5c8b36"
+    PKG_URL="https://github.com/kszaq/linux-amlogic-le/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="$PKG_NAME-amlogic-le-$PKG_VERSION*"
+    PKG_PATCH_DIRS="amlogic-3.14"
+    ;;
   *)
     PKG_VERSION="4.14"
     PKG_SHA256="f81d59477e90a130857ce18dc02f4fbe5725854911db1e7ba770c7cd350f96a7"
