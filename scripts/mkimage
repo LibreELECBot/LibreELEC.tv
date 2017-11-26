@@ -232,8 +232,18 @@ elif [ "$BOOTLOADER" = "u-boot" -a \( -n "$UBOOT_SYSTEM" -o "$PROJECT" = "Odroid
     if [ "$PROJECT" != "Odroid_C2" ]; then
       DTB="$($SCRIPTS/uboot_helper $PROJECT $DEVICE $UBOOT_SYSTEM dtb)"
 
-      if [ -f "$RELEASE_DIR/3rdparty/bootloader/$DTB" ]; then
-        mcopy $RELEASE_DIR/3rdparty/bootloader/$DTB ::
+      _dtb_cnt=0
+      for dtb in $DTB; do
+        if [ -f "$RELEASE_DIR/3rdparty/bootloader/$dtb" ]; then
+          mcopy $RELEASE_DIR/3rdparty/bootloader/$dtb ::
+          _dtb_cnt=$((_dtb_cnt + 1))
+        fi
+      done
+
+      if [ $_dtb_cnt -le 1 ]; then
+        _dtb_arg="FDT /$DTB"
+      else
+        _dtb_arg="FDTDIR /"
       fi
 
       mkdir -p "$LE_TMP"/extlinux
@@ -241,7 +251,7 @@ elif [ "$BOOTLOADER" = "u-boot" -a \( -n "$UBOOT_SYSTEM" -o "$PROJECT" = "Odroid
       cat << EOF > "$LE_TMP"/extlinux/extlinux.conf
 LABEL $DISTRO
   LINUX /$KERNEL_NAME
-  FDT /$DTB
+  $_dtb_arg
   APPEND boot=UUID=$UUID_SYSTEM disk=UUID=$UUID_STORAGE quiet $EXTRA_CMDLINE
 EOF
 
