@@ -184,6 +184,9 @@ $SCRIPTS/install network
 # Installer support
 [ "$INSTALLER_SUPPORT" = "yes" ] && $SCRIPTS/install installer
 
+# U-boot tools
+[ "$UBOOT_TOOLS" = "yes" ] && $SCRIPTS/install u-boot:host
+
 # Devtools... (not for Release)
 [ "$TESTING" = "yes" ] && $SCRIPTS/install testing
 
