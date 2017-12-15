@@ -17,41 +17,17 @@
 ################################################################################
 
 PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.5"
-PKG_SHA256="be84544eadc2bb71d4ace39e4984ed2990111f053f24267a07afb4b4e1e5428f"
-PKG_ARCH="any"
+PKG_VERSION="3.4.7"
+PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
 PKG_LICENSE="BSD"
-PKG_SITE="https://pypi.python.org/pypi/pycryptodome"
+PKG_SITE="https://www.pycryptodome.org/"
 PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain Python2 distutilscross:host"
-PKG_SECTION="python/security"
-PKG_SHORTDESC="Cryptographic library for Python"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives."
-PKG_TOOLCHAIN="manual"
+PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
 
-pre_configure_target() {
-  cd $PKG_BUILD
-  rm -rf .$TARGET_NAME
-
-  export PYTHONXCPREFIX="$SYSROOT_PREFIX/usr"
-  export LDSHARED="$CC -shared"
-}
-
-make_target() {
-  python setup.py build --cross-compile
-}
-
-makeinstall_target() {
-  python setup.py install --root=$INSTALL --prefix=/usr
-
-  # Remove SelfTest bloat
-  find $INSTALL -type d -name SelfTest -exec rm -fr "{}" \; 2>/dev/null || true
-  find $INSTALL -name SOURCES.txt -exec sed -i "/\/SelfTest\//d;" "{}" \;
-
-  # Create Cryptodome as an alternative namespace to Crypto (Kodi addons may use either)
-  ln -sf /usr/lib/$PKG_PYTHON_VERSION/site-packages/Crypto $INSTALL/usr/lib/$PKG_PYTHON_VERSION/site-packages/Cryptodome
-}
+PKG_TOOLCHAIN="python"
 
 post_makeinstall_target() {
-  find $INSTALL/usr/lib -name "*.py" -exec rm -rf "{}" ";"
+  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
+  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
+          $_pythonpath/Cryptodome
 }
