@@ -18,8 +18,8 @@
 ################################################################################
 
 PKG_NAME="u-boot"
-PKG_VERSION="6592d3d"
-PKG_SHA256="c1a1d3ea85dc685a038c6816eb588d5999b03d53767292232470041e466d17a7"
+PKG_VERSION="5ecf0ee"
+PKG_SHA256="fba1d26583d446a5bbb5713fe37848e05b546d125384c2c2d2883414d61b7cad"
 PKG_ARCH="arm aarch64"
 PKG_SITE="https://www.denx.de/wiki/U-Boot"
 PKG_URL="https://github.com/rockchip-linux/u-boot/archive/$PKG_VERSION.tar.gz"
