@@ -21,6 +21,6 @@
 . config/options $1
 
 mkdir -p $RELEASE_DIR/3rdparty/bootloader
-  cp -a $(get_build_dir linux)/arch/$TARGET_KERNEL_ARCH/boot/dts/meson64_odroidc2.dtb $RELEASE_DIR/3rdparty/bootloader
+  cp -a $(get_build_dir linux)/arch/$TARGET_KERNEL_ARCH/boot/dts/amlogic/odroidc2.dtb $RELEASE_DIR/3rdparty/bootloader
   cp -a $(get_build_dir $BOOTLOADER)/u-boot.bin $RELEASE_DIR/3rdparty/bootloader
-  cp -a $PROJECT_DIR/$PROJECT/bootloader/boot.ini $RELEASE_DIR/3rdparty/bootloader
+  cp -a $PROJECT_DIR/$PROJECT/devices/$DEVICE/bootloader/boot.ini $RELEASE_DIR/3rdparty/bootloader
