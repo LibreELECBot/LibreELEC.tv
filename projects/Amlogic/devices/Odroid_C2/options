@@ -1,0 +1,22 @@
+  # Configuration for u-boot
+    UBOOT_CONFIG="odroidc2_defconfig"
+
+  # Target Configfile for u-boot
+    UBOOT_CONFIGFILE="boot.ini"
+
+  # Kernel extra targets to build
+    KERNEL_UBOOT_EXTRA_TARGET="odroidc2.dtb"
+
+  # additional drivers to install:
+  # for a list of additinoal drivers see packages/linux-drivers
+  # Space separated list is supported,
+  # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
+    ADDITIONAL_DRIVERS="gpu-aml RTL8192CU RTL8192DU RTL8188EU RTL8192EU RTL8812AU"
+
+  # additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
+  # Space separated list is supported,
+  # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
+    FIRMWARE="misc-firmware wlan-firmware dvb-firmware"
+
+  # Amlogic IR remote support (yes / no)
+    AMREMOTE_SUPPORT="no"

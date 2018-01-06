@@ -55,5 +55,4 @@ makeinstall_target() {
   mkdir -p $INSTALL/usr/share/bootloader
     cp $PROJECT_DIR/$PROJECT/bootloader/boot.ini $INSTALL/usr/share/bootloader
     cp -av $PKG_BUILD/u-boot.bin $INSTALL/usr/share/bootloader
-    cp -av $PROJECT_DIR/$PROJECT/bootloader/update.sh $INSTALL/usr/share/bootloader
 }
