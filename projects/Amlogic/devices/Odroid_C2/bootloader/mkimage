@@ -27,6 +27,6 @@ if [ -f "$RELEASE_DIR/3rdparty/bootloader/boot.ini" ]; then
   mcopy $RELEASE_DIR/3rdparty/bootloader/boot.ini ::
 fi
 
-if [ -f "$RELEASE_DIR/3rdparty/bootloader/odroidc2.dtb" ]; then
-  mcopy $RELEASE_DIR/3rdparty/bootloader/odroidc2.dtb ::
+if [ -f "$RELEASE_DIR/3rdparty/bootloader/meson64_odroidc2.dtb" ]; then
+  mcopy $RELEASE_DIR/3rdparty/bootloader/meson64_odroidc2.dtb ::
 fi

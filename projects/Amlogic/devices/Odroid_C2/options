@@ -4,8 +4,23 @@
   # Target Configfile for u-boot
     UBOOT_CONFIGFILE="boot.ini"
 
+  # Kernel target for u-boot (default 'uImage' if BOOTLOADER=u-boot) (uImage / zImage)
+    KERNEL_TARGET="Image"
+
   # Kernel extra targets to build
-    KERNEL_UBOOT_EXTRA_TARGET="odroidc2.dtb"
+    KERNEL_UBOOT_EXTRA_TARGET=""
+
+  # Build Android kernel image using mkbootimg
+    BUILD_ANDROID_BOOTIMG=""
+
+  # Additional options to be passed to Android mkbootimg
+    ANDROID_BOOTIMG_OPTIONS=""
+
+  # Additional kernel make parameters (for example to specify the u-boot loadaddress)
+    KERNEL_MAKE_EXTRACMD="dtbs"
+
+  # kernel image name
+    KERNEL_NAME="KERNEL"
 
   # additional drivers to install:
   # for a list of additinoal drivers see packages/linux-drivers
