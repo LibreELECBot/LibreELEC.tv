@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 33813b07..d7b909c4 100644
+index 04365fd9..d18982e3 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -210,6 +210,15 @@ noinst_HEADERS = \
+@@ -212,6 +212,15 @@ noinst_HEADERS = \
  	jni/win32/jni_md.h \
  	jni/darwin/jni_md.h
  
@@ -18,7 +18,7 @@ index 33813b07..d7b909c4 100644
  pkginclude_HEADERS = \
  	src/file/filesystem.h \
  	src/libbluray/bluray.h \
-@@ -217,6 +226,10 @@ pkginclude_HEADERS = \
+@@ -219,6 +228,10 @@ pkginclude_HEADERS = \
  	src/libbluray/keys.h \
  	src/libbluray/player_settings.h \
  	src/libbluray/bdnav/clpi_data.h \
@@ -574,10 +574,10 @@ index 00000000..d4c93cb9
 +                bd_get_debug_mask
 diff --git a/libbluray.vcxproj b/libbluray.vcxproj
 new file mode 100644
-index 00000000..393cd1a0
+index 00000000..bc3a87ee
 --- /dev/null
 +++ b/libbluray.vcxproj
-@@ -0,0 +1,236 @@
+@@ -0,0 +1,233 @@
 +﻿<?xml version="1.0" encoding="utf-8"?>
 +<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 +  <ItemGroup Label="ProjectConfigurations">
@@ -724,9 +724,6 @@ index 00000000..393cd1a0
 +  </PropertyGroup>
 +  <PropertyGroup Label="Configuration" Condition="'$(VisualStudioVersion)' == '14.0'">
 +    <PlatformToolset>v140_xp</PlatformToolset>
-+  </PropertyGroup>
-+  <PropertyGroup Label="Configuration" Condition="'$(VisualStudioVersion)' == '15.0'">
-+    <PlatformToolset>v141_xp</PlatformToolset>
 +  </PropertyGroup>
 +  <PropertyGroup Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='DebugRelease'" Label="Configuration">
 +    <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -1294,32 +1291,62 @@ index 11aaf820..f5518636 100644
      if (!file) {
          BD_DEBUG(DBG_FILE | DBG_CRIT, "Error opening file %s (out of memory)\n", filename);
 diff --git a/src/libbluray/bdnav/clpi_parse.c b/src/libbluray/bdnav/clpi_parse.c
-index 839e10c3..5fa490dc 100644
+index 312c10f3..25dd5d4d 100644
 --- a/src/libbluray/bdnav/clpi_parse.c
 +++ b/src/libbluray/bdnav/clpi_parse.c
-@@ -39,6 +39,7 @@
- #define CLPI_SIG1  ('H' << 24 | 'D' << 16 | 'M' << 8 | 'V')
- #define CLPI_SIG2A ('0' << 24 | '2' << 16 | '0' << 8 | '0')
- #define CLPI_SIG2B ('0' << 24 | '1' << 16 | '0' << 8 | '0')
-+#define CLPI_SIG2C ('0' << 24 | '2' << 16 | '4' << 8 | '0')
+@@ -38,6 +38,23 @@
+ #include <string.h>
  
- static void
- _human_readable_sig(char *sig, uint32_t s1, uint32_t s2)
-@@ -134,7 +135,8 @@ _parse_header(BITSTREAM *bits, CLPI_CL *cl)
-     cl->type_indicator2 = bs_read(bits, 32);
-     if (cl->type_indicator != CLPI_SIG1 || 
-         (cl->type_indicator2 != CLPI_SIG2A &&
--         cl->type_indicator2 != CLPI_SIG2B)) {
+ #define CLPI_SIG1  ('H' << 24 | 'D' << 16 | 'M' << 8 | 'V')
++#define CLPI_SIG2A ('0' << 24 | '2' << 16 | '0' << 8 | '0')
++#define CLPI_SIG2B ('0' << 24 | '1' << 16 | '0' << 8 | '0')
++#define CLPI_SIG2C ('0' << 24 | '2' << 16 | '4' << 8 | '0')
++
++static void
++_human_readable_sig(char *sig, uint32_t s1, uint32_t s2)
++{
++    sig[0] = (s1 >> 24) & 0xFF;
++    sig[1] = (s1 >> 16) & 0xFF;
++    sig[2] = (s1 >>  8) & 0xFF;
++    sig[3] = (s1      ) & 0xFF;
++    sig[4] = (s2 >> 24) & 0xFF;
++    sig[5] = (s2 >> 16) & 0xFF;
++    sig[6] = (s2 >>  8) & 0xFF;
++    sig[7] = (s2      ) & 0xFF;
++    sig[8] = 0;
++}
+ 
+ static int
+ _parse_stream_attr(BITSTREAM *bits, CLPI_PROG_STREAM *ss)
+@@ -122,6 +139,23 @@ _parse_header(BITSTREAM *bits, CLPI_CL *cl)
+         return 0;
+     }
+ 
++    cl->type_indicator  = bs_read(bits, 32);
++    cl->type_indicator2 = bs_read(bits, 32);
++    if (cl->type_indicator != CLPI_SIG1 || 
++        (cl->type_indicator2 != CLPI_SIG2A &&
 +         cl->type_indicator2 != CLPI_SIG2B &&
 +         cl->type_indicator2 != CLPI_SIG2C)) {
- 
-         char sig[9];
-         char expect[9];
++
++        char sig[9];
++        char expect[9];
++
++        _human_readable_sig(sig, cl->type_indicator, cl->type_indicator2);
++        _human_readable_sig(expect, CLPI_SIG1, CLPI_SIG2A);
++        BD_DEBUG(DBG_NAV | DBG_CRIT, "failed signature match expected (%s) got (%s)\n",
++                expect, sig);
++        return 0;
++    }
++
+     cl->sequence_info_start_addr = bs_read(bits, 32);
+     cl->program_info_start_addr = bs_read(bits, 32);
+     cl->cpi_start_addr = bs_read(bits, 32);
 diff --git a/src/libbluray/bdnav/index_parse.c b/src/libbluray/bdnav/index_parse.c
-index 6a0f5a01..56b3d949 100644
+index 0deb6176..300a1bf9 100644
 --- a/src/libbluray/bdnav/index_parse.c
 +++ b/src/libbluray/bdnav/index_parse.c
-@@ -104,12 +104,11 @@ static int _parse_index(BITSTREAM *bs, INDX_ROOT *index)
+@@ -105,12 +105,11 @@ static int _parse_index(BITSTREAM *bs, INDX_ROOT *index)
  
      index->num_titles = bs_read(bs, 16);
      if (!index->num_titles) {
@@ -1335,7 +1362,7 @@ index 6a0f5a01..56b3d949 100644
          return 0;
      }
 diff --git a/src/libbluray/bdnav/mpls_data.h b/src/libbluray/bdnav/mpls_data.h
-index f148d513..b6a8cdd0 100644
+index 2ceac92f..d23d40ea 100644
 --- a/src/libbluray/bdnav/mpls_data.h
 +++ b/src/libbluray/bdnav/mpls_data.h
 @@ -47,6 +47,7 @@ typedef struct
@@ -1355,18 +1382,34 @@ index f148d513..b6a8cdd0 100644
  
  typedef struct
 diff --git a/src/libbluray/bdnav/mpls_parse.c b/src/libbluray/bdnav/mpls_parse.c
-index 82b61854..92ea99a7 100644
+index 358b6342..fd34f725 100644
 --- a/src/libbluray/bdnav/mpls_parse.c
 +++ b/src/libbluray/bdnav/mpls_parse.c
-@@ -40,6 +40,7 @@
- #define MPLS_SIG1  ('M' << 24 | 'P' << 16 | 'L' << 8 | 'S')
- #define MPLS_SIG2A ('0' << 24 | '2' << 16 | '0' << 8 | '0')
- #define MPLS_SIG2B ('0' << 24 | '1' << 16 | '0' << 8 | '0')
-+#define MPLS_SIG2C ('0' << 24 | '2' << 16 | '4' << 8 | '0')
+@@ -39,6 +39,23 @@
+ #include <string.h>
  
- static void
- _human_readable_sig(char *sig, uint32_t s1, uint32_t s2)
-@@ -92,9 +93,10 @@ _parse_appinfo(BITSTREAM *bits, MPLS_AI *ai)
+ #define MPLS_SIG1 ('M' << 24 | 'P' << 16 | 'L' << 8 | 'S')
++#define MPLS_SIG2A ('0' << 24 | '2' << 16 | '0' << 8 | '0')
++#define MPLS_SIG2B ('0' << 24 | '1' << 16 | '0' << 8 | '0')
++#define MPLS_SIG2C ('0' << 24 | '2' << 16 | '4' << 8 | '0')
++
++static void
++_human_readable_sig(char *sig, uint32_t s1, uint32_t s2)
++{
++    sig[0] = (s1 >> 24) & 0xFF;
++    sig[1] = (s1 >> 16) & 0xFF;
++    sig[2] = (s1 >>  8) & 0xFF;
++    sig[3] = (s1      ) & 0xFF;
++    sig[4] = (s2 >> 24) & 0xFF;
++    sig[5] = (s2 >> 16) & 0xFF;
++    sig[6] = (s2 >>  8) & 0xFF;
++    sig[7] = (s2      ) & 0xFF;
++    sig[8] = 0;
++}
+ 
+ static int
+ _parse_uo(BITSTREAM *bits, BD_UO_MASK *uo)
+@@ -77,9 +94,10 @@ _parse_appinfo(BITSTREAM *bits, MPLS_AI *ai)
      ai->random_access_flag = bs_read(bits, 1);
      ai->audio_mix_flag = bs_read(bits, 1);
      ai->lossless_bypass_flag = bs_read(bits, 1);
@@ -1378,17 +1421,31 @@ index 82b61854..92ea99a7 100644
      bs_seek_byte(bits, pos + len);
  #endif
      return 1;
-@@ -112,7 +114,8 @@ _parse_header(BITSTREAM *bits, MPLS_PL *pl)
-     pl->type_indicator2 = bs_read(bits, 32);
-     if (pl->type_indicator != MPLS_SIG1 || 
-         (pl->type_indicator2 != MPLS_SIG2A && 
--         pl->type_indicator2 != MPLS_SIG2B)) {
+@@ -98,6 +116,23 @@ _parse_header(BITSTREAM *bits, MPLS_PL *pl)
+         return 0;
+     }
+ 
++    pl->type_indicator  = bs_read(bits, 32);
++    pl->type_indicator2 = bs_read(bits, 32);
++    if (pl->type_indicator != MPLS_SIG1 || 
++        (pl->type_indicator2 != MPLS_SIG2A && 
 +         pl->type_indicator2 != MPLS_SIG2B &&
 +         pl->type_indicator2 != MPLS_SIG2C)) {
- 
-         char sig[9];
-         char expect[9];
-@@ -218,6 +221,7 @@ _parse_stream(BITSTREAM *bits, MPLS_STREAM *s)
++
++        char sig[9];
++        char expect[9];
++
++        _human_readable_sig(sig, pl->type_indicator, pl->type_indicator2);
++        _human_readable_sig(expect, MPLS_SIG1, MPLS_SIG2A);
++        BD_DEBUG(DBG_NAV | DBG_CRIT, "failed signature match, expected (%s) got (%s)\n",
++                expect, sig);
++        return 0;
++    }
++
+     pl->list_pos = bs_read(bits, 32);
+     pl->mark_pos = bs_read(bits, 32);
+     pl->ext_pos  = bs_read(bits, 32);
+@@ -194,6 +229,7 @@ _parse_stream(BITSTREAM *bits, MPLS_STREAM *s)
              break;
      };
      s->lang[3] = '\0';
@@ -1396,10 +1453,11 @@ index 82b61854..92ea99a7 100644
  
      if (bs_seek_byte(bits, pos + len) < 0) {
          return 0;
-@@ -911,6 +915,99 @@ _parse_subpath_extension(BITSTREAM *bits, MPLS_PL *pl)
+@@ -958,6 +994,99 @@ _parse_subpath_extension(BITSTREAM *bits, MPLS_PL *pl)
+     return 0;
  }
  
- static int
++static int
 +_parse_stn_ss_extension(BITSTREAM *bits, MPLS_PL *pl)
 +{
 +    int ii, s;
@@ -1492,11 +1550,10 @@ index 82b61854..92ea99a7 100644
 +    return 0;
 +}
 +
-+static int
+ static int
  _parse_mpls_extension(BITSTREAM *bits, int id1, int id2, void *handle)
  {
-     MPLS_PL *pl = (MPLS_PL*)handle;
-@@ -924,7 +1021,7 @@ _parse_mpls_extension(BITSTREAM *bits, int id1, int id2, void *handle)
+@@ -972,7 +1101,7 @@ _parse_mpls_extension(BITSTREAM *bits, int id1, int id2, void *handle)
  
      if (id1 == 2) {
          if (id2 == 1) {
@@ -1506,10 +1563,10 @@ index 82b61854..92ea99a7 100644
          if (id2 == 2) {
              // SubPath entries extension
 diff --git a/src/libbluray/bluray.c b/src/libbluray/bluray.c
-index ce4854d8..94565278 100644
+index 883b35ce..19485d01 100644
 --- a/src/libbluray/bluray.c
 +++ b/src/libbluray/bluray.c
-@@ -1651,6 +1651,25 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick)
+@@ -1654,6 +1654,25 @@ int64_t bd_seek_time(BLURAY *bd, uint64_t tick)
      return bd->s_pos;
  }
  
@@ -1535,7 +1592,7 @@ index ce4854d8..94565278 100644
  uint64_t bd_tell_time(BLURAY *bd)
  {
      uint32_t clip_pkt = 0, out_pkt = 0, out_time = 0;
-@@ -2648,6 +2667,7 @@ static BLURAY_TITLE_INFO* _fill_title_info(NAV_TITLE* title, uint32_t title_idx,
+@@ -2651,6 +2670,7 @@ static BLURAY_TITLE_INFO* _fill_title_info(NAV_TITLE* title, uint32_t title_idx,
              NAV_CLIP *nc = &title->clip_list.clip[ii];
  
              memcpy(ci->clip_id, pi->clip->clip_id, sizeof(ci->clip_id));
@@ -1543,7 +1600,7 @@ index ce4854d8..94565278 100644
              ci->pkt_count = nc->end_pkt - nc->start_pkt;
              ci->start_time = (uint64_t)nc->title_time * 2;
              ci->in_time = (uint64_t)pi->in_time * 2;
-@@ -2672,6 +2692,8 @@ static BLURAY_TITLE_INFO* _fill_title_info(NAV_TITLE* title, uint32_t title_idx,
+@@ -2675,6 +2695,8 @@ static BLURAY_TITLE_INFO* _fill_title_info(NAV_TITLE* title, uint32_t title_idx,
          }
      }
  
@@ -1552,7 +1609,7 @@ index ce4854d8..94565278 100644
      return title_info;
  
   error:
-@@ -3825,3 +3847,28 @@ void bd_free_bdjo(struct bdjo_data *obj)
+@@ -3832,3 +3854,28 @@ void bd_free_bdjo(struct bdjo_data *obj)
  {
      bdjo_free(&obj);
  }
@@ -1582,7 +1639,7 @@ index ce4854d8..94565278 100644
 +  return NULL;
 +}
 diff --git a/src/libbluray/bluray.h b/src/libbluray/bluray.h
-index b7b52e55..744a6926 100644
+index 70e6a843..742bb534 100644
 --- a/src/libbluray/bluray.h
 +++ b/src/libbluray/bluray.h
 @@ -32,6 +32,7 @@ extern "C" {
@@ -1593,7 +1650,7 @@ index b7b52e55..744a6926 100644
  
  #define TITLES_ALL              0    /**< all titles. */
  #define TITLES_FILTER_DUP_TITLE 0x01 /**< remove duplicate titles. */
-@@ -222,6 +223,7 @@ typedef struct bd_stream_info {
+@@ -224,6 +225,7 @@ typedef struct bd_stream_info {
  } BLURAY_STREAM_INFO;
  
  typedef struct bd_clip {
@@ -1601,7 +1658,7 @@ index b7b52e55..744a6926 100644
      uint32_t           pkt_count;
      uint8_t            still_mode;
      uint16_t           still_time;  /* seconds */
-@@ -272,6 +274,8 @@ typedef struct bd_title_info {
+@@ -274,6 +276,8 @@ typedef struct bd_title_info {
      BLURAY_CLIP_INFO     *clips;
      BLURAY_TITLE_CHAPTER *chapters;
      BLURAY_TITLE_MARK    *marks;
@@ -1610,10 +1667,12 @@ index b7b52e55..744a6926 100644
  } BLURAY_TITLE_INFO;
  
  /*
-@@ -480,6 +484,16 @@ uint32_t bd_get_current_title(BLURAY *bd);
+@@ -480,6 +484,16 @@ int bd_select_playlist(BLURAY *bd, uint32_t playlist);
+  */
+ uint32_t bd_get_current_title(BLURAY *bd);
  
- /**
-  *
++/**
++ *
 + * Find the byte position to specific time in 90Khz ticks
 + *
 + * @param bd    BLURAY ojbect
@@ -1622,12 +1681,10 @@ index b7b52e55..744a6926 100644
 + */
 +int64_t bd_find_seek_point(BLURAY *bd, uint64_t tick);
 +
-+/**
-+ *
-  *  Read from currently selected title file, decrypt if possible
+ /**
   *
-  * @param bd  BLURAY object
-@@ -1033,7 +1047,6 @@ int bd_mouse_select(BLURAY *bd, int64_t pts, uint16_t x, uint16_t y);
+  *  Read from currently selected title file, decrypt if possible
+@@ -1039,7 +1053,6 @@ int bd_mouse_select(BLURAY *bd, int64_t pts, uint16_t x, uint16_t y);
  
  /* access to internal information */
  
@@ -1635,7 +1692,7 @@ index b7b52e55..744a6926 100644
  /**
   *
   *  Get copy of clip information for requested playitem.
-@@ -1086,6 +1099,28 @@ void bd_stop_bdj(BLURAY *bd); // shutdown BD-J and clean up resources
+@@ -1092,6 +1105,28 @@ void bd_stop_bdj(BLURAY *bd); // shutdown BD-J and clean up resources
   */
  int bd_read_file(BLURAY *, const char *path, void **data, int64_t *size);
  
