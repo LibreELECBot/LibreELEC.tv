@@ -99,10 +99,11 @@ class Player(xbmc.Player):
    def onPlayBackStopped(self):
       systemctl('restart')
 
-   def play(self):
+   def play(self, artist, track):
       if not self.isPlaying() and xbmcaddon.Addon().getSetting('ls_O') == 'Kodi':
          suspendSink('0')
          listitem = xbmcgui.ListItem(xbmcaddon.Addon().getAddonInfo('name'))
+         listitem.addStreamInfo('audio',{'codec': 'mp3'})
          listitem.setArt({'thumb': xbmcaddon.Addon().getAddonInfo('icon')})
          super(Player, self).play(self.ITEM, listitem)
          del listitem
