@@ -1,0 +1,47 @@
+diff --git a/Makefile b/Makefile
+index 963c8ac..e1ac7e3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -731,7 +731,6 @@ clean:
+ .PHONY: distclean
+ distclean: clean
+ 	rm -rf ${ROOTDIR}/build.*
+-	rm -rf ${ROOTDIR}/data/dvb-scan
+ 	rm -f ${ROOTDIR}/.config.mk
+ 
+ # Create version
+@@ -877,9 +876,6 @@ ffmpeg_rebuild:
+ 
+ # linuxdvb git tree
+ $(ROOTDIR)/data/dvb-scan/.stamp:
+-	@echo "Receiving data/dvb-scan from https://github.com/tvheadend/dtv-scan-tables.git#tvheadend"
+-	@rm -rf $(ROOTDIR)/data/dvb-scan/*
+-	@$(ROOTDIR)/support/getmuxlist $(ROOTDIR)/data/dvb-scan
+ 	@touch $@
+ 
+ .PHONY: check_dvb_scan
+diff --git a/configure b/configure
+index 58c951c..86080c4 100755
+--- a/configure
++++ b/configure
+@@ -647,18 +647,8 @@ if enabled_or_auto imagecache; then
+ fi
+ 
+ #
+-# DVB scan
+-#
+-if enabled dvbscan; then
+-  printf "${TAB}" "fetching dvb-scan files ..."
+-  "${ROOTDIR}/support/getmuxlist"
+-  if [ $? -ne 0 ]; then
+-    echo "fail"
+-    check_bin git || echo "FATAL: git binary not found (install the git package)"
+-    die "Failed to fetch dvb-scan data (use --disable-dvbscan)"
+-  fi
+-  echo "ok"
+-fi
++# DVB scan is managed via external package and always enabled
++#
+ 
+ #
+ # epoll

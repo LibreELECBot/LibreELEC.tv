@@ -20,13 +20,13 @@ PKG_NAME="tvheadend42"
 PKG_VERSION="ceaf330"
 PKG_SHA256="c6b3b366136d9e86630cb2ebd2cab823448d0eeb02ef15e72bc0accd8dc9d923"
 PKG_VERSION_NUMBER="4.2.4-23"
-PKG_REV="113"
+PKG_REV="114"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.tvheadend.org"
 PKG_URL="https://github.com/tvheadend/tvheadend/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="tvheadend-${PKG_VERSION}*"
-PKG_DEPENDS_TARGET="toolchain avahi curl dvb-apps ffmpegx libdvbcsa libiconv openssl pngquant:host Python2:host"
+PKG_DEPENDS_TARGET="toolchain avahi curl dvb-apps ffmpegx libdvbcsa libiconv openssl pngquant:host Python2:host tvh-dtv-scan-tables"
 PKG_SECTION="service"
 PKG_SHORTDESC="Tvheadend: a TV streaming server for Linux"
 PKG_LONGDESC="Tvheadend ($PKG_VERSION_NUMBER): is a TV streaming server for Linux supporting DVB-S/S2, DVB-C, DVB-T/T2, IPTV, SAT>IP, ATSC and ISDB-T"
@@ -91,6 +91,7 @@ post_unpack() {
 }
 
 pre_configure_target() {
+  cp -a $(get_build_dir tvh-dtv-scan-tables) $PKG_BUILD/data/dvb-scan
 # fails to build in subdirs
   cd $PKG_BUILD
   rm -rf .$TARGET_NAME
