@@ -69,6 +69,7 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
   unset -f unpack
   unset -f post_unpack
   unset -f pre_patch
+  unset -f pre_apply_patch
   unset -f post_patch
 
   . $PKG_DIR/package.mk
@@ -168,6 +169,18 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
     fi
 
     if [ -f "$i" ]; then
+      # if a pre_apply_patch hook is defined, pass it the path to this patch
+      # relative to the build root - if it returns 0, skip applying the patch
+      if [ "$(type -t pre_apply_patch)" = "function" ]; then
+        PATCH_PATH="${i#$ROOT/}"
+        ! pre_apply_patch || {
+          unset PATCH_PATH
+          printf "%${BUILD_INDENT}c $(print_color CLR_SKIP_PATCH "SKIP PATCH") $(print_color CLR_PATCH_DESC "${PATCH_DESC}")   ${i#$ROOT/}\n" ' '>&$SILENT_OUT
+          continue
+        }
+        unset PATCH_PATH
+      fi
+
       printf "%${BUILD_INDENT}c $(print_color CLR_APPLY_PATCH "APPLY PATCH") $(print_color CLR_PATCH_DESC "${PATCH_DESC}")   ${i#$ROOT/}\n" ' '>&$SILENT_OUT
       if grep -qE '^GIT binary patch$|^rename from|^rename to' $i; then
         cat $i | git apply --directory=`echo "$PKG_BUILD" | cut -f1 -d\ ` -p1 --verbose --whitespace=nowarn --unsafe-paths >&$VERBOSE_OUT
