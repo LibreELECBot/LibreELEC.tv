@@ -46,6 +46,13 @@ case "$LINUX" in
     PKG_PATCH_DIRS="amlogic-3.14"
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host"
     ;;
+  rockchip-4.4)
+    PKG_VERSION="28018092"
+    PKG_SHA256="944b59f3b8fd9c1e37ea717e600651f9e49f3f01e2e9290d00386dec1789bf83"
+    PKG_URL="https://github.com/rockchip-linux/kernel/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="kernel-$PKG_VERSION*"
+    PKG_PATCH_DIRS="rockchip-4.4"
+    ;;
   *)
     PKG_VERSION="4.14.15"
     PKG_SHA256="ffc393a0c66f80375eacd3fb177b92e5c9daa07de0dcf947e925e049352e6142"
