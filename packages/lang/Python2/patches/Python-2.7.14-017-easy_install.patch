@@ -1,0 +1,19 @@
+diff -Naur Python-2.7.14-orig/Lib/distutils/cmd.py Python-2.7.14/Lib/distutils/cmd.py
+--- Python-2.7.14-orig/Lib/distutils/cmd.py	2017-09-16 19:38:35.000000000 +0200
++++ Python-2.7.14/Lib/distutils/cmd.py	2017-12-15 13:18:26.271636584 +0100
+@@ -52,10 +52,11 @@
+         initializer and depends on the actual command being
+         instantiated.
+         """
+-        # late import because of mutual dependence between these classes
+-        from distutils.dist import Distribution
+-
+-        if not isinstance(dist, Distribution):
++        # From https://bugs.python.org/issue23102
++        # dist should quack like a Distribution (duck-typing avoids a
++        # circular dependency and hopefully ameliorates trouble due to
++        # setuptools having monkey patched distutils modules).
++        if not hasattr(dist, 'get_requires'):
+             raise TypeError, "dist must be a Distribution instance"
+         if self.__class__ is Command:
+             raise RuntimeError, "Command is an abstract class"

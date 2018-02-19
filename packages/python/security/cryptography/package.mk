@@ -16,18 +16,17 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.7"
-PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
-PKG_LICENSE="BSD"
-PKG_SITE="https://www.pycryptodome.org/"
-PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
+PKG_NAME="cryptography"
+PKG_VERSION="2.1.4"
+PKG_SHA256="9b8c169526aaf45f851f9324b2786abd4bc875db72333981eb0d22b11cd49e65"
+PKG_LICENSE="ALv2"
+PKG_SITE="https://cryptography.io"
+PKG_URL="https://github.com/pyca/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="asn1crypto cffi enum34 idna ipaddress six"
+PKG_LONGDESC="cryptography is a package designed to expose cryptographic primitives and recipes to Python developers"
 
 PKG_TOOLCHAIN="python"
 
-post_makeinstall_target() {
-  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
-  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
-          $_pythonpath/Cryptodome
+pre_make_target() {
+  export CC="$CC -pthread"
 }

@@ -16,18 +16,17 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.7"
-PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
-PKG_LICENSE="BSD"
-PKG_SITE="https://www.pycryptodome.org/"
-PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
+PKG_NAME="pynacl"
+PKG_VERSION="1.2.1"
+PKG_SHA256="00ac0c2bfaa087de634a73a4e348f535f69c386fabf762adb4841728b5fe88b1"
+PKG_LICENSE="ALv2"
+PKG_SITE="https://pynacl.readthedocs.io/"
+PKG_URL="https://github.com/pyca/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="cffi libsodium six"
+PKG_LONGDESC="Python binding to the Networking and Cryptography (NaCl) library"
 
 PKG_TOOLCHAIN="python"
 
-post_makeinstall_target() {
-  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
-  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
-          $_pythonpath/Cryptodome
+pre_make_target() {
+  export SODIUM_INSTALL="system"
 }

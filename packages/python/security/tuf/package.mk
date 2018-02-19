@@ -16,18 +16,13 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.7"
-PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
-PKG_LICENSE="BSD"
-PKG_SITE="https://www.pycryptodome.org/"
-PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
+PKG_NAME="tuf"
+PKG_VERSION="0.10.1"
+PKG_SHA256="8f5f4a93e36ea1ddeb8c11cd31ecdf1324ac8e64261418468bfc9f1f970bf572"
+PKG_LICENSE="ALv2"
+PKG_SITE="https://www.updateframework.com"
+PKG_URL="https://github.com/theupdateframework/$PKG_NAME/archive/v$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="iso8601 securesystemslib six"
+PKG_LONGDESC="A framework for securing software update systems"
 
 PKG_TOOLCHAIN="python"
-
-post_makeinstall_target() {
-  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
-  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
-          $_pythonpath/Cryptodome
-}

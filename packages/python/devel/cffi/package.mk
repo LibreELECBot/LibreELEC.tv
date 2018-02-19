@@ -16,18 +16,14 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.7"
-PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
-PKG_LICENSE="BSD"
-PKG_SITE="https://www.pycryptodome.org/"
+PKG_NAME="cffi"
+PKG_VERSION="1.11.2"
+PKG_SHA256="ab87dd91c0c4073758d07334c1e5f712ce8fe48f007b86f8238773963ee700a6"
+PKG_LICENSE="MIT"
+PKG_SITE="http://cffi.readthedocs.io/"
 PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
+PKG_DEPENDS_HOST="libffi:host pycparser:host"
+PKG_DEPENDS_TARGET="cffi:host libffi"
+PKG_LONGDESC="Foreign Function Interface for Python calling C code"
 
 PKG_TOOLCHAIN="python"
-
-post_makeinstall_target() {
-  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
-  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
-          $_pythonpath/Cryptodome
-}

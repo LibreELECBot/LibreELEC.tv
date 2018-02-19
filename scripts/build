@@ -220,6 +220,13 @@ if [ "$PKG_IS_KERNEL_PKG" = "yes" ]; then
   fi
 fi
 
+if [ "$PKG_TOOLCHAIN" = "python" ]; then
+  [ -z "$PKG_PYTHON" ] && PKG_PYTHON="2"
+  _python="$TOOLCHAIN/bin/python$PKG_PYTHON"
+  PKG_DEPENDS_HOST="toolchain distutilscross:host $PKG_DEPENDS_HOST"
+  PKG_DEPENDS_TARGET="toolchain distutilscross:host Python$PKG_PYTHON $PKG_DEPENDS_TARGET"
+fi
+
 # build dependencies, only when PKG_DEPENDS_? is filled
 unset _pkg_depends
 case "$TARGET" in
@@ -291,7 +298,7 @@ if [ -z "$PKG_TOOLCHAIN" -o "$PKG_TOOLCHAIN" = "auto" ]; then
   fi
   _auto_toolchain=" (auto-detect)"
 fi
-if ! listcontains "meson cmake cmake-make configure ninja make autotools manual" "$PKG_TOOLCHAIN"; then
+if ! listcontains "meson cmake cmake-make configure ninja make autotools manual python" "$PKG_TOOLCHAIN"; then
   printf "$(print_color bold-red "ERROR:") unknown toolchain $PKG_TOOLCHAIN"
   exit 1
 fi
@@ -463,6 +470,26 @@ else
       echo "Executing (bootstrap): make $PKG_MAKE_OPTS_BOOTSTRAP" | tr -s " "
       make $PKG_MAKE_OPTS_BOOTSTRAP
       ;;
+
+    # python based build
+    "python:host")
+      echo "Executing (host): $_python setup.py build --build-base .$HOST_NAME" | tr -s " "
+      export LDSHARED="$CC -shared $LDSHARED"
+      $_python setup.py build --build-base .$HOST_NAME
+      ;;
+    "python:target")
+      echo "Executing (target): $_python setup.py easy_install --build-directory=$PKG_BUILD/.$TARGET_NAME $_python_deps --prefix=$INSTALL/usr ." | tr -s " "
+      export CFLAGS="$CFLAGS -I$SYSROOT_PREFIX/usr/include -L$SYSROOT_PREFIX/usr/lib"
+      export LDSHARED="$CC -shared $LDSHARED"
+      export PYTHONXCPREFIX="$SYSROOT_PREFIX/usr"
+      _pythonpath="$INSTALL/usr/lib/$(readlink $_python)/site-packages"
+      mkdir -p $_pythonpath
+      [ "$PKG_PYTHON_DEPS" != "yes" ] && _python_deps="--no-deps"
+      PYTHONPATH="$PYTHONPATH:$_pythonpath" $_python setup.py easy_install --build-directory=$PKG_BUILD/.$TARGET_NAME $_python_deps --prefix=$INSTALL/usr .
+      find "$INSTALL/usr" -name "*.py" -exec rm -rf "{}" ";"
+      find "$INSTALL/usr" -name "*.egg" -type f -exec zip -dq {} "*.exe" "*.py" ";"
+      mv $_pythonpath/easy-install.pth $_pythonpath/$PKG_NAME-$PKG_VERSION.pth
+      ;;
   esac
 fi
 if [ "$(type -t post_make_$TARGET)" = "function" ]; then
@@ -505,6 +532,12 @@ else
       ;;
     "configure:bootstrap"|"cmake-make:bootstrap"|"autotools:bootstrap"|"make:bootstrap")
       make install $PKG_MAKEINSTALL_OPTS_BOOTSTRAP
+      ;;
+
+    # python based build
+    "python:host")
+      echo "Executing (host): $_python setup.py build --build-base .$HOST_NAME install --root=/ --prefix=$TOOLCHAIN" | tr -s " "
+      $_python setup.py build --build-base .$HOST_NAME install --root=/ --prefix=$TOOLCHAIN
       ;;
   esac
 fi

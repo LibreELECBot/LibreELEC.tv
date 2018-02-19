@@ -1,6 +1,6 @@
-################################################################################
+###############################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2017-present Team LibreELEC
+#      Copyright (C) 2017 Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,18 +16,15 @@
 #  along with LibreELEC.  If not, see <http://www.gnu.org/licenses/>.
 ################################################################################
 
-PKG_NAME="pycryptodome"
-PKG_VERSION="3.4.7"
-PKG_SHA256="18d8dfe31bf0cb53d58694903e526be68f3cf48e6e3c6dfbbc1e7042b1693af7"
-PKG_LICENSE="BSD"
-PKG_SITE="https://www.pycryptodome.org/"
-PKG_URL="https://files.pythonhosted.org/packages/source/${PKG_NAME:0:1}/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_LONGDESC="PyCryptodome is a self-contained Python package of low-level cryptographic primitives"
+PKG_NAME="libsodium"
+PKG_VERSION="1.0.16"
+PKG_SHA256="0c14604bbeab2e82a803215d65c3b6e74bb28291aaee6236d65c699ccfe1a98c"
+PKG_LICENSE="ISC"
+PKG_SITE="https://libsodium.org/"
+PKG_URL="https://github.com/jedisct1/libsodium/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_TARGET="toolchain"
+PKG_LONGDESC="Sodium is a modern, easy-to-use software library for encryption, decryption, signatures, password hashing and more."
 
-PKG_TOOLCHAIN="python"
+PKG_TOOLCHAIN="autotools"
 
-post_makeinstall_target() {
-  rm -rf $_pythonpath/pycryptodome-*.egg/Crypto/SelfTest
-  ln -sfr $_pythonpath/pycryptodome-*.egg/Crypto \
-          $_pythonpath/Cryptodome
-}
+PKG_CONFIGURE_OPTS_TARGET="--disable-shared --enable-static"
