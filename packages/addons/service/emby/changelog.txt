@@ -1,3 +1,6 @@
+118
+- Update to 3.2.70.13
+
 117
 - Update to 3.2.34.0
 - Use reworked ffmpegx
