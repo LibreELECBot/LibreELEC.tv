@@ -41,13 +41,18 @@ STAMP_DEPENDS="$PKG_DIR $PKG_NEED_UNPACK $PROJECT_DIR/$PROJECT/patches/$PKG_NAME
 
 # Perform a wildcard match on the package to ensure old versions are cleaned too
 PKG_DEEPMD5=
+GIT_MUST_REBUILD="no"
 for i in $BUILD/$1-*; do
   if [ -d $i -a -f "$i/.libreelec-unpack" ] ; then
     . "$i/.libreelec-unpack"
     if [ "$STAMP_PKG_NAME" = "$1" ]; then
       [ -z "${PKG_DEEPMD5}" ] && PKG_DEEPMD5=$(find $STAMP_DEPENDS -exec md5sum {} \; 2>/dev/null | sort | md5sum | cut -d" " -f1)
       if [ ! "$PKG_DEEPMD5" = "$STAMP_PKG_DEEPMD5" ] ; then
+        if [ -z "$PKG_GIT_URL" ] ; then
         $SCRIPTS/clean $1
+        else
+          GIT_MUST_REBUILD="yes"
+        fi
       fi
     fi
   fi
@@ -58,9 +63,9 @@ if [ -d "$PKG_BUILD" -a ! -f "$STAMP" ]; then
   $SCRIPTS/clean $1
 fi
 
-[ -f "$STAMP" ] && exit 0
+[ -f "$STAMP" -a "$GIT_MUST_REBUILD" = "no" ] && exit 0
 
-if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
+if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" -o -n "$PKG_GIT_URL" ]; then
   printf "%${BUILD_INDENT}c $(print_color CLR_UNPACK "UNPACK")   $1\n" ' '>&$SILENT_OUT
   export BUILD_INDENT=$((${BUILD_INDENT:-1}+$BUILD_INDENT_SIZE))
 
@@ -72,6 +77,8 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
   unset -f post_patch
 
   . $PKG_DIR/package.mk
+
+  if [ -z "$PKG_GIT_URL" ] ; then
 
   if [ "$(type -t pre_unpack)" = "function" ]; then
     pre_unpack
@@ -98,7 +105,53 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
     cp -PRf $PKG_DIR/sources/* $BUILD/${PKG_NAME}-${PKG_VERSION}
   fi
 
-  if [ -z "$PKG_URL" ]; then
+  fi
+
+  if [ -z "$PKG_URL" -a -n "$PKG_GIT_URL" ]; then
+    # init GIT_ORIG_DIR
+    GIT_ORIG_DIR=""
+    GIT_PREV_LOCATION=$(pwd)
+    # cycle through folders that match $PKG_NAME in $BUILD until we find the right one
+    for f in $BUILD/$1-*/ ; do
+      if [ -d $f ]; then
+        if [ -f $f/.libreelec-unpack ]; then
+          source $f/.libreelec-unpack
+          if [ "$PKG_NAME" = "$STAMP_PKG_NAME" ]; then
+            cd $f
+            BUILD_GIT_URL=$(git remote get-url origin)
+            if [ "$BUILD_GIT_URL" = "$PKG_GIT_URL" ]; then
+              # git cloned repository found
+              GIT_ORIG_DIR=$f
+              break
+            fi
+          fi
+        fi
+      fi
+    done
+    cd $GIT_PREV_LOCATION
+    if [ -d "$GIT_ORIG_DIR" -a -n "$GIT_ORIG_DIR" ]; then
+      if [ ! "$GIT_ORIG_DIR" = "$BUILD/$PKG_NAME-$PKG_VERSION/" ]; then
+        mv $GIT_ORIG_DIR $BUILD/$PKG_NAME-$PKG_VERSION
+      fi
+      cd $BUILD/$PKG_NAME-$PKG_VERSION
+      # clean repository from any local changes
+      git clean -fdx
+      git checkout -- .
+      # switch to master branch and pull
+      git checkout master
+      git pull
+    else
+      # no valid folder found => clean
+      $SCRIPTS/clean $1
+      # clone the repository
+      git clone $PKG_GIT_URL $BUILD/$PKG_NAME-$PKG_VERSION/
+      cd $BUILD/$PKG_NAME-$PKG_VERSION/
+    fi
+    # switch to desired version and fetch submodules
+    git checkout $PKG_VERSION
+    git submodule update --init --recursive
+    cd $ROOT
+  elif [ -z "$PKG_URL" ] ; then
     mkdir -p "${BUILD}/${PKG_NAME}-${PKG_VERSION}"
   fi
 
