@@ -110,7 +110,9 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" -o -n "$PKG_GIT_URL" ]; then
   if [ -z "$PKG_URL" -a -n "$PKG_GIT_URL" ]; then
     # init GIT_ORIG_DIR
     GIT_ORIG_DIR=""
-    GIT_PREV_LOCATION=$(pwd)
+    [ -n "$PKG_GIT_BRANCH" ] && GIT_CLONE_BRANCH="--branch $PKG_GIT_BRANCH" || GIT_CLONE_BRANCH=""
+    [ "$PKG_GIT_CLONE_SINGLE" = "yes" ] && GIT_CLONE_SINGLE="--single-branch" || GIT_CLONE_SINGLE=""
+    [ -n "$PKG_GIT_SUBMODULE_DEPTH" ] && GIT_SUBMODULE_DEPTH="--depth $PKG_GIT_SUBMODULE_DEPTH" || GIT_SUBMODULE_DEPTH=""
     # cycle through folders that match $PKG_NAME in $BUILD until we find the right one
     for f in $BUILD/$1-*/ ; do
       if [ -d $f ]; then
@@ -128,28 +130,40 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" -o -n "$PKG_GIT_URL" ]; then
         fi
       fi
     done
-    cd $GIT_PREV_LOCATION
     if [ -d "$GIT_ORIG_DIR" -a -n "$GIT_ORIG_DIR" ]; then
       if [ ! "$GIT_ORIG_DIR" = "$BUILD/$PKG_NAME-$PKG_VERSION/" ]; then
         mv $GIT_ORIG_DIR $BUILD/$PKG_NAME-$PKG_VERSION
       fi
       cd $BUILD/$PKG_NAME-$PKG_VERSION
-      # clean repository from any local changes
+      # clean repository from any local changes and pull
       git clean -fdx
       git checkout -- .
-      # switch to master branch and pull
-      git checkout master
       git pull
     else
       # no valid folder found => clean
       $SCRIPTS/clean $1
       # clone the repository
-      git clone $PKG_GIT_URL $BUILD/$PKG_NAME-$PKG_VERSION/
+      git clone $GIT_CLONE_BRANCH $GIT_CLONE_SINGLE $PKG_GIT_URL $BUILD/$PKG_NAME-$PKG_VERSION/
       cd $BUILD/$PKG_NAME-$PKG_VERSION/
     fi
     # switch to desired version and fetch submodules
-    git checkout $PKG_VERSION
-    git submodule update --init --recursive
+    git reset --hard $PKG_VERSION
+    git submodule update --init --recursive $GIT_SUBMODULE_DEPTH
+    # create tar.bz2 archive if not created before
+    GIT_ARCHIVE="$SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.bz2"
+    if [ ! -f "$GIT_ARCHIVE" ]; then
+      cd $BUILD
+      mkdir -p $SOURCES/$PKG_NAME
+      GIT_EXCLUDE_TAR=""
+      for _e in $(find $PKG_NAME-$PKG_VERSION -name .git) ; do
+        GIT_EXCLUDE_TAR="--exclude=$_e $GIT_EXCLUDE_TAR"
+      done
+      tar $GIT_EXCLUDE_TAR -c $PKG_NAME-$PKG_VERSION | bzip2 > $GIT_ARCHIVE
+      echo $(sha256sum $GIT_ARCHIVE | cut -d" " -f1) > $GIT_ARCHIVE.sha256
+      echo "git clone $GIT_CLONE_BRANCH $GIT_CLONE_SINGLE $PKG_GIT_URL" > $GIT_ARCHIVE.url
+      echo "git reset --hard $PKG_VERSION" >> $GIT_ARCHIVE.url
+      echo "git submodule update --init --recursive $GIT_SUBMODULE_DEPTH" >> $GIT_ARCHIVE.url
+    fi
     cd $ROOT
   elif [ -z "$PKG_URL" ] ; then
     mkdir -p "${BUILD}/${PKG_NAME}-${PKG_VERSION}"
