@@ -151,7 +151,7 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" -o -n "$PKG_GIT_URL" ]; then
     git submodule update --init --recursive $GIT_SUBMODULE_DEPTH
     # create tar.bz2 archive if not created before
     GIT_ARCHIVE="$SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.bz2"
-    if [ ! -f "$GIT_ARCHIVE" ]; then
+    if [ ! -f "$GIT_ARCHIVE" -a "$PKG_GIT_CREATE_ARCHIVE" = "yes" ]; then
       cd $BUILD
       mkdir -p $SOURCES/$PKG_NAME
       GIT_EXCLUDE_TAR=""
