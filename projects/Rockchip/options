@@ -60,6 +60,9 @@
   # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
     FIRMWARE="misc-firmware wlan-firmware dvb-firmware"
 
+  # additional packages to install
+    ADDITIONAL_PACKAGES="dtc"
+
   # build and install ATV IR remote support (yes / no)
     ATVCLIENT_SUPPORT="no"
 
