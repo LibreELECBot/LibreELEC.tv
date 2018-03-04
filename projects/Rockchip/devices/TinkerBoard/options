@@ -30,6 +30,3 @@
 
   # kernel serial console
     EXTRA_CMDLINE="console=uart8250,mmio32,0xff690000 console=tty0"
-
-  # additional Firmware to use
-    FIRMWARE="$FIRMWARE rtl8723b_bt"
