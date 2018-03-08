@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="audiodecoder.organya"
-PKG_VERSION="8573890"
-PKG_REV="1"
+PKG_VERSION="0f3d367"
+PKG_SHA256="4e0125900881ab6a438e0e9d14bde5c8ed756ef845c5d5288cc00fedd581d99b"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/notspiff/audiodecoder.organya"
@@ -27,18 +28,6 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""
 PKG_SHORTDESC="audiodecoder.organya"
 PKG_LONGDESC="audiodecoder.organya"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="kodi.audiodecoder"
-
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
-
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
-}

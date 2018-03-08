@@ -18,7 +18,6 @@
 
 PKG_NAME="libc"
 PKG_VERSION=""
-PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.openelec.tv"
@@ -30,9 +29,6 @@ PKG_SHORTDESC="libc: Metapackage"
 PKG_LONGDESC=""
 PKG_SHORTDESC="libc: Meta package for installing various tools and libs needed for libc"
 PKG_LONGDESC="Meta package for installing various tools and libs needed for libc"
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
 
 if [ "$BOOTLOADER" = "bcm2835-bootloader" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET arm-mem"

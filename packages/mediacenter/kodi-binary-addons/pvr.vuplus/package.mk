@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="pvr.vuplus"
-PKG_VERSION="763a644"
-PKG_REV="1"
+PKG_VERSION="f05f158"
+PKG_SHA256="96656716275ec07106ba938a5376bd53670c4f3f1e4fc006be9cfb2c17e58339"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
@@ -27,18 +28,6 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""
 PKG_SHORTDESC="pvr.vuplus"
 PKG_LONGDESC="pvr.vuplus"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.pvrclient"
-
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
-
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
-}

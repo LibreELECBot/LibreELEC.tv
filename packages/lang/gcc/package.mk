@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="gcc"
-PKG_VERSION="6.2.0"
-PKG_REV="1"
+PKG_VERSION="7.3.0"
+PKG_SHA256="832ca6ae04636adbb430e865a1451adf6979ab44ca1c8374f61fba65645ce15c"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://gcc.gnu.org/"
-PKG_URL="http://ftpmirror.gnu.org/gcc/$PKG_NAME-$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_URL="http://ftpmirror.gnu.org/gcc/$PKG_NAME-$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_BOOTSTRAP="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host"
 PKG_DEPENDS_TARGET="gcc:host"
 PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host glibc"
@@ -30,14 +30,11 @@ PKG_SECTION="lang"
 PKG_SHORTDESC="gcc: The GNU Compiler Collection Version 4 (aka GNU C Compiler)"
 PKG_LONGDESC="This package contains the GNU Compiler Collection. It includes compilers for the languages C, C++, Objective C, Fortran 95, Java and others ... This GCC contains the Stack-Smashing Protector Patch which can be enabled with the -fstack-protector command-line option. More information about it ca be found at http://www.research.ibm.com/trl/projects/security/ssp/."
 
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
-
 GCC_COMMON_CONFIGURE_OPTS="--target=$TARGET_NAME \
                            --with-sysroot=$SYSROOT_PREFIX \
-                           --with-gmp=$ROOT/$TOOLCHAIN \
-                           --with-mpfr=$ROOT/$TOOLCHAIN \
-                           --with-mpc=$ROOT/$TOOLCHAIN \
+                           --with-gmp=$TOOLCHAIN \
+                           --with-mpfr=$TOOLCHAIN \
+                           --with-mpc=$TOOLCHAIN \
                            --with-gnu-as \
                            --with-gnu-ld \
                            --enable-plugin \
@@ -96,7 +93,7 @@ post_make_host() {
   rm -rf $TARGET_NAME/libgcc/libgcc_s.so
   ln -sf libgcc_s.so.1 $TARGET_NAME/libgcc/libgcc_s.so
 
-  if [ ! "$DEBUG" = yes ]; then
+  if [ ! "${BUILD_WITH_DEBUG}" = "yes" ]; then
     ${TARGET_PREFIX}strip $TARGET_NAME/libgcc/libgcc_s.so*
     ${TARGET_PREFIX}strip $TARGET_NAME/libstdc++-v3/src/.libs/libstdc++.so*
   fi
@@ -105,7 +102,7 @@ post_make_host() {
 post_makeinstall_host() {
   cp -PR $TARGET_NAME/libstdc++-v3/src/.libs/libstdc++.so* $SYSROOT_PREFIX/usr/lib
 
-  GCC_VERSION=`$ROOT/$TOOLCHAIN/bin/${TARGET_NAME}-gcc -dumpversion`
+  GCC_VERSION=`$TOOLCHAIN/bin/${TARGET_NAME}-gcc -dumpversion`
   DATE="0501`echo $GCC_VERSION | sed 's/\([0-9]\)/0\1/g' | sed 's/\.//g'`"
   CROSS_CC=${TARGET_PREFIX}gcc-${GCC_VERSION}
   CROSS_CXX=${TARGET_PREFIX}g++-${GCC_VERSION}
@@ -114,7 +111,7 @@ post_makeinstall_host() {
 
 cat > ${TARGET_PREFIX}gcc <<EOF
 #!/bin/sh
-$ROOT/$TOOLCHAIN/bin/ccache $CROSS_CC "\$@"
+$TOOLCHAIN/bin/ccache $CROSS_CC "\$@"
 EOF
 
   chmod +x ${TARGET_PREFIX}gcc
@@ -126,7 +123,7 @@ EOF
 
 cat > ${TARGET_PREFIX}g++ <<EOF
 #!/bin/sh
-$ROOT/$TOOLCHAIN/bin/ccache $CROSS_CXX "\$@"
+$TOOLCHAIN/bin/ccache $CROSS_CXX "\$@"
 EOF
 
   chmod +x ${TARGET_PREFIX}g++
@@ -145,8 +142,8 @@ make_target() {
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/lib
-    cp -P $ROOT/$PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libgcc/libgcc_s.so* $INSTALL/usr/lib
-    cp -P $ROOT/$PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libstdc++-v3/src/.libs/libstdc++.so* $INSTALL/usr/lib
+    cp -P $PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libgcc/libgcc_s.so* $INSTALL/usr/lib
+    cp -P $PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libstdc++-v3/src/.libs/libstdc++.so* $INSTALL/usr/lib
 }
 
 configure_init() {
@@ -159,5 +156,5 @@ make_init() {
 
 makeinstall_init() {
   mkdir -p $INSTALL/usr/lib
-    cp -P $ROOT/$PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libgcc/libgcc_s.so* $INSTALL/usr/lib
+    cp -P $PKG_BUILD/.$HOST_NAME/$TARGET_NAME/libgcc/libgcc_s.so* $INSTALL/usr/lib
 }

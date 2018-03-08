@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016 Team LibreELEC
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="mono"
-PKG_VERSION="4.2.1.102"
-PKG_REV="101"
+PKG_VERSION="5.8.0.108"
+PKG_SHA256="ecd7c55c2f62caa65fb360ace74a45ee44bbe2de046566d90594ba66c082f39c"
+PKG_REV="110"
 PKG_ARCH="any"
 PKG_LICENSE="MIT"
 PKG_SITE="http://www.mono-project.com"
@@ -28,7 +29,7 @@ PKG_DEPENDS_TARGET="toolchain mono:host libgdiplus sqlite mono_sqlite zlib"
 PKG_SECTION="tools"
 PKG_SHORTDESC="Mono: a cross platform, open source .NET framework"
 PKG_LONGDESC="Mono ($PKG_VERSION) is a software platform designed to allow developers to easily create cross platform applications part of the .NET Foundation"
-PKG_AUTORECONF="yes"
+PKG_TOOLCHAIN="autotools"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Mono"
@@ -64,14 +65,14 @@ configure_target() {
 }
 
 makeinstall_target() {
-  make -C "$ROOT/$PKG_BUILD/.$HOST_NAME" install DESTDIR="$INSTALL"
-  make -C "$ROOT/$PKG_BUILD/.$TARGET_NAME" install DESTDIR="$INSTALL"
+  make -C "$PKG_BUILD/.$HOST_NAME" install DESTDIR="$INSTALL"
+  make -C "$PKG_BUILD/.$TARGET_NAME" install DESTDIR="$INSTALL"
   $STRIP "$INSTALL/storage/.kodi/addons/$PKG_SECTION.$PKG_NAME/bin/mono"
 }
 
 addon() {
   mkdir -p "$ADDON_BUILD/$PKG_ADDON_ID"
-  
+
   cp -PR "$PKG_BUILD/.install_pkg/storage/.kodi/addons/$PKG_SECTION.$PKG_NAME"/* \
          "$ADDON_BUILD/$PKG_ADDON_ID/"
 
@@ -82,9 +83,6 @@ addon() {
      "$ADDON_BUILD/$PKG_ADDON_ID/bin/mono"
 
   cp -L "$(get_build_dir cairo)/.install_pkg/usr/lib/libcairo.so.2" \
-        "$(get_build_dir libX11)/.install_pkg/usr/lib/libX11.so.6" \
-        "$(get_build_dir libXext)/.install_pkg/usr/lib/libXext.so.6" \
-        "$(get_build_dir libexif)/.install_pkg/usr/lib/libexif.so.12" \
         "$(get_build_dir libgdiplus)/.install_pkg/usr/lib/libgdiplus.so" \
         "$(get_build_dir mono_sqlite)/.install_pkg/usr/lib/libsqlite3.so.0" \
         "$(get_build_dir pixman)/.install_pkg/usr/lib/libpixman-1.so.0" \

@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="bcm2835-bootloader"
-PKG_VERSION="6d45dcf"
-PKG_REV="1"
+PKG_VERSION="aa75533"
+PKG_SHA256="61feed41f35a8ab620aeb37e62e180936795f02ffb44ab89ab2e28d45f447a32"
 PKG_ARCH="arm"
 PKG_LICENSE="nonfree"
 PKG_SITE="http://www.broadcom.com"
@@ -27,16 +27,7 @@ PKG_DEPENDS_TARGET="toolchain linux"
 PKG_SECTION="tools"
 PKG_SHORTDESC="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
 PKG_LONGDESC="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
-
-make_target() {
-  if [ -f $DISTRO_DIR/$DISTRO/config/dt-blob.dts ]; then
-    echo Compiling device tree blob
-    $(kernel_path)/scripts/dtc/dtc -O dtb -o dt-blob.bin $DISTRO_DIR/$DISTRO/config/dt-blob.dts
-  fi
-}
+PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {
   mkdir -p $INSTALL/usr/share/bootloader
@@ -44,19 +35,11 @@ makeinstall_target() {
     cp -PRv bootcode.bin $INSTALL/usr/share/bootloader
     cp -PRv fixup_x.dat $INSTALL/usr/share/bootloader/fixup.dat
     cp -PRv start_x.elf $INSTALL/usr/share/bootloader/start.elf
-    [ -f dt-blob.bin ] && cp -PRv dt-blob.bin $INSTALL/usr/share/bootloader/dt-blob.bin
+
+    find_file_path config/dt-blob.bin && cp -PRv $FOUND_PATH $INSTALL/usr/share/bootloader
 
     cp -PRv $PKG_DIR/scripts/update.sh $INSTALL/usr/share/bootloader
 
-    if [ -f $DISTRO_DIR/$DISTRO/config/distroconfig.txt ]; then
-      cp -PRv $DISTRO_DIR/$DISTRO/config/distroconfig.txt $INSTALL/usr/share/bootloader
-    else
-      cp -PRv $PKG_DIR/files/3rdparty/bootloader/distroconfig.txt $INSTALL/usr/share/bootloader
-    fi
-
-    if [ -f $DISTRO_DIR/$DISTRO/config/config.txt ]; then
-      cp -PRv $DISTRO_DIR/$DISTRO/config/config.txt $INSTALL/usr/share/bootloader
-    else
-      cp -PRv $PKG_DIR/files/3rdparty/bootloader/config.txt $INSTALL/usr/share/bootloader
-    fi
+    find_file_path config/distroconfig.txt $PKG_DIR/files/3rdparty/bootloader/distroconfig.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
+    find_file_path config/config.txt $PKG_DIR/files/3rdparty/bootloader/config.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
 }

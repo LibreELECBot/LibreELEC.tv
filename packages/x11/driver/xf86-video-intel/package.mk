@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="xf86-video-intel"
-PKG_VERSION="9ac7a33"
-PKG_REV="1"
+PKG_VERSION="26f5406"
+PKG_SHA256="8393ec70f45e9a243de7e6d085b1fa02aa3933c8ac9c72ccd83ce2d890052a5d"
 PKG_ARCH="x86_64"
 PKG_LICENSE="OSS"
 PKG_SITE="http://intellinuxgraphics.org/"
@@ -28,9 +28,7 @@ PKG_DEPENDS_TARGET="toolchain libXcomposite util-macros fontsproto systemd xorg-
 PKG_SECTION="x11/driver"
 PKG_SHORTDESC="xf86-video-intel: The Xorg driver for Intel video chips"
 PKG_LONGDESC="The Xorg driver for Intel i810, i815, 830M, 845G, 852GM, 855GM, 865G, 915G, 915GM and 965G video chips."
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="yes"
+PKG_TOOLCHAIN="autotools"
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-backlight \
                            --disable-backlight-helper \
@@ -51,7 +49,7 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-backlight \
                            --disable-tear-free \
                            --disable-create2 \
                            --disable-async-swap \
-                           --with-default-dri=3 \
+                           --with-default-dri=2 \
                            --with-xorg-module-dir=$XORG_PATH_MODULES"
 
 pre_configure_target() {

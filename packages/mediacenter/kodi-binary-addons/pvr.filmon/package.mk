@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="pvr.filmon"
-PKG_VERSION="d490810"
-PKG_REV="1"
+PKG_VERSION="2721611"
+PKG_SHA256="7c8178f3db13959b74130ab0617cff97b8ab1762527b7891a0ad8b8a8dcf686f"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
@@ -27,18 +28,6 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform jsoncpp"
 PKG_SECTION=""
 PKG_SHORTDESC="pvr.filmon"
 PKG_LONGDESC="pvr.filmon"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.pvrclient"
-
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
-
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
-}

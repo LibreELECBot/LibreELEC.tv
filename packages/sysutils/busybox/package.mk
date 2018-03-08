@@ -17,21 +17,18 @@
 ################################################################################
 
 PKG_NAME="busybox"
-PKG_VERSION="1.25.1"
-PKG_REV="1"
+PKG_VERSION="1.28.1"
+PKG_SHA256="98fe1d3c311156c597cd5cfa7673bb377dc552b6fa20b5d3834579da3b13652e"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.busybox.net"
 PKG_URL="http://busybox.net/downloads/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_HOST=""
-PKG_DEPENDS_TARGET="toolchain busybox:host hdparm dosfstools e2fsprogs zip unzip pciutils usbutils parted procps-ng"
+PKG_DEPENDS_TARGET="toolchain busybox:host hdparm dosfstools e2fsprogs zip unzip pciutils usbutils parted procps-ng gptfdisk"
 PKG_DEPENDS_INIT="toolchain"
 PKG_SECTION="system"
 PKG_SHORTDESC="BusyBox: The Swiss Army Knife of Embedded Linux"
 PKG_LONGDESC="BusyBox combines tiny versions of many common UNIX utilities into a single small executable. It provides replacements for most of the utilities you usually find in GNU fileutils, shellutils, etc. The utilities in BusyBox generally have fewer options than their full-featured GNU cousins; however, the options that are included provide the expected functionality and behave very much like their GNU counterparts. BusyBox provides a fairly complete environment for any small or embedded system."
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
 
 PKG_MAKE_OPTS_HOST="ARCH=$TARGET_ARCH CROSS_COMPILE= KBUILD_VERBOSE=1 install"
 PKG_MAKE_OPTS_TARGET="ARCH=$TARGET_ARCH \
@@ -55,17 +52,8 @@ if [ "$NFS_SUPPORT" = yes ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET rpcbind"
 fi
 
-if [ -f $PROJECT_DIR/$PROJECT/busybox/busybox-target.conf ]; then
-  BUSYBOX_CFG_FILE_TARGET=$PROJECT_DIR/$PROJECT/busybox/busybox-target.conf
-else
-  BUSYBOX_CFG_FILE_TARGET=$PKG_DIR/config/busybox-target.conf
-fi
-
-if [ -f $PROJECT_DIR/$PROJECT/busybox/busybox-init.conf ]; then
-  BUSYBOX_CFG_FILE_INIT=$PROJECT_DIR/$PROJECT/busybox/busybox-init.conf
-else
-  BUSYBOX_CFG_FILE_INIT=$PKG_DIR/config/busybox-init.conf
-fi
+# dont build parallel
+MAKEFLAGS=-j1
 
 pre_build_target() {
   mkdir -p $PKG_BUILD/.$TARGET_NAME
@@ -83,18 +71,19 @@ pre_build_init() {
 }
 
 configure_host() {
-  cd $ROOT/$PKG_BUILD/.$HOST_NAME
+  cd $PKG_BUILD/.$HOST_NAME
     cp $PKG_DIR/config/busybox-host.conf .config
 
     # set install dir
-    sed -i -e "s|^CONFIG_PREFIX=.*$|CONFIG_PREFIX=\"$ROOT/$PKG_BUILD/.install_host\"|" .config
+    sed -i -e "s|^CONFIG_PREFIX=.*$|CONFIG_PREFIX=\"$PKG_BUILD/.install_host\"|" .config
 
     make oldconfig
 }
 
 configure_target() {
-  cd $ROOT/$PKG_BUILD/.$TARGET_NAME
-    cp $BUSYBOX_CFG_FILE_TARGET .config
+  cd $PKG_BUILD/.$TARGET_NAME
+    find_file_path config/busybox-target.conf
+    cp $FOUND_PATH .config
 
     # set install dir
     sed -i -e "s|^CONFIG_PREFIX=.*$|CONFIG_PREFIX=\"$INSTALL/usr\"|" .config
@@ -107,6 +96,7 @@ configure_target() {
       sed -i -e "s|^CONFIG_CROND=.*$|# CONFIG_CROND is not set|" .config
       sed -i -e "s|^CONFIG_FEATURE_CROND_D=.*$|# CONFIG_FEATURE_CROND_D is not set|" .config
       sed -i -e "s|^CONFIG_CRONTAB=.*$|# CONFIG_CRONTAB is not set|" .config
+      sed -i -e "s|^CONFIG_FEATURE_CROND_SPECIAL_TIMES=.*$|# CONFIG_FEATURE_CROND_SPECIAL_TIMES is not set|" .config
     fi
 
     if [ ! "$NFS_SUPPORT" = yes ]; then
@@ -130,8 +120,9 @@ configure_target() {
 }
 
 configure_init() {
-  cd $ROOT/$PKG_BUILD/.$TARGET_NAME-init
-    cp $BUSYBOX_CFG_FILE_INIT .config
+  cd $PKG_BUILD/.$TARGET_NAME-init
+    find_file_path config/busybox-init.conf
+    cp $FOUND_PATH .config
 
     # set install dir
     sed -i -e "s|^CONFIG_PREFIX=.*$|CONFIG_PREFIX=\"$INSTALL/usr\"|" .config
@@ -149,8 +140,8 @@ configure_init() {
 }
 
 makeinstall_host() {
-  mkdir -p $ROOT/$TOOLCHAIN/bin
-    cp -R $ROOT/$PKG_BUILD/.install_host/bin/* $ROOT/$TOOLCHAIN/bin
+  mkdir -p $TOOLCHAIN/bin
+    cp -R $PKG_BUILD/.install_host/bin/* $TOOLCHAIN/bin
 }
 
 makeinstall_target() {
@@ -159,7 +150,6 @@ makeinstall_target() {
     cp $PKG_DIR/scripts/createlog $INSTALL/usr/bin/
     cp $PKG_DIR/scripts/lsb_release $INSTALL/usr/bin/
     cp $PKG_DIR/scripts/apt-get $INSTALL/usr/bin/
-    cp $PKG_DIR/scripts/passwd $INSTALL/usr/bin/
     cp $PKG_DIR/scripts/sudo $INSTALL/usr/bin/
     cp $PKG_DIR/scripts/pastebinit $INSTALL/usr/bin/
     ln -sf pastebinit $INSTALL/usr/bin/paste
@@ -175,9 +165,6 @@ makeinstall_target() {
     cp $PKG_DIR/config/inputrc $INSTALL/etc
     cp $PKG_DIR/config/httpd.conf $INSTALL/etc
     cp $PKG_DIR/config/suspend-modules.conf $INSTALL/etc
-
-  mkdir -p $INSTALL/usr/config/sysctl.d
-    cp $PKG_DIR/config/transmission.conf $INSTALL/usr/config/sysctl.d
 
   # /etc/fstab is needed by...
     touch $INSTALL/etc/fstab
@@ -200,10 +187,10 @@ makeinstall_target() {
 }
 
 post_install() {
-  ROOT_PWD="`$ROOT/$TOOLCHAIN/bin/cryptpw -m sha512 $ROOT_PASSWORD`"
+  ROOT_PWD="`$TOOLCHAIN/bin/cryptpw -m sha512 $ROOT_PASSWORD`"
 
   echo "chmod 4755 $INSTALL/usr/bin/busybox" >> $FAKEROOT_SCRIPT
-  echo "chmod 000 $INSTALL/etc/shadow" >> $FAKEROOT_SCRIPT
+  echo "chmod 000 $INSTALL/usr/cache/shadow" >> $FAKEROOT_SCRIPT
 
   add_user root "$ROOT_PWD" 0 0 "Root User" "/storage" "/bin/sh"
   add_group root 0
@@ -240,12 +227,8 @@ makeinstall_init() {
     touch $INSTALL/etc/fstab
     ln -sf /proc/self/mounts $INSTALL/etc/mtab
 
-  if [ -n "$DEVICE" -a -f $PROJECT_DIR/$PROJECT/devices/$DEVICE/initramfs/platform_init ]; then
-    cp $PROJECT_DIR/$PROJECT/devices/$DEVICE/initramfs/platform_init $INSTALL
-  elif [ -f $PROJECT_DIR/$PROJECT/initramfs/platform_init ]; then
-    cp $PROJECT_DIR/$PROJECT/initramfs/platform_init $INSTALL
-  fi
-  if [ -f $INSTALL/platform_init ]; then
+  if find_file_path initramfs/platform_init; then
+    cp ${FOUND_PATH} $INSTALL
     chmod 755 $INSTALL/platform_init
   fi
 

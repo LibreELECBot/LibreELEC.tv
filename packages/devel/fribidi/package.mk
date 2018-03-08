@@ -17,19 +17,16 @@
 ################################################################################
 
 PKG_NAME="fribidi"
-PKG_VERSION="0.19.7"
-PKG_REV="1"
+PKG_VERSION="1.0.1"
+PKG_SHA256="c1b182d70590b6cdb5545bab8149de33b966800f27f2d9365c68917ed5a174e4"
 PKG_ARCH="any"
 PKG_LICENSE="LGPL"
 PKG_SITE="http://fribidi.freedesktop.org/"
-PKG_URL="http://fribidi.freedesktop.org/download/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_URL="https://github.com/fribidi/fribidi/releases/download/v$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="devel"
 PKG_SHORTDESC="fribidi: The Bidirectional Algorithm library"
 PKG_LONGDESC="The library implements all of the algorithm as described in the Unicode Standard Annex #9, The Bidirectional Algorithm, http://www.unicode.org/unicode/reports/tr9/. FriBidi is exhautively tested against Bidi Reference Code, and due to our best knowledge, does not contain any conformance bugs."
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-shared \
                            --enable-static \

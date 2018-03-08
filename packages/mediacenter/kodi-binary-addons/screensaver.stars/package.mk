@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="screensaver.stars"
-PKG_VERSION="55764aa"
-PKG_REV="1"
+PKG_VERSION="bb61e49"
+PKG_SHA256="418e5c0dcf010b83b2cdf7ca00ff27b663359d0706ed00ac85fd841a3e943f43"
+PKG_REV="2"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/notspiff/screensaver.stars"
@@ -27,7 +28,6 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""
 PKG_SHORTDESC="screensaver.stars"
 PKG_LONGDESC="screensaver.stars"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.ui.screensaver"
@@ -35,14 +35,3 @@ PKG_ADDON_TYPE="xbmc.ui.screensaver"
 if [ "$OPENGL" = "no" ] ; then
   exit 0
 fi
-
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
-
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
-}

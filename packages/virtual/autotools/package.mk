@@ -18,16 +18,11 @@
 
 PKG_NAME="autotools"
 PKG_VERSION=""
-PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.openelec.tv"
 PKG_URL=""
-PKG_DEPENDS_HOST="ccache:host autoconf:host automake:host libtool:host intltool:host autoconf-archive:host"
+PKG_DEPENDS_HOST="ccache:host autoconf:host automake:host intltool:host libtool:host autoconf-archive:host"
 PKG_SECTION="virtual"
 PKG_SHORTDESC="autotools: Metapackage"
-PKG_LONGDESC=""
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
-
+PKG_LONGDESC="autotools: Metapackage"

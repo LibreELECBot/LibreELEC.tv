@@ -19,7 +19,7 @@
 PKG_NAME="tiff"
 #PKG_VERSION="4.0.3"
 PKG_VERSION="3.9.7"
-PKG_REV="1"
+PKG_SHA256="f5d64dd4ce61c55f5e9f6dc3920fbe5a41e02c2e607da7117a35eb5c320cef6a"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://www.remotesensing.org/libtiff/"
@@ -29,9 +29,6 @@ PKG_SECTION="graphics"
 PKG_SHORTDESC="libtiff: A library for reading and writing TIFF files"
 PKG_LONGDESC="libtiff is a library for reading and writing data files encoded with the Tag Image File format, Revision 6.0 (or revision 5.0 or revision 4.0). This file format is suit- able for archiving multi-color and monochromatic image data."
 
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
-
 PKG_CONFIGURE_OPTS_TARGET="--enable-static \
                            --disable-shared \
                            --disable-mdi \
@@ -39,7 +36,8 @@ PKG_CONFIGURE_OPTS_TARGET="--enable-static \
                            --with-gl=no \
                            --with-jpeg-lib-dir=$SYSROOT_PREFIX/usr/lib \
                            --with-jpeg-include-dir=$SYSROOT_PREFIX/usr/include \
-                           --without-x"
+                           --without-x \
+                           --with-gl=no"
 
 pre_configure_target() {
   export CFLAGS="$CFLAGS -fPIC -DPIC"

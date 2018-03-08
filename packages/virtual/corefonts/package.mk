@@ -18,7 +18,6 @@
 
 PKG_NAME="corefonts"
 PKG_VERSION=""
-PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.openelec.tv"
@@ -27,9 +26,6 @@ PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="virtual"
 PKG_SHORTDESC="corefonts: Metapackage for installing fonts"
 PKG_LONGDESC="corefonts is a Metapackage for installing fonts"
-
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
 
 if [ -n "$CUSTOM_FONTS" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $CUSTOM_FONTS"

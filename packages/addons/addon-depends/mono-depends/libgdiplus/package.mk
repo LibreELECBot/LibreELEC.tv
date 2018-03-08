@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016 Team LibreELEC
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,24 +17,25 @@
 ################################################################################
 
 PKG_NAME="libgdiplus"
-PKG_VERSION="4.2"
-PKG_REV="0"
-PKG_ARCH="any"
+PKG_VERSION="5.6"
+PKG_SHA256="6a75e4a476695cd6a1475fd6b989423ecf73978fd757673669771d8a6e13f756"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/mono/libgdiplus"
 PKG_URL="https://github.com/mono/libgdiplus/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain giflib libjpeg-turbo tiff libXext libexif glib cairo"
-PKG_SECTION="tools"
-PKG_SHORTDESC="libgiplus"
+PKG_DEPENDS_TARGET="toolchain cairo giflib glib libjpeg-turbo tiff"
 PKG_LONGDESC="An Open Source implementation of the GDI+ API"
+PKG_TOOLCHAIN="autotools"
 
-PKG_IS_ADDON="no"
+PKG_CONFIGURE_OPTS_TARGET="--enable-shared               \
+                           --with-libgif=$TARGET_PREFIX  \
+                           --with-libjpeg=$TARGET_PREFIX \
+                           --with-libtiff=$TARGET_PREFIX"
 
-PKG_AUTORECONF="yes"
-PKG_CONFIGURE_OPTS_TARGET="--enable-shared \
-                           --with-libgif   \
-                           --with-libjpeg  \
-                           --with-libtiff"
+if [ "$DISPLAYSERVER" = "x11" ]; then
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libXext libexif"
+else
+  PKG_CONFIGURE_OPTS_TARGET="$PKG_CONFIGURE_OPTS_TARGET --without-x11"
+fi
 
 makeinstall_target() {
   make install DESTDIR=$INSTALL

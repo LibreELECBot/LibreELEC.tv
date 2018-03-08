@@ -17,8 +17,9 @@
 ################################################################################
 
 PKG_NAME="peripheral.joystick"
-PKG_VERSION="987a818"
-PKG_REV="0"
+PKG_VERSION="12e7d52"
+PKG_SHA256="2d66199dee46afddfaede1ffbe2aa5691f5441b5dcf54cb0e3d3059a95c34c61"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/peripheral.joystick"
@@ -27,18 +28,6 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform p8-platform"
 PKG_SECTION=""
 PKG_SHORTDESC="peripheral.joystick: Joystick support in Kodi"
 PKG_LONGDESC="peripheral.joystick provides joystick support and button mapping"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="kodi.peripheral"
-
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr"
-
-addon() {
-  mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/
-  cp -R $PKG_BUILD/.install_pkg/usr/share/kodi/addons/$PKG_NAME/* $ADDON_BUILD/$PKG_ADDON_ID/
-
-  ADDONSO=$(xmlstarlet sel -t -v "/addon/extension/@library_linux" $ADDON_BUILD/$PKG_ADDON_ID/addon.xml)
-  cp -L $PKG_BUILD/.install_pkg/usr/lib/kodi/addons/$PKG_NAME/$ADDONSO $ADDON_BUILD/$PKG_ADDON_ID/
-}

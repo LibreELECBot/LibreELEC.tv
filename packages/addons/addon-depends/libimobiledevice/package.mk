@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016 Team LibreELEC
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,15 +18,16 @@
 
 PKG_NAME="libimobiledevice"
 PKG_VERSION="1.2.0"
+PKG_SHA256="786b0de0875053bf61b5531a86ae8119e320edab724fc62fe2150cc931f11037"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.libimobiledevice.org"
 PKG_URL="http://www.libimobiledevice.org/downloads/$PKG_NAME-$PKG_VERSION.tar.bz2"
-PKG_DEPENDS_TARGET="toolchain libusbmuxd libressl"
+PKG_DEPENDS_TARGET="toolchain libusbmuxd openssl"
 PKG_SECTION="libs"
 PKG_SHORTDESC="libimobiledevice is a cross-platform software library that talks the protocols to support iPhone®, iPod Touch®, iPad® and Apple TV® devices"
 PKG_LONGDESC="libimobiledevice is a cross-platform software library that talks the protocols to support iPhone®, iPod Touch®, iPad® and Apple TV® devices"
-PKG_AUTORECONF="yes"
+PKG_TOOLCHAIN="autotools"
 
 PKG_CONFIGURE_OPTS_TARGET="--enable-static \
                            --disable-shared \
@@ -34,5 +35,5 @@ PKG_CONFIGURE_OPTS_TARGET="--enable-static \
                            --disable-largefile"
 
 post_makeinstall_target() {
-  cp $ROOT/$PKG_BUILD/common/utils.h $SYSROOT_PREFIX/usr/include/libimobiledevice/
+  cp $PKG_BUILD/common/utils.h $SYSROOT_PREFIX/usr/include/libimobiledevice/
 }

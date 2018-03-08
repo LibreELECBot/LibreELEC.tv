@@ -1,6 +1,6 @@
 ################################################################################
 #      This file is part of LibreELEC - https://libreelec.tv
-#      Copyright (C) 2016 Team LibreELEC
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,42 +17,30 @@
 ################################################################################
 
 PKG_NAME="moonlight-embedded"
-PKG_VERSION="2.2.2"
-PKG_REV="1"
+PKG_VERSION="a4b6de1"
+PKG_SHA256="54c53f0f6abcd49aadd065e6a5cdd1bff1ca5b8c6461fff2dc220d9465f487ce"
 PKG_ARCH="any"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/irtimmer/moonlight-embedded"
-PKG_URL="https://github.com/irtimmer/moonlight-embedded/archive/v$PKG_VERSION.tar.gz"
+PKG_URL="https://github.com/irtimmer/moonlight-embedded/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain curl libcec pulseaudio ffmpeg systemd alsa-lib moonlight-common-c libevdev enet opus"
 PKG_SECTION=""
 PKG_SHORTDESC="Gamestream client for embedded systems"
 PKG_LONGDESC="Moonlight Embedded is an open source implementation of NVIDIA's GameStream, as used by the NVIDIA Shield, but built for Linux"
 
-PKG_IS_ADDON="no"
-PKG_AUTORECONF="no"
-
 FREESCALE_V4L_INCLUDE=""
 if [ "$KODIPLAYER_DRIVER" = "bcm2835-driver" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET bcm2835-driver"
-elif [ "$KODIPLAYER_DRIVER" = "libfslvpuwrap" ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libfslvpuwrap gpu-viv-bin-mx6q v4l-utils"
-  FREESCALE_V4L_INCLUDE="-DFREESCALE_INCLUDE_DIR=$(get_build_dir v4l-utils)/lib/include"
 elif [ "$KODIPLAYER_DRIVER" = "libamcodec" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libamcodec"
 elif [ "$DISPLAYSERVER" = "x11" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libvdpau SDL2 ffmpeg libxcb"
 fi
 
-PKG_CMAKE_OPTS_TARGET="-DCMAKE_MODULE_PATH=$SYSROOT_PREFIX/usr/lib/kodi \
-                       -DCMAKE_PREFIX_PATH=$SYSROOT_PREFIX/usr \
-                       $FREESCALE_V4L_INCLUDE"
+PKG_CMAKE_OPTS_TARGET="$FREESCALE_V4L_INCLUDE"
 
 pre_build_target() {
-  cp -a $(get_build_dir moonlight-common-c)/* $ROOT/$PKG_BUILD/third_party/moonlight-common-c
-}
-
-pre_configure_target() {
-  [ "$PROJECT" = "imx6" ] && strip_gold || true
+  cp -a $(get_build_dir moonlight-common-c)/* $PKG_BUILD/third_party/moonlight-common-c
 }
 
 makeinstall_target() {

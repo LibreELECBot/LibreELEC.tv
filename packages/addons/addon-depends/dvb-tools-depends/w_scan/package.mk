@@ -1,6 +1,6 @@
 ################################################################################
-#      This file is part of LibreELEC - http://www.libreelec.tv
-#      Copyright (C) 2016 Team LibreELEC
+#      This file is part of LibreELEC - https://libreelec.tv
+#      Copyright (C) 2016-present Team LibreELEC
 #
 #  LibreELEC is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -17,8 +17,8 @@
 ################################################################################
 
 PKG_NAME="w_scan"
-PKG_VERSION="20141122"
-PKG_REV="1"
+PKG_VERSION="20170107"
+PKG_SHA256="38e0f38a7bf06cff6d6ea01652ad4ee60da2cb0e937360468f936da785b46ffe"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://wirbel.htpc-forum.de/w_scan/index2.html"
@@ -27,12 +27,12 @@ PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="tools"
 PKG_SHORTDESC="DVBlast is a small channel scan tool to create an channel.conf for VDR"
 PKG_LONGDESC="DVBlast is a small channel scan tool to create an channel.conf for VDR"
-PKG_AUTORECONF="yes"
+PKG_TOOLCHAIN="autotools"
 
 # aml 3.14 is meh
 pre_configure_target() {
-if [ "$TARGET_ARCH" = "aarch64" ]; then
-  sed -i 's/DVB_HEADER=0/DVB_HEADER=1/g' $ROOT/$PKG_BUILD/configure*
-  sed -i 's/HAS_DVB_API5=0/HAS_DVB_API5=1/g' $ROOT/$PKG_BUILD/configure*
+if [ $LINUX = "amlogic-3.14" -o $LINUX = "amlogic-3.10" ]; then
+  sed -i 's/DVB_HEADER=0/DVB_HEADER=1/g' $PKG_BUILD/configure*
+  sed -i 's/HAS_DVB_API5=0/HAS_DVB_API5=1/g' $PKG_BUILD/configure*
 fi
 }
