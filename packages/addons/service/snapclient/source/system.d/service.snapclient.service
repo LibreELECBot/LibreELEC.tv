@@ -6,6 +6,7 @@ Requires=kodi.service network-online.target sound.target
 [Service]
 Type=forking
 ExecStart=/bin/sh /storage/.kodi/addons/service.snapclient/bin/snapclient.start
+Restart=always
 
 [Install]
 WantedBy=kodi.target
