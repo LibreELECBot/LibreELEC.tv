@@ -145,6 +145,15 @@
 
 # build and install Joystick support (yes / no)
   JOYSTICK_SUPPORT="yes"
+  
+# build and install iommu support (yes / no)
+  CONFIG_IOMMU_SUPPORT="yes"
+  
+# build and install amd iommu support (yes / no)
+  CONFIG_AMD_IOMMU="yes"
+
+# build and install intel vt-d support (yes / no)
+  CONFIG_INTEL_VT-D="yes"
 
 # build and install CEC adapter support (yes / no)
   CEC_SUPPORT="yes"
