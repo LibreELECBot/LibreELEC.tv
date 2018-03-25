@@ -27,6 +27,16 @@ case "$ss_ps" in
   Airplay)
     ss_us="--stream airplay:///shairport-sync?name=Airplay"
     ;;
+  Kodi)
+    ss_us="--stream pipe:///tmp/snapfifo?name=Kodi"
+    if [ -z "$(pactl list short | grep sink_name=snapserver)" ]; then
+      pactl load-module module-pipe-sink \
+                        file=/tmp/snapfifo \
+                        rate=48000 \
+                        sink_name=snapserver \
+                        &> /dev/null
+    fi
+    ;;
   Spotify)
     ss_us="--stream spotify:///librespot?name=Spotify"
     ;;

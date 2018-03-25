@@ -1,2 +1,6 @@
+101
+- Always restart service
+- Improve latency setting
+
 100
 - Initial addon

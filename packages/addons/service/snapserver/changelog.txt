@@ -1,2 +1,5 @@
+101
+- Add streaming from Kodi
+
 100
 - Initial addon
