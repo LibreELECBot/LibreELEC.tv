@@ -65,6 +65,10 @@ configure_host() {
 
 makeinstall_host() {
   make INSTALL_PREFIX=$TOOLCHAIN install_sw
+  WSL=$(grep Microsoft /proc/version)
+  if [ ! -z "$WSL" ]; then
+    execstack -c $TOOLCHAIN/lib/libcrypto.so*  
+  fi
 }
 
 pre_configure_target() {
