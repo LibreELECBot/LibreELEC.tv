@@ -122,6 +122,13 @@ case "$DISTRO" in
       ;;
 esac
 
+# On WSL the stackexec flag need to be removed from openssl
+WSL=$(grep Microsoft /proc/version)
+if [ ! -z "$WSL" ]; then
+	deps+=(execstack)
+	deps_pkg+=(execstack)
+fi
+
 # project specific dependencies
 if [ -n "$EXTRA_DEPS" ] ; then
   deps+=($EXTRA_DEPS)
