@@ -17,12 +17,12 @@
 ################################################################################
 
 PKG_NAME="libbluray"
-PKG_VERSION="1.0.2"
-PKG_SHA256="6d9e7c4e416f664c330d9fa5a05ad79a3fb39b95adfc3fd6910cbed503b7aeff"
+PKG_VERSION="1.0.2a"
+PKG_SHA256="a65c8504094ebda68e7ef477ea3b74a6bd4b3bbf7707d2d35813b4615ba186bc"
 PKG_ARCH="any"
 PKG_LICENSE="LGPL"
 PKG_SITE="https://www.videolan.org/developers/libbluray.html"
-PKG_URL="https://ftp.videolan.org/pub/videolan/libbluray/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
+PKG_URL="https://github.com/CvH/libbluray/releases/download/$PKG_VERSION/libbluray-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain fontconfig freetype libxml2"
 PKG_SECTION="multimedia"
 PKG_SHORTDESC="libbluray: A Blu-Ray Discs playback library"
