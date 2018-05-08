@@ -28,7 +28,6 @@ PKG_DEPENDS_TARGET="Adafruit_Python_ADS1x15 Adafruit_Python_ADXL345 Adafruit_Pyt
 PKG_SECTION="virtual"
 PKG_SHORTDESC="A bundle of libraries from Adafruit"
 PKG_LONGDESC="This is a bundle of various Adafruit Python libraries. Included are: ADS1x15, ADXL345, BMP, CharLCD, DHT, GPIO, LED_Backpack, LSM303, MCP3008, MCP4725, PCA9685, PureIO, SI1145, SSD1306, TCS34725, VCNL40xx, WS2801"
-PKG_AUTORECONF="no"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Adafruit Libraries"
