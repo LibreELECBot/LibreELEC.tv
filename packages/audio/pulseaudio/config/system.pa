@@ -65,5 +65,9 @@ load-module module-position-event-sounds
   load-module module-zeroconf-publish
 .endif
 
+.ifexists module-zeroconf-discover.so
+  load-module module-zeroconf-discover
+.endif
+
 load-module module-native-protocol-tcp auth-anonymous=1
 load-module module-switch-on-connect
