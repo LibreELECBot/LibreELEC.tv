@@ -36,7 +36,7 @@ make_target() {
   export RUSTUP_HOME="$CARGO_HOME"
   export PATH="$CARGO_HOME/bin:$PATH"
   rm -rf "$CARGO_HOME"
-  curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y
+  wget -t 2 -nv -O - https://sh.rustup.rs | sh -s -- --no-modify-path -y
   rustup default "$PKG_VERSION"
   case "$TARGET_ARCH" in
     aarch64)
