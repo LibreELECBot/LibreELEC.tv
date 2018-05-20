@@ -1,6 +1,7 @@
 111
 - Update to 431be9e
 - Fix delay with Kodi playback option
+- Cache volume
 
 110
 - Update to 685fb4e

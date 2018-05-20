@@ -86,7 +86,6 @@ oe_setup_addon service.librespot
 
 LIBRESPOT="librespot --cache \"$ADDON_HOME/cache\" \
                      --disable-audio-cache \
-                     --initial-volume "$ls_v" \
                      --name \"Librespot@$HOSTNAME\" \
                      --onevent librespot.onevent"
 
