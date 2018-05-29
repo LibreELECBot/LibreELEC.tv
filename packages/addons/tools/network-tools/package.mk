@@ -31,6 +31,7 @@ PKG_TOOLCHAIN="virtual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Network Tools"
 PKG_ADDON_TYPE="xbmc.python.script"
+PKG_SECTION="virtual"
 
 PKG_DEPENDS_TARGET="toolchain \
                     bwm-ng \

@@ -32,6 +32,7 @@ PKG_TOOLCHAIN="virtual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Raspberry Pi Tools"
 PKG_ADDON_TYPE="xbmc.python.module"
+PKG_SECTION="virtual"
 PKG_ADDON_PROJECTS="RPi"
 
 
