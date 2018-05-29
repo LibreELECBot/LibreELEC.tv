@@ -20,7 +20,6 @@ To control the build behaviour of your package, use variables in the top-down or
 | PKG_URL     | -       | yes | Address at which the source of the software application can be retrieved |
 | PKG_MAINTAINER | -    | no  | Your name |
 | PKG_DEPENDS_BOOTSTRAP<br>PKG_DEPENDS_HOST   PKG_DEPENDS_INIT   PKG_DEPENDS_TARGET | - | no | A space separated list of name of packages required to build the software application |
-| PKG_SECTION | -       | no  | virtual if the package only defines dependencies |
 | PKG_SHORTDESC | -     | no<br>yes&nbsp;for&nbsp;addons | Short description of the software package |
 | PKG_LONGDESC | -      | yes | Long description of the package including purpose or function within LibreELEC or Kodi |
 
@@ -69,6 +68,7 @@ Additional options used when the package builds an addon.
 | PKG_IS_ADDON | no     | yes      | Must be set to `yes` |
 | PKG_ADDON_NAME | -    | yes      | Proper name of the addon that is shown at the repo |
 | PKG_ADDON_TYPE | -    | yes      | See LE/config/addon/ for other possibilities |
+| PKG_SECTION | ""      | yes      | Section of the addon in the addon tree |
 | PKG_ADDON_VERSION | - | no       | The version of the addon, used in addon.xml |
 | PKG_ADDON_PROVIDES | - | no      | [Provides](http://kodi.wiki/view/addon.xml#.3Cprovides.3E_element) in addon-xml |
 | PKG_ADDON_REQUIRES | - | no      | [Requires](http://kodi.wiki/view/addon.xml#.3Crequires.3E) used in addon.xml |
@@ -97,6 +97,7 @@ But not always. To select a specific toolchain, you only need to set the `PKG_TO
 | ninja       | [Ninja Build](https://ninja-build.org/) |
 | make        | [Makefile Based](https://www.gnu.org/software/make/) |
 | manual      | only runs self writen build steps, see [Functions](#functions) |
+| virtual     | package with dependencies, only |
 
 ###### Auto-Detection
 The auto-detections looks for specific files in the source path.
@@ -216,7 +217,6 @@ PKG_LICENSE="LGPL"
 PKG_SITE="https://mariadb.org/"
 PKG_URL="https://github.com/MariaDB/mariadb-connector-c/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain zlib openssl"
-PKG_SECTION="database"
 PKG_SHORTDESC="mariadb-connector: library to conntect to mariadb/mysql database server"
 PKG_LONGDESC="mariadb-connector: library to conntect to mariadb/mysql database server"
 
