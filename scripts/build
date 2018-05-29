@@ -236,7 +236,7 @@ fi
 export BUILD_INDENT=$((${BUILD_INDENT:-1}+$BUILD_INDENT_SIZE))
 
 # virtual packages dont must be build, they only contains dependencies, so dont go further here
-if [ "$PKG_SECTION" = "virtual" ]; then
+if [ "$PKG_TOOLCHAIN" = "virtual" ]; then
   PKG_DEEPHASH=$(calculate_stamp)
   for i in PKG_NAME PKG_DEEPHASH BUILD_WITH_DEBUG; do
     echo "STAMP_$i=\"${!i}\"" >> $STAMP

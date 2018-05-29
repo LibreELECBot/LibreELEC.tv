@@ -192,7 +192,7 @@ if [ -d "$SOURCES/$1" -o -d "$PKG_DIR/sources" ]; then
   fi
 fi
 
-if [ "$PKG_SECTION" != "virtual" ]; then
+if [ "$PKG_TOOLCHAIN" != "virtual" ]; then
   mkdir -p $PKG_BUILD
 
   rm -f $STAMPS/$1/build_*

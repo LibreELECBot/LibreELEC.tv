@@ -47,7 +47,7 @@ if [ -f $STAMP ]; then
     . $PKG_DIR/package.mk
 
     # virtual packages dont must be build, they only contains dependencies, so dont go further here
-    if [ ! "$PKG_SECTION" = "virtual" ]; then
+    if [ ! "$PKG_TOOLCHAIN" = "virtual" ]; then
 
       # setup configure script
       if [ -z "$PKG_CONFIGURE_SCRIPT" ]; then
@@ -99,7 +99,7 @@ if [ -f $STAMP ]; then
       fi
 
       cd $ROOT
-    fi  # ! "$PKG_SECTION" = "virtual"
+    fi  # ! "$PKG_TOOLCHAIN" = "virtual"
 
     if [ -f "$STAMP" ]; then
       rm -f $STAMP

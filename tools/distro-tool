@@ -520,13 +520,13 @@ class MyThread(threading.Thread):
         pkg_version = qItem["PKG_VERSION"]
         pkg_url = qItem["PKG_URL"]
         pkg_sha = qItem["PKG_SHA256"]
-        pkg_section = qItem["PKG_SECTION"]
+        pkg_toolchain = qItem["PKG_TOOLCHAIN"]
         pkg_source_name = qItem["PKG_SOURCE_NAME"]
 
         msgs = []
 
         if pkg_version == "" or pkg_version == "0.0invalid" or pkg_url == "":
-          if pkg_section != "virtual" and CHECK_FILTER_CLASS == "All" and CHECK_FILTER_TYPE == "All":
+          if pkg_toolchain != "virtual" and CHECK_FILTER_CLASS == "All" and CHECK_FILTER_TYPE == "All":
             MyUtility.show(msgs, 0, "cyan", "UNKNOWN VER OR URL", "%s (ver [%s], url [%s])" % (pkg_name, pkg_version, pkg_url))
             self.output_queue.put(msgs)
           continue
@@ -800,7 +800,7 @@ generate_work_worker() {
   local pcount=$1 worker="$2" revision="$3"
   local workfile_i="$(printf "%s.%02d" "${WORKFILES_I}" ${worker})"
   local workfile_o="$(printf "%s.%02d" "${WORKFILES_O}" ${worker})"
-  local wanted_vars="PKG_NAME PKG_VERSION PKG_URL PKG_SHA256 PKG_DIR PKG_SECTION PKG_IS_ADDON PKG_SOURCE_NAME"
+  local wanted_vars="PKG_NAME PKG_VERSION PKG_URL PKG_SHA256 PKG_DIR PKG_TOOLCHAIN PKG_IS_ADDON PKG_SOURCE_NAME"
   local package_name var comma PKG_URL PKG_SOURCE_NAME PKG_VERSION PKG_IS_ADDON
 
   [ -f "${workfile_i}" ] || return 0
