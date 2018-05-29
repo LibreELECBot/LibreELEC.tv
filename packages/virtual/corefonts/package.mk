@@ -23,9 +23,9 @@ PKG_LICENSE="GPL"
 PKG_SITE="http://www.openelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="virtual"
 PKG_SHORTDESC="corefonts: Metapackage for installing fonts"
 PKG_LONGDESC="corefonts is a Metapackage for installing fonts"
+PKG_TOOLCHAIN="virtual"
 
 if [ -n "$CUSTOM_FONTS" ]; then
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $CUSTOM_FONTS"

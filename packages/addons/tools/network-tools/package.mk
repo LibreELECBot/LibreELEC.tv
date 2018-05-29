@@ -24,7 +24,7 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="virtual"
+PKG_TOOLCHAIN="virtual"
 PKG_SHORTDESC="A bundle of network tools and programs"
 PKG_LONGDESC="This bundle currently includes bwm-ng, iftop, iperf, irssi, iw, lftp, ncftp, ngrep, nmap, rsync, sshfs, tcpdump, udpxy and wireless_tools."
 

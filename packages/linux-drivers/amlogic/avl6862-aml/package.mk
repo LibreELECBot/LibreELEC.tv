@@ -23,9 +23,9 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="virtual"
 PKG_SHORTDESC="avl6862-aml: Internal DVB tuner driver for Amlogic devices developed by afl1"
 PKG_LONGDESC="avl6862-aml: Internal DVB tuner driver for Amlogic devices developed by afl1"
+PKG_TOOLCHAIN="virtual"
 
 post_install() {
   enable_service amlogic-dvb.service

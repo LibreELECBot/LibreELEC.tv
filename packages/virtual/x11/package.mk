@@ -23,9 +23,9 @@ PKG_LICENSE="OSS"
 PKG_SITE="http://www.X.org"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain xorg-server"
-PKG_SECTION="virtual"
 PKG_SHORTDESC="x11: the Windowing system"
 PKG_LONGDESC="X11 is the Windowing system"
+PKG_TOOLCHAIN="virtual"
 
 # Additional packages we need for using xorg-server:
 # Fonts

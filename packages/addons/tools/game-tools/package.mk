@@ -24,7 +24,7 @@ PKG_LICENSE="GPL"
 PKG_SITE=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="virtual"
+PKG_TOOLCHAIN="virtual"
 PKG_SHORTDESC="A bundle of game tools and programs"
 PKG_LONGDESC="This bundle currently includes bchunk, ecm-tools, iat, and linuxconsoletools"
 
