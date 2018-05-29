@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://bitbucket.org/majortom/blindscan-s2"
 PKG_URL="https://github.com/persianpros/blindscan-s2/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="tools"
 PKG_SHORTDESC="blindscan-s2 is a program to blindscan digital satellite signals"
 PKG_LONGDESC="blindscan-s2 is a program to blindscan digital satellite signals"
 

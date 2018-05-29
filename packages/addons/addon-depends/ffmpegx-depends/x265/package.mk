@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/videolan/x265"
 PKG_URL="https://github.com/videolan/x265/archive/${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="multimedia"
 PKG_LONGDESC="x265 is a H.265/HEVC video encoder application library"
 PKG_TOOLCHAIN="make"
 

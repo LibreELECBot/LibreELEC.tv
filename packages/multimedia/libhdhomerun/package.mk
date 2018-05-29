@@ -26,7 +26,6 @@ PKG_SITE="http://www.silicondust.com"
 PKG_URL="http://download.silicondust.com/hdhomerun/${PKG_NAME}_${PKG_VERSION}.tgz"
 PKG_SOURCE_DIR="$PKG_NAME"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="driver"
 PKG_LONGDESC="The library provides functionality to setup the HDHomeRun."
 
 PKG_MAKE_OPTS_TARGET="CROSS_COMPILE=$TARGET_PREFIX"

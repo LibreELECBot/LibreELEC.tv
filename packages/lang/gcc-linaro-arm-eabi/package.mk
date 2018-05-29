@@ -25,7 +25,6 @@ PKG_SITE=""
 PKG_URL="https://releases.linaro.org/components/toolchain/binaries/${PKG_VERSION}/arm-eabi/gcc-linaro-${PKG_VERSION}-x86_64_arm-eabi.tar.xz"
 PKG_SOURCE_DIR="gcc-linaro-${PKG_VERSION}-x86_64_arm-eabi"
 PKG_DEPENDS_HOST="toolchain"
-PKG_SECTION="lang"
 PKG_LONGDESC="Linaro Aarch64 GNU Linux Binary Toolchain"
 PKG_TOOLCHAIN="manual"
 

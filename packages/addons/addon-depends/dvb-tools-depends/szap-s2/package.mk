@@ -25,7 +25,6 @@ PKG_SITE="https://bitbucket.org/updatelee/tune-s2"
 PKG_URL="https://bitbucket.org/CrazyCat/szap-s2/get/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="CrazyCat-${PKG_NAME}-${PKG_VERSION}*"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="tools"
 PKG_SHORTDESC="szap-s2 is a simple zapping tool for the Linux DVB S2 API"
 PKG_LONGDESC="szap-s2 is a simple zapping tool for the Linux DVB S2 API"
 

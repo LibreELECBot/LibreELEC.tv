@@ -25,7 +25,6 @@ PKG_SITE="https://github.com/libretro/mame2003-libretro"
 PKG_URL="https://github.com/libretro/mame2003-libretro/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="mame2003-libretro-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
-PKG_SECTION="emulation"
 PKG_SHORTDESC="Late 2003 version of MAME (0.78) for libretro"
 PKG_LONGDESC="Late 2003 version of MAME (0.78) for libretro"
 

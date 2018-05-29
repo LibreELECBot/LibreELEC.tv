@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="http://wiki.qemu.org"
 PKG_URL="https://download.qemu.org/qemu-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_HOST="toolchain glib:host pixman:host Python2:host zlib:host"
-PKG_SECTION="tools"
 PKG_SHORTDESC="QEMU is a generic and open source machine emulator and virtualizer."
 PKG_LONGDESC="QEMU is a generic and open source machine emulator and virtualizer."
 

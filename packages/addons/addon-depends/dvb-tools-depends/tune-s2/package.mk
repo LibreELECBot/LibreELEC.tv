@@ -25,7 +25,6 @@ PKG_SITE="https://bitbucket.org/updatelee/tune-s2"
 PKG_URL="https://bitbucket.org/CrazyCat/tune-s2/get/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="CrazyCat-${PKG_NAME}-${PKG_VERSION}*"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="tools"
 PKG_SHORTDESC="tune-s2 is a small linux app to be able to tune a dvb devices"
 PKG_LONGDESC="tune-s2 is a small linux app to be able to tune a dvb devices"
 

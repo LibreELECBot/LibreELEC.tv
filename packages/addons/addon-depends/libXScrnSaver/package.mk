@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="http://xorg.freedesktop.org/"
 PKG_URL="http://xorg.freedesktop.org/releases/individual/lib/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain scrnsaverproto"
-PKG_SECTION="x11/lib"
 PKG_SHORTDESC="X11 Screen Saver extension client library"
 PKG_LONGDESC="X11 Screen Saver extension client library"
 

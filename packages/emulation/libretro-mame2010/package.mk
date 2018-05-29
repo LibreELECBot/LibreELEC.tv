@@ -25,7 +25,6 @@ PKG_SITE="https://github.com/libretro/mame2010-libretro"
 PKG_URL="https://github.com/libretro/mame2010-libretro/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="mame2010-libretro-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
-PKG_SECTION="emulation"
 PKG_SHORTDESC="Late 2010 version of MAME (0.139) for libretro"
 PKG_LONGDESC="Late 2010 version of MAME (0.139) for libretro"
 

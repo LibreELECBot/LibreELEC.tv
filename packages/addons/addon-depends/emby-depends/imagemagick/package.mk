@@ -25,7 +25,6 @@ PKG_SITE="http://www.imagemagick.org/"
 PKG_URL="https://github.com/ImageMagick/ImageMagick/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="ImageMagick-$PKG_VERSION"
 PKG_DEPENDS_TARGET="toolchain libX11"
-PKG_SECTION="graphics"
 PKG_LONGDESC="Software suite to create, edit, compose, or convert bitmap images"
 
 PKG_CONFIGURE_OPTS_TARGET="--enable-static \

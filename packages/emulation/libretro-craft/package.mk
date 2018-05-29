@@ -25,7 +25,6 @@ PKG_SITE="https://github.com/libretro/Craft"
 PKG_URL="https://github.com/libretro/Craft/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="Craft-$PKG_VERSION*"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
-PKG_SECTION="emulation"
 PKG_SHORTDESC="A simple Minecraft clone written in C using modern OpenGL (shaders)"
 PKG_LONGDESC="A simple Minecraft clone written in C using modern OpenGL (shaders)"
 
