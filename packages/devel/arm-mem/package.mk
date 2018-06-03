@@ -15,7 +15,7 @@ PKG_SHORTDESC="arm-mem: ARM-accelerated versions of selected functions from stri
 PKG_LONGDESC="arm-mem is a ARM-accelerated versions of selected functions from string.h"
 PKG_BUILD_FLAGS="+pic"
 
-if [ "$DEVICE" = "RPi2" -o "$DEVICE" = "Slice3" ] ; then
+if [ "$DEVICE" = "RPi2" -o "$DEVICE" = "RPi3" -o "$DEVICE" = "Slice3" ] ; then
   PKG_LIB_ARM_MEM="libarmmem-v7l.so"
 else
   PKG_LIB_ARM_MEM="libarmmem-v6l.so"
