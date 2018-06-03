@@ -49,6 +49,13 @@ case "$LINUX" in
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET aml-dtbtools:host"
     PKG_BUILD_PERF="no"
     ;;
+  amlogic-mainline)
+    PKG_VERSION="b04e217704b7f879c6b91222b066983a44a7a09f" # 4.17-rc7
+    PKG_SHA256="057c51c2c3aae85f0687c2735fcb9b7329e64b7e929d7af67226a86810b0593d"
+    PKG_URL="https://github.com/torvalds/linux/archive/$PKG_VERSION.tar.gz"
+    PKG_SOURCE_DIR="$PKG_NAME-$PKG_VERSION*"
+    PKG_PATCH_DIRS="default"
+    ;;
   rockchip-4.4)
     PKG_VERSION="eae92ae2b930999857df47c3057327c1c490454b"
     PKG_SHA256="da453ca6ecefc3719a1165bc7b08fe00fc2b50ab64f6289ef6f3670a9fc1ceca"
@@ -162,11 +169,14 @@ pre_make_target() {
 
   make oldconfig
 
-  # regdb
-  cp $(get_build_dir wireless-regdb)/db.txt $PKG_BUILD/net/wireless/db.txt
+  # regdb (backward compatability with pre-4.15 kernels)
+  if grep -q ^CONFIG_CFG80211_INTERNAL_REGDB= $PKG_BUILD/.config ; then
+    cp $(get_build_dir wireless-regdb)/db.txt $PKG_BUILD/net/wireless/db.txt
+  fi
 }
 
 make_target() {
+  export HOST_EXTRACFLAGS="-I$TOOLCHAIN/include -L$TOOLCHAIN/lib"
   LDFLAGS="" make modules
   LDFLAGS="" make INSTALL_MOD_PATH=$INSTALL/$(get_kernel_overlay_dir) DEPMOD="$TOOLCHAIN/bin/depmod" modules_install
   rm -f $INSTALL/$(get_kernel_overlay_dir)/lib/modules/*/build
@@ -301,4 +311,9 @@ post_install() {
 
   # bluez looks in /etc/firmware/
     ln -sf /$(get_full_firmware_dir)/ $INSTALL/etc/firmware
+
+  # regdb and signature is now loaded as firmware by 4.15+
+    if grep -q ^CONFIG_CFG80211_REQUIRE_SIGNED_REGDB= $PKG_BUILD/.config; then
+      cp $(get_build_dir wireless-regdb)/regulatory.db{,.p7s} $INSTALL/$(get_full_firmware_dir)
+    fi
 }
