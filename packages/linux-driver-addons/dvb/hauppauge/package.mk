@@ -26,7 +26,6 @@ PKG_URL="https://git.linuxtv.org/media_build.git/snapshot/${PKG_VERSION}.tar.gz"
 PKG_SOURCE_DIR="${PKG_VERSION}"
 PKG_DEPENDS_TARGET="toolchain linux media_tree"
 PKG_NEED_UNPACK="$LINUX_DEPENDS media_tree"
-PKG_SECTION="driver.dvb"
 PKG_LONGDESC="DVB drivers for Hauppauge"
 
 PKG_IS_ADDON="yes"
@@ -34,6 +33,7 @@ PKG_IS_KERNEL_PKG="yes"
 PKG_ADDON_IS_STANDALONE="yes"
 PKG_ADDON_NAME="DVB drivers for Hauppauge"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="driver.dvb"
 PKG_ADDON_VERSION="${ADDON_VERSION}.${PKG_REV}"
 
 if [ $LINUX = "amlogic-3.14" -o $LINUX = "amlogic-3.10" ]; then

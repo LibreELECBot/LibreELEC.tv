@@ -27,13 +27,13 @@ PKG_SITE="https://www.musicpd.org"
 PKG_URL="http://www.musicpd.org/download/${PKG_NAME}/${PKG_VERSION%.*}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_TARGET="toolchain alsa-lib boost curl faad2 ffmpeg flac glib lame libcdio libiconv libid3tag \
                     libmad libmpdclient libsamplerate libvorbis libnfs libogg mpd-mpc opus pulseaudio samba yajl"
-PKG_SECTION="service.multimedia"
 PKG_SHORTDESC="Music Player Daemon (MPD): a free and open Music Player Server"
 PKG_LONGDESC="Music Player Daemon ($PKG_VERSION) is a flexible and powerful server-side application for playing music"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Music Player Daemon (MPD)"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service.multimedia"
 
 pre_configure_target() {
   export LIBS="$LIBS -logg -lFLAC -ldl"

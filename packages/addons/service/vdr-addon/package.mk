@@ -28,7 +28,6 @@ PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain vdr vdr-plugin-ddci2 vdr-plugin-dummydevice vdr-plugin-dvbapi vdr-plugin-eepg vdr-plugin-epgfixer \
                     vdr-plugin-epgsearch vdr-plugin-iptv vdr-plugin-live vdr-plugin-restfulapi vdr-plugin-robotv vdr-plugin-satip \
                     vdr-plugin-streamdev vdr-plugin-vnsiserver vdr-plugin-wirbelscan vdr-plugin-wirbelscancontrol vdr-plugin-xmltv2vdr"
-PKG_SECTION="service.multimedia"
 PKG_SHORTDESC="VDR: a TV streaming server for Linux"
 PKG_LONGDESC="VDR (2.3.x) is a TV streaming server for Linux supporting DVB-S/S2, DVB-C, DVB-T/T2, IPTV and SAT>IP"
 PKG_TOOLCHAIN="manual"
@@ -36,6 +35,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="VDR PVR Backend"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service.multimedia"
 PKG_ADDON_REQUIRES="pvr.vdr.vnsi:0.0.0 script.config.vdr:0.0.0"
 
 addon() {

@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="service.multimedia"
 PKG_SHORTDESC="Add-on removed"
 PKG_LONGDESC="Add-on removed"
 PKG_TOOLCHAIN="manual"
@@ -34,6 +33,7 @@ PKG_ADDON_BROKEN="Tvheadend 4.0 is no longer maintained and has been superseded 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Tvheadend Server 4.0"
 PKG_ADDON_TYPE="xbmc.broken"
+PKG_SECTION="service.multimedia"
 
 addon() {
   :

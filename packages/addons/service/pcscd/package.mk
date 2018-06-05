@@ -25,7 +25,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain pcsc-lite libusb ccid"
-PKG_SECTION="service"
 PKG_SHORTDESC="Middleware to access a smart card using SCard API (PC/SC)"
 PKG_LONGDESC="Middleware to access a smart card using SCard API (PC/SC)"
 PKG_TOOLCHAIN="manual"
@@ -33,6 +32,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="PC/SC Smart Card Daemon"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin/

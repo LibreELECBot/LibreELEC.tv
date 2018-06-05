@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="service"
 PKG_SHORTDESC="Provides the ability to change the kodi audio device if a bluetooth audio device is connected"
 PKG_LONGDESC="Provides the ability to change the kodi audio device if a bluetooth audio device is connected"
 PKG_TOOLCHAIN="manual"
@@ -32,6 +31,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Bluetooth Audio Device Changer"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 addon() {
   :

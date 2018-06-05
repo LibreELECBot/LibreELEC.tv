@@ -26,7 +26,6 @@ PKG_SITE="https://libreelec.tv"
 PKG_URL="https://github.com/b-jesch/script.program.driverselect/archive/$PKG_VERSION.tar.gz"
 PKG_SOURCE_DIR="${PKG_SECTION}.${PKG_NAME}-${PKG_VERSION}*"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="script.program"
 PKG_SHORTDESC="script.program.driverselect"
 PKG_LONGDESC="script.program.driverselect"
 PKG_TOOLCHAIN="manual"
@@ -34,6 +33,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Driver Select"
 PKG_ADDON_TYPE="xbmc.python.script"
+PKG_SECTION="script.program"
 
 unpack() {
   mkdir -p $PKG_BUILD/addon

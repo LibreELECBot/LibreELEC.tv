@@ -25,13 +25,13 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/rsyslog"
 PKG_URL="http://www.rsyslog.com/files/download/rsyslog/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain util-linux libestr libfastjson liblognorm librelp zlib libgcrypt liblogging"
-PKG_SECTION="service"
 PKG_SHORTDESC="Rsyslog: a rocket-fast system for log processing."
 PKG_LONGDESC="Rsyslog ($PKG_VERSION) offers high-performance, great security features and a modular design."
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Rsyslog"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 PKG_CONFIGURE_OPTS_TARGET="--enable-imfile \
                            --enable-imjournal \

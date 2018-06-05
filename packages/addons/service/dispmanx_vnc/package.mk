@@ -26,13 +26,13 @@ PKG_LICENSE="OSS"
 PKG_SITE="https://github.com/patrikolausson/dispmanx_vnc"
 PKG_URL="https://github.com/patrikolausson/dispmanx_vnc/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libvncserver bcm2835-bootloader bcm2835-driver libconfig openssl"
-PKG_SECTION="service/system"
 PKG_SHORTDESC="Raspberry Pi VNC: a Virtual Network Computing server for Raspberry Pi"
 PKG_LONGDESC="Raspberry Pi VNC ($PKG_VERSION) is a Virtual Network Computing (VNC) server for Raspberry Pi using dispmanx"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Raspberry Pi VNC"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service.system"
 PKG_MAINTAINER="Anton Voyl (awiouy)"
 
 pre_make_target() {

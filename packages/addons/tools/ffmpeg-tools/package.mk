@@ -24,13 +24,13 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain ffmpegx"
-PKG_SECTION="tools"
 PKG_SHORTDESC="FFmpeg binary for transcoding and audio/video manipulating."
 PKG_TOOLCHAIN="manual"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="FFmpeg Tools"
 PKG_ADDON_TYPE="xbmc.python.script"
+PKG_SECTION="tools"
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin/

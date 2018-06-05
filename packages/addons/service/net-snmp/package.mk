@@ -25,7 +25,6 @@ PKG_LICENSE="BSD"
 PKG_SITE="http://www.net-snmp.org"
 PKG_URL="http://sourceforge.net/projects/net-snmp/files/$PKG_NAME/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libnl openssl"
-PKG_SECTION="service"
 PKG_SHORTDESC="Simple Network Management Protocol utilities."
 PKG_LONGDESC="Simple Network Management Protocol (SNMP) is a widely used protocol for monitoring the health and welfare of network equipment."
 PKG_TOOLCHAIN="autotools"
@@ -33,6 +32,7 @@ PKG_TOOLCHAIN="autotools"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Net-SNMP"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 PKG_CONFIGURE_OPTS_TARGET="--with-defaults \
         --disable-applications \

@@ -24,7 +24,6 @@ PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_SECTION="service"
 PKG_SHORTDESC="fd628: Kodi service to light up additional icons on devices with FD628 display"
 PKG_LONGDESC="fd628: Kodi service to light up additional icons on devices with FD628 display"
 PKG_TOOLCHAIN="manual"
@@ -33,6 +32,7 @@ PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="service.fd628"
 PKG_ADDON_PROJECTS="S905 S912"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 make_target() {
   $SED -e "s|@PKG_VERSION@|$PKG_VERSION|g" \

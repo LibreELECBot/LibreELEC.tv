@@ -25,7 +25,6 @@ PKG_LICENSE="BSD-3c/GPLv2"
 PKG_SITE="https://sourceforge.net/projects/minidlna/"
 PKG_URL="http://repo.or.cz/minidlna.git/snapshot/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libiconv libid3tag libexif libjpeg-turbo libogg libvorbis ffmpeg flac sqlite"
-PKG_SECTION="service"
 PKG_SHORTDESC="MiniDLNA (ReadyMedia): a fully compliant DLNA/UPnP-AV server"
 PKG_LONGDESC="MiniDLNA ($PKG_VERSION) (ReadyMedia) is a media server, with the aim of being fully compliant with DLNA/UPnP-AV clients."
 PKG_TOOLCHAIN="autotools"
@@ -33,6 +32,7 @@ PKG_TOOLCHAIN="autotools"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="MiniDLNA (ReadyMedia)"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 PKG_CONFIGURE_OPTS_TARGET="--disable-static \
                            --disable-nls \

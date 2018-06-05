@@ -27,13 +27,13 @@ PKG_LICENSE="GPL"
 PKG_SITE="http://www.proftpd.org/"
 PKG_URL="https://github.com/proftpd/proftpd/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libcap openssl ncurses pcre whois"
-PKG_SECTION="service"
 PKG_SHORTDESC="ProFTPD: a FTP server for linux"
 PKG_LONGDESC="ProFTPD ($PKG_VERSION): is a secure and configurable FTP server with SSL/TLS support"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="ProFTPD Server"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 ADDON_DIR="/storage/.kodi/addons/service.proftpd"
 

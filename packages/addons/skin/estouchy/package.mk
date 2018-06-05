@@ -25,7 +25,6 @@ PKG_SITE="http://www.kodi.tv"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain kodi"
 PKG_PRIORITY="optional"
-PKG_SECTION="skin"
 PKG_SHORTDESC="Kodi skin Estouchy"
 PKG_LONGDESC="Kodi skin Estouchy"
 PKG_TOOLCHAIN="manual"
@@ -33,6 +32,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Estouchy"
 PKG_ADDON_TYPE="xbmc.gui.skin"
+PKG_SECTION="skin"
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID

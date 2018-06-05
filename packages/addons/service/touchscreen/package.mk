@@ -25,7 +25,6 @@ PKG_LICENSE="GPL"
 PKG_SITE=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain tslib evtest"
-PKG_SECTION="service"
 PKG_SHORTDESC="Touchscreen: support addon for Touchscreens"
 PKG_LONGDESC="Touchscreen: addon creates new virtual input device and \
 converts data from touchscreen to Kodi. Short tap sends button press event \
@@ -35,6 +34,7 @@ PKG_TOOLCHAIN="manual"
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Touchscreen"
 PKG_ADDON_TYPE="xbmc.service"
+PKG_SECTION="service"
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin
