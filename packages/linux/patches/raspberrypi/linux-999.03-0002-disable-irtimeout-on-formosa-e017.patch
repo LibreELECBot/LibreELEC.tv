@@ -1,0 +1,33 @@
+diff --git a/drivers/media/rc/mceusb.c b/drivers/media/rc/mceusb.c
+index 4c0c8008872a..2bc533c77f19 100644
+--- a/drivers/media/rc/mceusb.c
++++ b/drivers/media/rc/mceusb.c
+@@ -189,6 +189,7 @@ enum mceusb_model_type {
+ 	MULTIFUNCTION,
+ 	TIVO_KIT,
+ 	MCE_GEN2_NO_TX,
++	MCE_GEN2_NO_TX_BROKEN_IRTIMEOUT,
+ 	HAUPPAUGE_CX_HYBRID_TV,
+ 	EVROMEDIA_FULL_HYBRID_FULLHD,
+ 	ASTROMETA_T2HYBRID,
+@@ -229,6 +230,11 @@ static const struct mceusb_model mceusb_model[] = {
+ 		.mce_gen2 = 1,
+ 		.no_tx = 1,
+ 	},
++	[MCE_GEN2_NO_TX_BROKEN_IRTIMEOUT] = {
++		.mce_gen2 = 1,
++		.no_tx = 1,
++		.broken_irtimeout = 1
++	},
+ 	[MCE_GEN2_TX_INV] = {
+ 		.mce_gen2 = 1,
+ 		.tx_mask_normal = 1,
+@@ -377,7 +383,7 @@ static const struct usb_device_id mceusb_dev_table[] = {
+ 	{ USB_DEVICE(VENDOR_FORMOSA, 0xe016) },
+ 	/* Formosa aim / Trust MCE Infrared Receiver */
+ 	{ USB_DEVICE(VENDOR_FORMOSA, 0xe017),
+-	  .driver_info = MCE_GEN2_NO_TX },
++	  .driver_info = MCE_GEN2_NO_TX_BROKEN_IRTIMEOUT },
+ 	/* Formosa Industrial Computing / Beanbag Emulation Device */
+ 	{ USB_DEVICE(VENDOR_FORMOSA, 0xe018) },
+ 	/* Formosa21 / eHome Infrared Receiver */
