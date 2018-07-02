@@ -17,16 +17,14 @@
 ################################################################################
 
 PKG_NAME="game.libretro.beetle-pce-fast"
-PKG_VERSION="2e0e463"
-PKG_SHA256="f3f5d4c913c04ec90216278547cabaebb608264a6d5f9e8126f27e6d6e3483a4"
-PKG_REV="105"
+PKG_VERSION="33717ba"
+PKG_SHA256="d1c38aab5199d506a2eefafed90ac6075fc979d6fc26d1ef1b9fdbd4f8332214"
+PKG_REV="106"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.beetle-pce-fast"
 PKG_URL="https://github.com/kodi-game/game.libretro.beetle-pce-fast/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform libretro-beetle-pce-fast"
-PKG_SECTION=""
-PKG_SHORTDESC="game.libretro.beetle-pce-fast: Beetle PCE Fast for Kodi"
 PKG_LONGDESC="game.libretro.beetle-pce-fast: Beetle PCE Fast for Kodi"
 
 PKG_IS_ADDON="yes"
