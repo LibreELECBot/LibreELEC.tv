@@ -46,8 +46,8 @@ case "$LINUX" in
     PKG_URL="https://github.com/raspberrypi/linux/archive/$PKG_VERSION.tar.gz"
     ;;
   *)
-    PKG_VERSION="4.18-rc6"
-    PKG_SHA256="cbb8cd9997aea08fa4a196697f5c84037c62838ac960a30b9af4a08fe61dbfa3"
+    PKG_VERSION="4.18-rc7"
+    PKG_SHA256="3893023b934f0d831915b6ac236688860f9c71544585e181517372d5f399b300"
     PKG_URL="https://git.kernel.org/torvalds/t/$PKG_NAME-$PKG_VERSION.tar.gz"
     PKG_PATCH_DIRS="default"
     ;;
