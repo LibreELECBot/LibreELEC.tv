@@ -2,8 +2,8 @@
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="media_tree"
-PKG_VERSION="2017-12-06-b32a2b42f76c"
-PKG_SHA256="90a6b5b015bbb5583a6c72880f8b89ed8b3671ca64c713a00ec3467fbb84cdc4"
+PKG_VERSION="2018-04-15-60cc43fc8884"
+PKG_SHA256="ed21aadcbba7847af97d53b3093d0f2aef8f356807b0d066956affb422769708"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://git.linuxtv.org/media_tree.git"
@@ -31,6 +31,7 @@ unpack() {
     mkdir -p $PKG_BUILD/drivers/media/amlogic/
     cp -a "$(kernel_path)/drivers/amlogic/video_dev" "$PKG_BUILD/drivers/media/amlogic"
     sed -i 's,common/,,g; s,"trace/,",g' `find $PKG_BUILD/drivers/media/amlogic/video_dev/ -type f`
+
     # Copy videobuf-res module
     cp -a "$(kernel_path)/drivers/media/v4l2-core/videobuf-res.c" "$PKG_BUILD/drivers/media/v4l2-core/"
     cp -a "$(kernel_path)/include/media/videobuf-res.h" "$PKG_BUILD/include/media/"
@@ -38,6 +39,9 @@ unpack() {
     # Copy WeTek Play DVB driver
     if [ $LINUX = "amlogic-3.14" ]; then
       cp -a "$(kernel_path)/drivers/amlogic/wetek" "$PKG_BUILD/drivers/media/amlogic"
+      # fix includes
+      sed -e 's/#include "dvb_frontend.h"/#include "media\/dvb_frontend.h"/g' -i $PKG_BUILD/drivers/media/amlogic/wetek/*.*
+      sed -e 's/#include "dvb_math.h"/#include "media\/dvb_math.h"/g' -i $PKG_BUILD/drivers/media/amlogic/wetek/*.*
     fi
 
     # Copy avl6862 driver
