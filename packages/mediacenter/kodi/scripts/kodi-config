@@ -2,6 +2,7 @@
 
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
+# Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 KODI_ROOT=$HOME/.kodi
 
@@ -37,4 +38,57 @@ if [ "$(uname -m)" = "x86_64" -o "$(uname -m)" = "aarch64" ]; then
   echo "MALLOC_MMAP_THRESHOLD_=524288" >> /run/libreelec/kodi.conf
 else #arm
   echo "MALLOC_MMAP_THRESHOLD_=8192" >> /run/libreelec/kodi.conf
+
+  if [ -f /storage/.kodi/userdata/addon_data/service.libreelec.settings/oe_settings.xml ]; then
+    KBLAYOUT="$(xmlstarlet sel -t -v libreelec/settings/system/KeyboardLayout1 /storage/.kodi/userdata/addon_data/service.libreelec.settings/oe_settings.xml)"
+    if [ -n "${KBLAYOUT}" ]; then
+      # http://dev.alpinelinux.org/archive/bkeymaps/
+      # https://elinux.org/RPi_Keyboard_Layout#Basic_Layouts
+      val="${KBLAYOUT%%-*}"
+      case "${val}" in
+        azerty)
+          val="fr";;
+        bg_*)
+          val="bg";;
+        cf)
+          val="ca";; # French Canadian
+        croat)
+          val="hr";;
+        de_CH)
+          val="ch";;
+        fr_CH)
+          val="ch";;
+        hu*)
+          val="hu";;
+        it2)
+          val="it";;
+        jp106)
+          val="jp";;
+        mk0)
+          val="mk";; #Macedonian
+        nl2)
+          val="nl";;
+        pl[1-4])
+          val="pl";;
+        ro_*)
+          val="ro";;
+        ru_*)
+          val="ru";;
+        sg)
+          val="us";; #Singapore
+        slovene)
+          val="si";;
+        sr)
+          val="rs";; #Serbian
+        sv)
+          val="se";; #Swedish
+        tr*)
+          val="tr";; #Turkish
+        uk)
+          val="gb";;
+      esac
+      [ -f /usr/share/X11/xkb/symbols/$val ] || val="us"
+      echo "XKB_DEFAULT_LAYOUT=\"${val}\"" >> /run/libreelec/kodi.conf
+    fi
+  fi
 fi
