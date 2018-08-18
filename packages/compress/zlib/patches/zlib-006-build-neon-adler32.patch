@@ -1,0 +1,14 @@
+--- a/CMakeLists.txt	2018-08-20 00:19:32.060574035 +0000
++++ b/CMakeLists.txt	2018-08-20 00:47:35.316217503 +0000
+@@ -144,7 +144,10 @@
+             contrib/arm/inffast_chunk.h
+             contrib/arm/neon_slide_hash.h
+             contrib/arm/arm_longest_match.h)
+-        set(ZLIB_ARM_NEON contrib/arm/inflate.c contrib/arm/inffast_chunk.c)
++        set(ZLIB_ARM_NEON
++            contrib/arm/inflate.c
++            contrib/arm/inffast_chunk.c
++            contrib/arm/neon_adler32.c)
+         add_definitions(-DARM_NEON)
+         set(COMPILER ${CMAKE_C_COMPILER})
+         # NEON is mandatory in ARMv8.
