@@ -52,10 +52,8 @@ shift $((${OPTIND}-1))
 
 
 # sanity checking
-if [ -z "${PROJECT}" -o -z "${DEVICE}" -o -z "${ARCH}" ]; then
-  die "error: PROJECT, DEVICE and ARCH need to be set for proper results"
 # no directory or not a directory
-elif [ "${SOURCE_DIR}" = "${0}" ]; then
+if [ "${SOURCE_DIR}" = "${0}" ]; then
   die "error: no directory provided"
 elif [ ! -d "${SOURCE_DIR}" ]; then
   die "error: ${SOURCE_DIR} isn't a directory"
