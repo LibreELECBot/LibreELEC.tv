@@ -17,14 +17,11 @@ set -e
 # default variables
 DESTRUCTIVE_RUN="false"
 
-# last cli var
-SOURCE_DIR="${@: -1}"
-
 
 # helper functions
 help(){
-  echo "Usage: ${0} [-hd] directory"
-    echo "Setting PROJECT, DEVICE and ARCH is required."
+  echo "Usage: ${0} [-hd]"
+    echo "Set PROJECT, DEVICE and ARCH as required."
     echo "  -h this help"
     echo "  -d delete files (default: no)"
 }
@@ -52,20 +49,14 @@ shift $((${OPTIND}-1))
 
 
 # sanity checking
-# no directory or not a directory
-if [ "${SOURCE_DIR}" = "${0}" ]; then
-  die "error: no directory provided"
-elif [ ! -d "${SOURCE_DIR}" ]; then
-  die "error: ${SOURCE_DIR} isn't a directory"
-# source directory overload
-elif [ -n "$3" ]; then
-  die "error: too many arguments given"
+if [ ! -d "${SOURCES}" ]; then
+  die "error: ${SOURCES} is not a directory"
 fi
 
 
 # main
-# process files in SOURCE_DIR
-for SOURCE_PACKAGE in $(find "${SOURCE_DIR}/" -mindepth 1 -type d); do
+# process files in SOURCES
+for SOURCE_PACKAGE in $(find "${SOURCES}/" -mindepth 1 -type d); do
   PACKAGE_NAME=$(basename "${SOURCE_PACKAGE}")
 
   # check if package is still in the tree to selectively prune, or delete the dir
@@ -80,7 +71,7 @@ for SOURCE_PACKAGE in $(find "${SOURCE_DIR}/" -mindepth 1 -type d); do
       fi
 
       # list all files that would be deleted
-      if [ "${FILE}" != "${SOURCE_DIR}/${PACKAGE_NAME}/${CUR_PACKAGE_FILE}" ]; then
+      if [ "${FILE}" != "${SOURCES}/${PACKAGE_NAME}/${CUR_PACKAGE_FILE}" ]; then
         ls -1 "${FILE}"*
         if [ "${DESTRUCTIVE_RUN}" = "true" ]; then
           rm "${FILE}"*
