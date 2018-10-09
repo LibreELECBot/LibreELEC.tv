@@ -31,7 +31,20 @@ fi
 # determines TARGET_ARCH, if not forced by user (x86_64 / arm)
 # default is x86_64
 if [ -z "$ARCH" ]; then
-  TARGET_ARCH="x86_64"
+  if [ -n "$DEVICE" ]; then
+    linux_config_dir="$PROJECT_DIR/$PROJECT/devices/$DEVICE/linux"
+  else
+    linux_config_dir="$PROJECT_DIR/$PROJECT/linux"
+  fi
+
+  arch_list=()
+  for arch in $linux_config_dir/*.conf $linux_config_dir/*/linux.*.conf; do
+    [[ ${arch} =~ .*\*.* ]] && continue
+    arch_list+=($(basename $arch | cut -f2 -d "."))
+  done
+  if [ ${#arch_list[@]} -eq 1 ]; then
+    TARGET_ARCH=${arch_list[0]}
+  fi
 else
   TARGET_ARCH="$ARCH"
 fi
