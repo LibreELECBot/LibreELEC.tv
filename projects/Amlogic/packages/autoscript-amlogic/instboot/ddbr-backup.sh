@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
+
 #BACKUP_DATE=$(date +%Y%m%d%H%M%S)
 #image="$(date +%Y%m%d%H%M%S)-EMMC-backup.img"
 image="EMMC-backup.img"
