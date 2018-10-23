@@ -2,9 +2,9 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.tyrquake"
-PKG_VERSION="8fe7f682472c98532036965812b5d0e0b77b6b55"
-PKG_SHA256="9f358c75553984be63657ce7bdad25689947b71dd2db5a4990540920412f0d5f"
-PKG_REV="107"
+PKG_VERSION="3119e4f5c4fed210a9e91adb2a5aefbd57cd0c64"
+PKG_SHA256="f5dc51e67e0b3a89c1056cd424583d1b04531255b5ae75e796da6399217e9b10"
+PKG_REV="108"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.tyrquake"

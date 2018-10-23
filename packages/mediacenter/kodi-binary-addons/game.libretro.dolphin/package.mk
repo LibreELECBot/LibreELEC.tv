@@ -2,9 +2,9 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.dolphin"
-PKG_VERSION="f73b307"
+PKG_VERSION="f73b3073e3368bf6a75a2a286d79a66538d12679"
 PKG_SHA256="039cfecbfe67c24e87708008f811538b7d4502aa2171379570ee2632a33effe6"
-PKG_REV="105"
+PKG_REV="106"
 # no openGL suport in retroplayer yet
 PKG_ARCH="none"
 PKG_LICENSE="GPL"

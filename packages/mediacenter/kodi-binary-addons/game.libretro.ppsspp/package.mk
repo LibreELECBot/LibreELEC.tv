@@ -2,9 +2,9 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.ppsspp"
-PKG_VERSION="d24a963"
+PKG_VERSION="d24a9638f02a67d5b16097dbbb15013f8b645440"
 PKG_SHA256="2634b9c6f47bd32afcc2beb3f53b03b3ca3fb8d1391b502396ff24862aafca27"
-PKG_REV="106"
+PKG_REV="107"
 # no openGL suport in retroplayer yet
 PKG_ARCH="none"
 PKG_LICENSE="GPL"
