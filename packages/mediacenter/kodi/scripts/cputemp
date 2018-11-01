@@ -46,13 +46,14 @@ if [ "$1" = "cpu" -o "$TEMP" = "0" ]; then
     fi
   done
 
-  if [ "$TEMP" = "0" -a -f /sys/class/hwmon/hwmon0/device/temp1_input ]; then
-    TEMP="$(cat /sys/class/hwmon/hwmon0/device/temp1_input)"
-  fi
-
   # used on RaspberryPi and 3.14 kernel amlogic
   if [ "$TEMP" = "0" -a -f /sys/class/thermal/thermal_zone0/temp ]; then
     TEMP="$(cat /sys/class/thermal/thermal_zone0/temp)"
+  fi
+
+  # other temp sensor, possibly GPIO based (and not a SOC sensor)
+  if [ "$TEMP" = "0" -a -f /sys/class/hwmon/hwmon0/device/temp1_input ]; then
+    TEMP="$(cat /sys/class/hwmon/hwmon0/device/temp1_input)"
   fi
 
   TEMP="$(( $TEMP / 1000 ))"
