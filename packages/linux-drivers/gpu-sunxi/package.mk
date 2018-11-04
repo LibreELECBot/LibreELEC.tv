@@ -2,8 +2,8 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="gpu-sunxi"
-PKG_VERSION="r8p1-00rel0"
-PKG_SHA256="0036796165612eea75bee0e756fbd50c3137be257d4739b91aad0c159ae4016a"
+PKG_VERSION="r9p0-01rel0"
+PKG_SHA256="7a67127341d17640c1fff5dad80258fb2a37c8a2121b81525fe2327e4532ce2b"
 PKG_ARCH="arm aarch64"
 PKG_LICENSE="GPL"
 PKG_SITE="https://developer.arm.com/products/software/mali-drivers/utgard-kernel"
