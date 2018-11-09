@@ -10,6 +10,11 @@ devices = {
   },
 
   'Allwinner' : {
+    'A64' : {
+      'pine64' : { 'dtb' : 'sun50i-a64-pine64.dtb', 'config' : 'pine64_plus_defconfig' },
+      'pine64_plus' : { 'dtb' : 'sun50i-a64-pine64-plus.dtb', 'config' : 'pine64_plus_defconfig' },
+      'pine64_lts' : { 'dtb' : 'sun50i-a64-sopine-baseboard.dtb', 'config' : 'sopine_baseboard_defconfig' },
+    },
     'H3' : {
       'beelink_x2' : { 'dtb' : 'sun8i-h3-beelink-x2.dtb', 'config' : 'beelink_x2_defconfig' },
       'orangepi_2' : { 'dtb' : 'sun8i-h3-orangepi-2.dtb', 'config' : 'orangepi_2_defconfig' },
