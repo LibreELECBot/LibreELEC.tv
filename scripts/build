@@ -8,7 +8,7 @@
 
 if [ "$1" = "--all" ]; then
   if [ -n "$2" ]; then
-    for build_dir in $(ls -1d ${ROOT}/build.*); do
+    for build_dir in $(ls -1d "${ROOT}/${BUILD_BASE}/"*); do
       load_build_config ${build_dir} && ./scripts/build $2
     done
   fi

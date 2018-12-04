@@ -1,4 +1,4 @@
-BUILD_DIRS=build.*
+BUILD_DIRS=build
 
 all: release
 
@@ -21,7 +21,7 @@ clean:
 	rm -rf $(BUILD_DIRS)/* $(BUILD_DIRS)/.stamps
 
 distclean:
-	rm -rf ./.ccache ./$(BUILD_DIRS)
+	rm -rf ./.ccache ./$(BUILD_DIRS)/*
 
 src-pkg:
 	tar cvJf sources.tar.xz sources .stamps

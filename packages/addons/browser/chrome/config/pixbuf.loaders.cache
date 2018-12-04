@@ -1,6 +1,6 @@
 # How to generate those file
-# cd /LE/build.LibreELEC-Generic/gdk-pixbuf-2.36.12/.install_pkg/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders
-# cp /LE/build.LibreELEC-Generic/gdk-pixbuf-2.36.12/.install_pkg/usr/bin/gdk-pixbuf-query-loaders .
+# cd /LE/build/LibreELEC-Generic/gdk-pixbuf-2.36.12/.install_pkg/usr/lib/gdk-pixbuf-2.0/2.10.0/loaders
+# cp /LE/build/LibreELEC-Generic/gdk-pixbuf-2.36.12/.install_pkg/usr/bin/gdk-pixbuf-query-loaders .
 # ./gdk-pixbuf-query-loaders *.so > pixbuf.loaders.cache
 
 
