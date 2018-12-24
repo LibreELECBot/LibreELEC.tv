@@ -2,8 +2,8 @@
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="sapphire"
-PKG_VERSION="6.9"
-PKG_SHA256="191661e8186712fe4a08a7555dbca36676338c630536a48373048afbbb3ad2ff"
+PKG_VERSION="7.1"
+PKG_SHA256="935fb34bcf8b8937a6330bddbb3684afc2ed9b40f8f3fb8d665967a94003c2c5"
 PKG_REV="104"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
