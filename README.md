@@ -21,6 +21,5 @@ As LibreELEC includes code from many upstream projects it includes many copyrigh
 **Docker build system**
 ```
 docker build -t librelec .
-docker run -v $PWD:/home/libreelec -v $PWD:$PWD -e DISTRO=LibreELEC -e PROJECT=Rockchip -e SYSTEM=RK3328 -e ARCH=arm -d --name builder libreelec sleep 9999
-docker exec -u libreelec -ti builder make image -j8
+docker run -v $PWD:/home/libreelec -v $PWD:$PWD -e DISTRO=LibreELEC -e PROJECT=Rockchip -e SYSTEM=RK3328 -e ARCH=arm -ti --rm --name builder libreelec make image -j8
 ```
