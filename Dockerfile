@@ -56,7 +56,7 @@ RUN apt-get update \
 RUN useradd  -u 1000 libreelec && echo "libreelec ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/run
 
 ENV HOME /home/libreelec
-ENV DISTRO Lakka
+ENV DISTRO LibreELEC
 
 VOLUME /home/libreelec
 
