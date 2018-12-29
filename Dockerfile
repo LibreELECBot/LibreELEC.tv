@@ -44,6 +44,11 @@ RUN apt-get update \
 		xsltproc \
 		xz-utils \
 		zip \
+		python \
+		swig \
+		libpython-dev \
+		python-dev \
+		libfdt-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 ENV HOME /root
