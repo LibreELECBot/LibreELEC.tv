@@ -50,6 +50,7 @@ RUN apt-get update \
 		python-dev \
 		libfdt-dev \
 		sudo \
+		default-jre \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN useradd  -u 1000 libreelec && echo "libreelec ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/run
@@ -61,4 +62,5 @@ VOLUME /home/libreelec
 
 WORKDIR /home/libreelec
 
+USER 1000
 CMD make image
