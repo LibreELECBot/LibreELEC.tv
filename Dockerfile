@@ -49,13 +49,16 @@ RUN apt-get update \
 		libpython-dev \
 		python-dev \
 		libfdt-dev \
+		sudo \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV HOME /root
+RUN useradd  -u 1000 libreelec && echo "libreelec ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/run
+
+ENV HOME /home/libreelec
 ENV DISTRO Lakka
 
-VOLUME /root
+VOLUME /home/libreelec
 
-WORKDIR /root
+WORKDIR /home/libreelec
 
 CMD make image
