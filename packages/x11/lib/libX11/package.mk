@@ -35,7 +35,3 @@ pre_make_target() {
   echo '' > $PKG_BUILD/src/util/Makefile.am
   $HOST_CC $HOST_CFLAGS -I$PKG_BUILD/include $PKG_BUILD/src/util/makekeys.c -o $PKG_BUILD/.$TARGET_NAME/src/util/makekeys
 }
-
-make_target() {
-  make V=1 CC=$CC LD=$LD CFLAGS="$TARGET_CFLAGS"
-}
