@@ -6,6 +6,9 @@ PKG_VERSION=""
 PKG_LICENSE="various"
 PKG_SITE="http://www.libreelec.tv"
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain $PROJECT"
+PKG_DEPENDS_TARGET="toolchain"
+if [ -f $(get_pkg_directory $PROJECT)/package.mk ]; then
+  PKG_DEPENDS_TARGET+=" $PROJECT"
+fi
 PKG_SECTION="virtual"
 PKG_LONGDESC="OEM: Metapackage for various OEM packages"
