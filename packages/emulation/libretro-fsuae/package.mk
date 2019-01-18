@@ -2,13 +2,13 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-fsuae"
-PKG_VERSION="d4493d6e9499821956ca39fa42be371c23b22b62"
-PKG_SHA256="68a8b5c9714ab70f34d772ab9110eaab324c6b35939d4cd495189aba308cae7a"
-PKG_ARCH="x86_64"
+PKG_VERSION="6b98f852e00a83ecdcf497c1032882ad7b6efc99"
+PKG_SHA256="0beaf41955733f30cf092e7aa7e4f5e07a64c0608783fb7e6c820711c44e4ed9"
+PKG_ARCH="any"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/libretro-fsuae"
 PKG_URL="https://github.com/libretro/libretro-fsuae/archive/$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain libmpeg2 openal-soft"
+PKG_DEPENDS_TARGET="toolchain libmpeg2 openal-soft glib"
 PKG_LONGDESC="FS-UAE amiga emulator."
 PKG_BUILD_FLAGS="-lto"
 PKG_TOOLCHAIN="autotools"
@@ -28,7 +28,8 @@ pre_configure_target() {
 }
 
 make_target() {
-  make -j1 CC="$CC" gen
+  make -j1 CC="$HOST_CC" CPPFLAGS="$HOST_CPPFLAGS" CFLAGS="$HOST_CFLAGS" LDFLAGS="$HOST_LDFLAGS" gen
+  make clean
   make CC="$CC"
 }
 
