@@ -1,0 +1,71 @@
+--- RTL8189ES-rtl8189fs/os_dep/linux/ioctl_cfg80211.c	2018-09-02 15:34:42.000000000 +0300
++++ RTL8189ES-rtl8189fs.patch/os_dep/linux/ioctl_cfg80211.c	2019-01-28 20:36:58.951441225 +0300
+@@ -349,7 +349,7 @@
+ {
+ #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,39))
+ 	struct timespec ts;
+-	get_monotonic_boottime(&ts);
++	getboottime(&ts);
+ 	return ((u64)ts.tv_sec*1000000) + ts.tv_nsec / 1000;
+ #else
+ 	struct timeval tv;
+@@ -632,12 +632,12 @@
+ 	bss = cfg80211_get_bss(padapter->rtw_wdev->wiphy, notify_channel,
+ 			pnetwork->MacAddress, pnetwork->Ssid.Ssid,
+ 			pnetwork->Ssid.SsidLength,
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
+-			pnetwork->InfrastructureMode == Ndis802_11Infrastructure?IEEE80211_BSS_TYPE_ESS:IEEE80211_BSS_TYPE_IBSS,
+-			IEEE80211_PRIVACY(pnetwork->Privacy));
+-#else
+-			pnetwork->InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS, pnetwork->InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS);
+-#endif
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
++			pnetwork->InfrastructureMode == Ndis802_11Infrastructure?IEEE80211_BSS_TYPE_ESS:IEEE80211_BSS_TYPE_IBSS,
++			IEEE80211_PRIVACY(pnetwork->Privacy));
++#else
++			pnetwork->InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS, pnetwork->InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS);
++#endif
+ 
+ #if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 9, 0)
+ 	cfg80211_put_bss(padapter->rtw_wdev->wiphy, bss);
+@@ -832,7 +832,7 @@
+ 			, pmlmepriv->assoc_rsp_len-sizeof(struct rtw_ieee80211_hdr_3addr)-6
+ 			, GFP_ATOMIC);
+ 		#endif
+-
++
+ 	}
+ 	else
+ 	{
+@@ -2144,14 +2144,14 @@
+ 	
+ 	bss = cfg80211_get_bss(wiphy, NULL/*notify_channel*/,
+ 		select_network.MacAddress, select_network.Ssid.Ssid,
+-		select_network.Ssid.SsidLength,
+-#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
+-		select_network.InfrastructureMode == Ndis802_11Infrastructure?IEEE80211_BSS_TYPE_ESS:IEEE80211_BSS_TYPE_IBSS,
+-		IEEE80211_PRIVACY(select_network.Privacy));
+-#else
+-		select_network.InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS,
+-		select_network.InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS);
+-#endif
++		select_network.Ssid.SsidLength,
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 1, 0)
++		select_network.InfrastructureMode == Ndis802_11Infrastructure?IEEE80211_BSS_TYPE_ESS:IEEE80211_BSS_TYPE_IBSS,
++		IEEE80211_PRIVACY(select_network.Privacy));
++#else
++		select_network.InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS,
++		select_network.InfrastructureMode == Ndis802_11Infrastructure?WLAN_CAPABILITY_ESS:WLAN_CAPABILITY_IBSS);
++#endif
+ 	
+ 	if (bss) {
+ 		cfg80211_unlink_bss(wiphy, bss);
+@@ -4066,7 +4066,7 @@
+ 	#else
+ 		enum nl80211_iftype type, u32 *flags, struct vif_params *params)
+ 	#endif
+-
++
+ {
+ 	int ret = 0;
+ 	struct net_device* ndev = NULL;
