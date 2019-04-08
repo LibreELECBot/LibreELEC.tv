@@ -1,0 +1,69 @@
+From 5c50bc8ea74582b3e9f009c3b0ce186e668843de Mon Sep 17 00:00:00 2001
+From: Jay M <edit4ever@gmail.com>
+Date: Sat, 6 Apr 2019 14:02:59 -0700
+Subject: [PATCH] skin infolabel
+
+add declaration
+---
+ .../xbmc/GUIInfoManager.cpp                               | 8 +++++++-
+ .../xbmc/guilib/guiinfo/GUIInfoLabels.h                   | 1 +
+ .../xbmc/guilib/guiinfo/SkinGUIInfo.cpp                   | 5 +++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/GUIInfoManager.cpp b/xbmc/GUIInfoManager.cpp
+index d1bc0bb..dbc0e6f 100644
+--- a/xbmc/GUIInfoManager.cpp
++++ b/xbmc/GUIInfoManager.cpp
+@@ -3990,6 +3990,11 @@ const infomap fanart_labels[] =  {{ "color1",           FANART_COLOR1 },
+ ///                  _string_,
+ ///     Returns the current fontset from Font.xml.
+ ///   }
++///   \table_row3{   <b>`Skin.Name`</b>,
++///                  \anchor Skin_Name
++///                  _string_,
++///     Returns the current skin name.
++///   }
+ /// \table_end
+ ///
+ /// -----------------------------------------------------------------------------
+@@ -3997,7 +4002,8 @@ const infomap fanart_labels[] =  {{ "color1",           FANART_COLOR1 },
+ const infomap skin_labels[] =    {{ "currenttheme",      SKIN_THEME },
+                                   { "currentcolourtheme",SKIN_COLOUR_THEME },
+                                   { "aspectratio",       SKIN_ASPECT_RATIO},
+-                                  { "font",              SKIN_FONT}};
++                                  { "font",              SKIN_FONT},
++                                  { "name",              SKIN_NAME}};
+ 
+ /// \page modules__General__List_of_gui_access
+ /// \section modules__General__List_of_gui_access_Window Window
+diff --git a/xbmc/guilib/guiinfo/GUIInfoLabels.h b/xbmc/guilib/guiinfo/GUIInfoLabels.h
+index 0a2ee48..65021b3 100644
+--- a/xbmc/guilib/guiinfo/GUIInfoLabels.h
++++ b/xbmc/guilib/guiinfo/GUIInfoLabels.h
+@@ -367,6 +367,7 @@
+ #define SKIN_HAS_THEME              606
+ #define SKIN_ASPECT_RATIO           607
+ #define SKIN_FONT                   608
++#define SKIN_NAME                   609
+ 
+ #define SYSTEM_PRIVACY_POLICY       643
+ #define SYSTEM_TOTAL_MEMORY         644
+diff --git a/xbmc/guilib/guiinfo/SkinGUIInfo.cpp b/xbmc/guilib/guiinfo/SkinGUIInfo.cpp
+index 65622c0..830ad0e 100644
+--- a/xbmc/guilib/guiinfo/SkinGUIInfo.cpp
++++ b/xbmc/guilib/guiinfo/SkinGUIInfo.cpp
+@@ -84,6 +84,11 @@ bool CSkinGUIInfo::GetLabel(std::string& value, const CFileItem *item, int conte
+       value = CServiceBroker::GetSettings().GetString(CSettings::SETTING_LOOKANDFEEL_FONT);
+       return true;
+     }
++    case SKIN_NAME:
++    {
++      value = CServiceBroker::GetSettingsComponent()->GetSettings()->GetString(CSettings::SETTING_LOOKANDFEEL_SKIN);
++      return true;
++    }
+   }
+ 
+   return false;
+-- 
+2.17.1
+
