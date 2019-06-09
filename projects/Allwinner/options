@@ -74,3 +74,6 @@
   # debug tty path
     DEBUG_TTY="/dev/console"
 
+  # add RTL8189FS driver
+  ADDITIONAL_DRIVERS="$ADDITIONAL_DRIVERS RTL8189FS"
+  
