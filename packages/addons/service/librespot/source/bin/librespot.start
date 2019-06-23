@@ -74,6 +74,7 @@ init_alsa() {
 oe_setup_addon service.librespot
 
 LIBRESPOT="librespot --cache \"$ADDON_HOME/cache\" \
+                     --ap-port 443 \
                      --disable-audio-cache \
                      --name \"Librespot@$HOSTNAME\" \
                      --onevent librespot.onevent"
