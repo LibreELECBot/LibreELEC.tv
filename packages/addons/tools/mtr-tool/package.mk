@@ -13,11 +13,10 @@ PKG_LONGDESC="mtr combines the functionality of the traceroute and ping programs
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="mtr"
 PKG_ADDON_TYPE="xbmc.python.script"
-PKG_DEPENDS_TARGET="ncurses \
-                    mtr"
+PKG_DEPENDS_TARGET="mtr"
 
 addon() {
     mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin
-    cp -P $(get_build_dir mtr)/.armv7ve-libreelec-linux-gnueabi/mtr $ADDON_BUILD/$PKG_ADDON_ID/bin
-    cp -P $(get_build_dir mtr)/.armv7ve-libreelec-linux-gnueabi/mtr-packet $ADDON_BUILD/$PKG_ADDON_ID/bin
+    cp -P $(get_build_dir mtr)/.$TARGET_NAME/mtr $ADDON_BUILD/$PKG_ADDON_ID/bin
+    cp -P $(get_build_dir mtr)/.$TARGET_NAME/mtr-packet $ADDON_BUILD/$PKG_ADDON_ID/bin
 }
