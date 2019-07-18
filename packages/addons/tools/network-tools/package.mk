@@ -3,7 +3,7 @@
 
 PKG_NAME="network-tools"
 PKG_VERSION="1.0"
-PKG_REV="103"
+PKG_REV="104"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
@@ -11,7 +11,7 @@ PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="virtual"
 PKG_SHORTDESC="A bundle of network tools and programs"
-PKG_LONGDESC="This bundle currently includes bwm-ng, iftop, iperf, irssi, iw, lftp, ncftp, ngrep, nmap, rar2fs, rsync, sshfs, tcpdump, udpxy and wireless_tools."
+PKG_LONGDESC="This bundle currently includes bwm-ng, iftop, iperf, irssi, iw, lftp, ncftp, ngrep, nmap, rar2fs, rsync, sshfs, tcpdump, udpxy, wireless_tools and mtr."
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Network Tools"
@@ -32,7 +32,8 @@ PKG_DEPENDS_TARGET="toolchain \
                     sshfs \
                     tcpdump \
                     udpxy \
-                    wireless_tools"
+                    wireless_tools
+                    mtr"
 
 addon() {
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin
@@ -91,4 +92,9 @@ addon() {
     ln -s iwmulticall $ADDON_BUILD/$PKG_ADDON_ID/bin/iwlist
     ln -s iwmulticall $ADDON_BUILD/$PKG_ADDON_ID/bin/iwspy
     ln -s iwmulticall $ADDON_BUILD/$PKG_ADDON_ID/bin/iwpriv
+
+    # mtr
+    cp -P $(get_build_dir mtr)/.$TARGET_NAME/mtr $ADDON_BUILD/$PKG_ADDON_ID/bin
+    cp -P $(get_build_dir mtr)/.$TARGET_NAME/mtr-packet $ADDON_BUILD/$PKG_ADDON_ID/bin
+
 }
