@@ -9,10 +9,6 @@ PKG_SITE="ftp://ftp.bitwizard.nl/mtr"
 PKG_URL="ftp://ftp.bitwizard.nl/mtr/mtr-${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="ncurses"
 
-make_target() {
-  make
-}
-
 makeinstall_target() {
   : # nop
 }
