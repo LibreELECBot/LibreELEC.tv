@@ -32,7 +32,7 @@ PKG_DEPENDS_TARGET="toolchain \
                     sshfs \
                     tcpdump \
                     udpxy \
-                    wireless_tools
+                    wireless_tools \
                     mtr"
 
 addon() {
