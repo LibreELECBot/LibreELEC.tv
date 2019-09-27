@@ -26,12 +26,14 @@ case "$LIBREELEC_ARCH" in
     ;;
 esac
 
+[ -n "$sc_ss" ] && sc_SS="--h $sc_ss"
 [ -n "$sc_h" ] && sc_H="--hostID $sc_h"
 [ -n "$sc_s" ] && sc_S="--soundcard $sc_s"
 
 HOME="$ADDON_HOME" \
 nice -n "$sc_n" \
 snapclient \
+  $sc_SS \
   $sc_H \
   --latency "$sc_l" \
   --port "$sc_p" \
