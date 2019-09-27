@@ -7,4 +7,5 @@
     <setting id="sc_p" default="true">1704</setting>
     <setting id="sc_r" default="true">0</setting>
     <setting id="sc_s" default="true"></setting>
+    <setting id="sc_ss" default="true"></setting>
 </settings>
