@@ -21,6 +21,10 @@ msgctxt "#30003"
 msgid "Host ID"
 msgstr ""
 
+msgctxt "#30016"
+msgid "Snapserver hostname/IP"
+msgstr ""
+
 msgctxt "#30004"
 msgid "Port"
 msgstr ""
