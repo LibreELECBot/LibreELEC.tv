@@ -72,7 +72,7 @@ post_makeinstall_target() {
     cp -P $PKG_DIR/scripts/connman-setup $INSTALL/usr/lib/connman
 
   mkdir -p $INSTALL/etc
-    ln -sf /run/connman/resolv.conf $INSTALL/etc/resolv.conf
+    ln -sf /run/resolv.conf $INSTALL/etc/resolv.conf
 
     # /etc/hosts must be writeable
     ln -sf /run/connman/hosts $INSTALL/etc/hosts
