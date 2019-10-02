@@ -11,9 +11,9 @@
 
 # set variable for connman main.conf location
   if [ -f /storage/.config/connman_main.conf ]; then
-    export CONNMAN_MAIN="--config=/storage/.config/connman_main.conf"
+    CONNMAN_MAIN="--config=/storage/.config/connman_main.conf"
   else
-    export CONNMAN_MAIN="--config=/etc/connman/main.conf"
+    CONNMAN_MAIN="--config=/etc/connman/main.conf"
   fi
 
 # find network device used for given NFS mount
@@ -40,3 +40,5 @@ elif [ -n "$NFS_DEV" -a -e /proc/net/pnp ]; then
 else
   ln -sf /run/connman/resolv.conf /run/resolv.conf
 fi
+
+export CONNMAN_MAIN
