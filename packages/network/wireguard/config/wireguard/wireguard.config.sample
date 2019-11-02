@@ -1,0 +1,11 @@
+[provider_wireguard]
+Type = WireGuard
+Name = Wireguard VPN Tunnel
+Host = 3.2.5.6
+Domain = my.home.network
+WireGuard.Address = 10.2.0.2/24
+WireGuard.ListenPort = 51820
+WireGuard.PrivateKey = qKIj010hDdWSjQQyVCnEgthLXusBgm3I6HWrJUaJymc=
+WireGuard.PublicKey = zzqUfWGIil6QxrAGz77HE5BGUEdD2PgHYnCg3CDKagE=
+WireGuard.AllowedIPs = 0.0.0.0/0
+WireGuard.EndpointPort = 51820
