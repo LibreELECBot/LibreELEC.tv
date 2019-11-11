@@ -13,6 +13,13 @@ PKG_DEPENDS_TARGET="toolchain linux bcmstat"
 PKG_LONGDESC="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
 PKG_TOOLCHAIN="manual"
 
+post_unpack() {
+  if [ "$DEVICE" = "RPi4" ]; then
+    cp -PRv $PKG_DIR/testing/fixup4x.dat $PKG_BUILD
+    cp -PRv $PKG_DIR/testing/start4x.elf $PKG_BUILD
+  fi
+}
+
 makeinstall_target() {
   mkdir -p $INSTALL/usr/share/bootloader
     cp -PRv LICENCE* $INSTALL/usr/share/bootloader
