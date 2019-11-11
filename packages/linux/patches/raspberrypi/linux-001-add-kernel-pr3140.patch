@@ -1,0 +1,1970 @@
+From 0cbba80e0192053e66cadd47a5e20aa2bf070db9 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Tue, 6 Aug 2019 15:23:14 +0100
+Subject: [PATCH 01/18] clk-bcm2835: Avoid null pointer exception
+
+clk_desc_array[BCM2835_PLLB] doesn't exist so we dereference null when iterating
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/clk/bcm/clk-bcm2835.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index b2c143fda8f66..94d239d32dc8b 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -2288,9 +2288,11 @@ static bool bcm2835_clk_is_claimed(const char *name)
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(clk_desc_array); i++) {
+-		const char *clk_name = *(const char **)(clk_desc_array[i].data);
+-		if (!strcmp(name, clk_name))
+-		    return bcm2835_clk_claimed[i];
++		if (clk_desc_array[i].data) {
++			const char *clk_name = *(const char **)(clk_desc_array[i].data);
++			if (!strcmp(name, clk_name))
++				return bcm2835_clk_claimed[i];
++		}
+ 	}
+ 
+ 	return false;
+
+From cbf8e663981c96713b16f724da462cb6a7907aa8 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Fri, 23 Aug 2019 16:34:38 +0100
+Subject: [PATCH 02/18] v3d_drv: Handle missing clock more gracefully
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/gpu/drm/v3d/v3d_drv.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+index bb14b89d8a5e4..c7030ecb26ed3 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.c
++++ b/drivers/gpu/drm/v3d/v3d_drv.c
+@@ -301,9 +301,9 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	v3d->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(v3d->clk)) {
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get clock\n");
++	if (IS_ERR_OR_NULL(v3d->clk)) {
++		if (PTR_ERR(v3d->clk) != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get clock (%ld)\n", PTR_ERR(v3d->clk));
+ 		goto dev_free;
+ 	}
+ 	v3d->clk_up_rate = clk_get_rate(v3d->clk);
+
+From c5e96f120d763e12789667ad9a2dededa5da4bf3 Mon Sep 17 00:00:00 2001
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Date: Fri, 4 Jan 2019 15:14:33 +0530
+Subject: [PATCH 03/18] cpufreq: scpi/scmi: Fix freeing of dynamic OPPs
+
+Commit 1690d8bb91e370ab772062b79bd434ce815c4729 upstream
+
+Since the commit 2a4eb7358aba "OPP: Don't remove dynamic OPPs from
+_dev_pm_opp_remove_table()", dynamically created OPP aren't
+automatically removed anymore by dev_pm_opp_cpumask_remove_table(). This
+affects the scpi and scmi cpufreq drivers which no longer free OPPs on
+failures or on invocations of the policy->exit() callback.
+
+Create a generic OPP helper dev_pm_opp_remove_all_dynamic() which can be
+called from these drivers instead of dev_pm_opp_cpumask_remove_table().
+
+In dev_pm_opp_remove_all_dynamic(), we need to make sure that the
+opp_list isn't getting accessed simultaneously from other parts of the
+OPP core while the helper is freeing dynamic OPPs, i.e. we can't drop
+the opp_table->lock while traversing through the OPP list. And to
+accomplish that, this patch also creates _opp_kref_release_unlocked()
+which can be called from this new helper with the opp_table lock already
+held.
+
+Cc: 4.20 <stable@vger.kernel.org> # v4.20
+Reported-by: Valentin Schneider <valentin.schneider@arm.com>
+Fixes: 2a4eb7358aba "OPP: Don't remove dynamic OPPs from _dev_pm_opp_remove_table()"
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpufreq/scmi-cpufreq.c |  4 +--
+ drivers/cpufreq/scpi-cpufreq.c |  4 +--
+ drivers/opp/core.c             | 63 +++++++++++++++++++++++++++++++---
+ include/linux/pm_opp.h         |  5 +++
+ 4 files changed, 67 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
+index 3f06934394869..242c3370544e6 100644
+--- a/drivers/cpufreq/scmi-cpufreq.c
++++ b/drivers/cpufreq/scmi-cpufreq.c
+@@ -176,7 +176,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
+ out_free_priv:
+ 	kfree(priv);
+ out_free_opp:
+-	dev_pm_opp_cpumask_remove_table(policy->cpus);
++	dev_pm_opp_remove_all_dynamic(cpu_dev);
+ 
+ 	return ret;
+ }
+@@ -188,7 +188,7 @@ static int scmi_cpufreq_exit(struct cpufreq_policy *policy)
+ 	cpufreq_cooling_unregister(priv->cdev);
+ 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
+ 	kfree(priv);
+-	dev_pm_opp_cpumask_remove_table(policy->related_cpus);
++	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/cpufreq/scpi-cpufreq.c b/drivers/cpufreq/scpi-cpufreq.c
+index 87a98ec77773a..99449738faa4d 100644
+--- a/drivers/cpufreq/scpi-cpufreq.c
++++ b/drivers/cpufreq/scpi-cpufreq.c
+@@ -177,7 +177,7 @@ static int scpi_cpufreq_init(struct cpufreq_policy *policy)
+ out_free_priv:
+ 	kfree(priv);
+ out_free_opp:
+-	dev_pm_opp_cpumask_remove_table(policy->cpus);
++	dev_pm_opp_remove_all_dynamic(cpu_dev);
+ 
+ 	return ret;
+ }
+@@ -190,7 +190,7 @@ static int scpi_cpufreq_exit(struct cpufreq_policy *policy)
+ 	clk_put(priv->clk);
+ 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
+ 	kfree(priv);
+-	dev_pm_opp_cpumask_remove_table(policy->related_cpus);
++	dev_pm_opp_remove_all_dynamic(priv->cpu_dev);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index f3433bf47b100..0595d66b57931 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -881,11 +881,9 @@ void _opp_free(struct dev_pm_opp *opp)
+ 	kfree(opp);
+ }
+ 
+-static void _opp_kref_release(struct kref *kref)
++static void _opp_kref_release(struct dev_pm_opp *opp,
++			      struct opp_table *opp_table)
+ {
+-	struct dev_pm_opp *opp = container_of(kref, struct dev_pm_opp, kref);
+-	struct opp_table *opp_table = opp->opp_table;
+-
+ 	/*
+ 	 * Notify the changes in the availability of the operable
+ 	 * frequency/voltage list.
+@@ -894,7 +892,22 @@ static void _opp_kref_release(struct kref *kref)
+ 	opp_debug_remove_one(opp);
+ 	list_del(&opp->node);
+ 	kfree(opp);
++}
++
++static void _opp_kref_release_unlocked(struct kref *kref)
++{
++	struct dev_pm_opp *opp = container_of(kref, struct dev_pm_opp, kref);
++	struct opp_table *opp_table = opp->opp_table;
++
++	_opp_kref_release(opp, opp_table);
++}
+ 
++static void _opp_kref_release_locked(struct kref *kref)
++{
++	struct dev_pm_opp *opp = container_of(kref, struct dev_pm_opp, kref);
++	struct opp_table *opp_table = opp->opp_table;
++
++	_opp_kref_release(opp, opp_table);
+ 	mutex_unlock(&opp_table->lock);
+ 	dev_pm_opp_put_opp_table(opp_table);
+ }
+@@ -906,10 +919,16 @@ void dev_pm_opp_get(struct dev_pm_opp *opp)
+ 
+ void dev_pm_opp_put(struct dev_pm_opp *opp)
+ {
+-	kref_put_mutex(&opp->kref, _opp_kref_release, &opp->opp_table->lock);
++	kref_put_mutex(&opp->kref, _opp_kref_release_locked,
++		       &opp->opp_table->lock);
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_put);
+ 
++static void dev_pm_opp_put_unlocked(struct dev_pm_opp *opp)
++{
++	kref_put(&opp->kref, _opp_kref_release_unlocked);
++}
++
+ /**
+  * dev_pm_opp_remove()  - Remove an OPP from OPP table
+  * @dev:	device for which we do this operation
+@@ -949,6 +968,40 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_remove);
+ 
++/**
++ * dev_pm_opp_remove_all_dynamic() - Remove all dynamically created OPPs
++ * @dev:	device for which we do this operation
++ *
++ * This function removes all dynamically created OPPs from the opp table.
++ */
++void dev_pm_opp_remove_all_dynamic(struct device *dev)
++{
++	struct opp_table *opp_table;
++	struct dev_pm_opp *opp, *temp;
++	int count = 0;
++
++	opp_table = _find_opp_table(dev);
++	if (IS_ERR(opp_table))
++		return;
++
++	mutex_lock(&opp_table->lock);
++	list_for_each_entry_safe(opp, temp, &opp_table->opp_list, node) {
++		if (opp->dynamic) {
++			dev_pm_opp_put_unlocked(opp);
++			count++;
++		}
++	}
++	mutex_unlock(&opp_table->lock);
++
++	/* Drop the references taken by dev_pm_opp_add() */
++	while (count--)
++		dev_pm_opp_put_opp_table(opp_table);
++
++	/* Drop the reference taken by _find_opp_table() */
++	dev_pm_opp_put_opp_table(opp_table);
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_remove_all_dynamic);
++
+ struct dev_pm_opp *_opp_allocate(struct opp_table *table)
+ {
+ 	struct dev_pm_opp *opp;
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index 099b31960dec2..492408ef9d108 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -107,6 +107,7 @@ void dev_pm_opp_put(struct dev_pm_opp *opp);
+ int dev_pm_opp_add(struct device *dev, unsigned long freq,
+ 		   unsigned long u_volt);
+ void dev_pm_opp_remove(struct device *dev, unsigned long freq);
++void dev_pm_opp_remove_all_dynamic(struct device *dev);
+ 
+ int dev_pm_opp_enable(struct device *dev, unsigned long freq);
+ 
+@@ -208,6 +209,10 @@ static inline void dev_pm_opp_remove(struct device *dev, unsigned long freq)
+ {
+ }
+ 
++static inline void dev_pm_opp_remove_all_dynamic(struct device *dev)
++{
++}
++
+ static inline int dev_pm_opp_enable(struct device *dev, unsigned long freq)
+ {
+ 	return 0;
+
+From c26139bd2369ca08d063add81c7ddd93b6b090d6 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Wed, 12 Jun 2019 20:24:54 +0200
+Subject: [PATCH 04/18] clk: bcm283x: add driver interfacing with Raspberry
+ Pi's firmware
+
+Commit 4e85e535e6cc6e8a96350e8ee684d0f22eb8629e upstream.
+
+Raspberry Pi's firmware offers an interface though which update it's
+clock's frequencies. This is specially useful in order to change the CPU
+clock (pllb_arm) which is 'owned' by the firmware and we're unable to
+scale using the register interface provided by clk-bcm2835.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/bcm/Kconfig           |   7 +
+ drivers/clk/bcm/Makefile          |   1 +
+ drivers/clk/bcm/clk-raspberrypi.c | 300 ++++++++++++++++++++++++++++++
+ 3 files changed, 308 insertions(+)
+ create mode 100644 drivers/clk/bcm/clk-raspberrypi.c
+
+diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
+index 4c4bd85f707c0..7b196f10a70fa 100644
+--- a/drivers/clk/bcm/Kconfig
++++ b/drivers/clk/bcm/Kconfig
+@@ -63,3 +63,10 @@ config CLK_BCM_SR
+ 	default ARCH_BCM_IPROC
+ 	help
+ 	  Enable common clock framework support for the Broadcom Stingray SoC
++
++config CLK_RASPBERRYPI
++	tristate "Raspberry Pi firmware based clock support"
++	depends on RASPBERRYPI_FIRMWARE || (COMPILE_TEST && !RASPBERRYPI_FIRMWARE)
++	help
++	  Enable common clock framework support for Raspberry Pi's firmware
++	  dependent clocks
+diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
+index 002661d391288..eb7159099d82a 100644
+--- a/drivers/clk/bcm/Makefile
++++ b/drivers/clk/bcm/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_CLK_BCM_KONA)	+= clk-bcm21664.o
+ obj-$(CONFIG_COMMON_CLK_IPROC)	+= clk-iproc-armpll.o clk-iproc-pll.o clk-iproc-asiu.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835-aux.o
++obj-$(CONFIG_CLK_RASPBERRYPI)	+= clk-raspberrypi.o
+ obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
+ obj-$(CONFIG_CLK_BCM_CYGNUS)	+= clk-cygnus.o
+ obj-$(CONFIG_CLK_BCM_HR2)	+= clk-hr2.o
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+new file mode 100644
+index 0000000000000..fef1f7caee4fd
+--- /dev/null
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -0,0 +1,300 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Raspberry Pi driver for firmware controlled clocks
++ *
++ * Even though clk-bcm2835 provides an interface to the hardware registers for
++ * the system clocks we've had to factor out 'pllb' as the firmware 'owns' it.
++ * We're not allowed to change it directly as we might race with the
++ * over-temperature and under-voltage protections provided by the firmware.
++ *
++ * Copyright (C) 2019 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++ */
++
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++#include <soc/bcm2835/raspberrypi-firmware.h>
++
++#define RPI_FIRMWARE_ARM_CLK_ID		0x00000003
++
++#define RPI_FIRMWARE_STATE_ENABLE_BIT	BIT(0)
++#define RPI_FIRMWARE_STATE_WAIT_BIT	BIT(1)
++
++/*
++ * Even though the firmware interface alters 'pllb' the frequencies are
++ * provided as per 'pllb_arm'. We need to scale before passing them trough.
++ */
++#define RPI_FIRMWARE_PLLB_ARM_DIV_RATE	2
++
++#define A2W_PLL_FRAC_BITS		20
++
++struct raspberrypi_clk {
++	struct device *dev;
++	struct rpi_firmware *firmware;
++
++	unsigned long min_rate;
++	unsigned long max_rate;
++
++	struct clk_hw pllb;
++	struct clk_hw *pllb_arm;
++	struct clk_lookup *pllb_arm_lookup;
++};
++
++/*
++ * Structure of the message passed to Raspberry Pi's firmware in order to
++ * change clock rates. The 'disable_turbo' option is only available to the ARM
++ * clock (pllb) which we enable by default as turbo mode will alter multiple
++ * clocks at once.
++ *
++ * Even though we're able to access the clock registers directly we're bound to
++ * use the firmware interface as the firmware ultimately takes care of
++ * mitigating overheating/undervoltage situations and we would be changing
++ * frequencies behind his back.
++ *
++ * For more information on the firmware interface check:
++ * https://github.com/raspberrypi/firmware/wiki/Mailbox-property-interface
++ */
++struct raspberrypi_firmware_prop {
++	__le32 id;
++	__le32 val;
++	__le32 disable_turbo;
++} __packed;
++
++static int raspberrypi_clock_property(struct rpi_firmware *firmware, u32 tag,
++				      u32 clk, u32 *val)
++{
++	struct raspberrypi_firmware_prop msg = {
++		.id = cpu_to_le32(clk),
++		.val = cpu_to_le32(*val),
++		.disable_turbo = cpu_to_le32(1),
++	};
++	int ret;
++
++	ret = rpi_firmware_property(firmware, tag, &msg, sizeof(msg));
++	if (ret)
++		return ret;
++
++	*val = le32_to_cpu(msg.val);
++
++	return 0;
++}
++
++static int raspberrypi_fw_pll_is_on(struct clk_hw *hw)
++{
++	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
++						   pllb);
++	u32 val = 0;
++	int ret;
++
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_CLOCK_STATE,
++					 RPI_FIRMWARE_ARM_CLK_ID, &val);
++	if (ret)
++		return 0;
++
++	return !!(val & RPI_FIRMWARE_STATE_ENABLE_BIT);
++}
++
++
++static unsigned long raspberrypi_fw_pll_get_rate(struct clk_hw *hw,
++						 unsigned long parent_rate)
++{
++	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
++						   pllb);
++	u32 val = 0;
++	int ret;
++
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_CLOCK_RATE,
++					 RPI_FIRMWARE_ARM_CLK_ID,
++					 &val);
++	if (ret)
++		return ret;
++
++	return val * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++}
++
++static int raspberrypi_fw_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
++						   pllb);
++	u32 new_rate = rate / RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++	int ret;
++
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_SET_CLOCK_RATE,
++					 RPI_FIRMWARE_ARM_CLK_ID,
++					 &new_rate);
++	if (ret)
++		dev_err_ratelimited(rpi->dev, "Failed to change %s frequency: %d",
++				    clk_hw_get_name(hw), ret);
++
++	return ret;
++}
++
++/*
++ * Sadly there is no firmware rate rounding interface. We borrowed it from
++ * clk-bcm2835.
++ */
++static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
++					  struct clk_rate_request *req)
++{
++	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
++						   pllb);
++	u64 div, final_rate;
++	u32 ndiv, fdiv;
++
++	/* We can't use req->rate directly as it would overflow */
++	final_rate = clamp(req->rate, rpi->min_rate, rpi->max_rate);
++
++	div = (u64)final_rate << A2W_PLL_FRAC_BITS;
++	do_div(div, req->best_parent_rate);
++
++	ndiv = div >> A2W_PLL_FRAC_BITS;
++	fdiv = div & ((1 << A2W_PLL_FRAC_BITS) - 1);
++
++	final_rate = ((u64)req->best_parent_rate *
++					((ndiv << A2W_PLL_FRAC_BITS) + fdiv));
++
++	req->rate = final_rate >> A2W_PLL_FRAC_BITS;
++
++	return 0;
++}
++
++static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
++	.is_prepared = raspberrypi_fw_pll_is_on,
++	.recalc_rate = raspberrypi_fw_pll_get_rate,
++	.set_rate = raspberrypi_fw_pll_set_rate,
++	.determine_rate = raspberrypi_pll_determine_rate,
++};
++
++static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
++{
++	u32 min_rate = 0, max_rate = 0;
++	struct clk_init_data init;
++	int ret;
++
++	memset(&init, 0, sizeof(init));
++
++	/* All of the PLLs derive from the external oscillator. */
++	init.parent_names = (const char *[]){ "osc" };
++	init.num_parents = 1;
++	init.name = "pllb";
++	init.ops = &raspberrypi_firmware_pll_clk_ops;
++	init.flags = CLK_GET_RATE_NOCACHE | CLK_IGNORE_UNUSED;
++
++	/* Get min & max rates set by the firmware */
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_MIN_CLOCK_RATE,
++					 RPI_FIRMWARE_ARM_CLK_ID,
++					 &min_rate);
++	if (ret) {
++		dev_err(rpi->dev, "Failed to get %s min freq: %d\n",
++			init.name, ret);
++		return ret;
++	}
++
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_MAX_CLOCK_RATE,
++					 RPI_FIRMWARE_ARM_CLK_ID,
++					 &max_rate);
++	if (ret) {
++		dev_err(rpi->dev, "Failed to get %s max freq: %d\n",
++			init.name, ret);
++		return ret;
++	}
++
++	if (!min_rate || !max_rate) {
++		dev_err(rpi->dev, "Unexpected frequency range: min %u, max %u\n",
++			min_rate, max_rate);
++		return -EINVAL;
++	}
++
++	dev_info(rpi->dev, "CPU frequency range: min %u, max %u\n",
++		 min_rate, max_rate);
++
++	rpi->min_rate = min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++	rpi->max_rate = max_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++
++	rpi->pllb.init = &init;
++
++	return devm_clk_hw_register(rpi->dev, &rpi->pllb);
++}
++
++static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
++{
++	rpi->pllb_arm = clk_hw_register_fixed_factor(rpi->dev,
++				"pllb_arm", "pllb",
++				CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
++				1, 2);
++	if (IS_ERR(rpi->pllb_arm)) {
++		dev_err(rpi->dev, "Failed to initialize pllb_arm\n");
++		return PTR_ERR(rpi->pllb_arm);
++	}
++
++	rpi->pllb_arm_lookup = clkdev_hw_create(rpi->pllb_arm, NULL, "cpu0");
++	if (!rpi->pllb_arm_lookup) {
++		dev_err(rpi->dev, "Failed to initialize pllb_arm_lookup\n");
++		clk_hw_unregister_fixed_factor(rpi->pllb_arm);
++		return -ENOMEM;
++	}
++
++	return 0;
++}
++
++static int raspberrypi_clk_probe(struct platform_device *pdev)
++{
++	struct device_node *firmware_node;
++	struct device *dev = &pdev->dev;
++	struct rpi_firmware *firmware;
++	struct raspberrypi_clk *rpi;
++	int ret;
++
++	firmware_node = of_find_compatible_node(NULL, NULL,
++					"raspberrypi,bcm2835-firmware");
++	if (!firmware_node) {
++		dev_err(dev, "Missing firmware node\n");
++		return -ENOENT;
++	}
++
++	firmware = rpi_firmware_get(firmware_node);
++	of_node_put(firmware_node);
++	if (!firmware)
++		return -EPROBE_DEFER;
++
++	rpi = devm_kzalloc(dev, sizeof(*rpi), GFP_KERNEL);
++	if (!rpi)
++		return -ENOMEM;
++
++	rpi->dev = dev;
++	rpi->firmware = firmware;
++
++	ret = raspberrypi_register_pllb(rpi);
++	if (ret) {
++		dev_err(dev, "Failed to initialize pllb, %d\n", ret);
++		return ret;
++	}
++
++	ret = raspberrypi_register_pllb_arm(rpi);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static struct platform_driver raspberrypi_clk_driver = {
++	.driver = {
++		.name = "raspberrypi-clk",
++	},
++	.probe          = raspberrypi_clk_probe,
++};
++module_platform_driver(raspberrypi_clk_driver);
++
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
++MODULE_DESCRIPTION("Raspberry Pi firmware clock driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:raspberrypi-clk");
+
+From ce22ed90168bfa3e8c987dbc62777ec1c86af4c0 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Wed, 12 Jun 2019 20:24:56 +0200
+Subject: [PATCH 05/18] cpufreq: add driver for Raspberry Pi
+
+Commit d3df18a97e586702920337056540267807b23f8e upstream.
+
+Raspberry Pi's firmware offers and interface though which update it's
+performance requirements. It allows us to request for specific runtime
+frequencies, which the firmware might or might not respect, depending on
+the firmware configuration and thermals.
+
+As the maximum and minimum frequencies are configurable in the firmware
+there is no way to know in advance their values. So the Raspberry Pi
+cpufreq driver queries them, builds an opp frequency table to then
+launch cpufreq-dt.
+
+Also, as the firmware interface might be configured as a module, making
+the cpu clock unavailable during init, this implements a full fledged
+driver, as opposed to most drivers registering cpufreq-dt, which only
+make use of an init routine.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/cpufreq/Kconfig.arm           |  8 +++
+ drivers/cpufreq/Makefile              |  1 +
+ drivers/cpufreq/raspberrypi-cpufreq.c | 97 +++++++++++++++++++++++++++
+ 3 files changed, 106 insertions(+)
+ create mode 100644 drivers/cpufreq/raspberrypi-cpufreq.c
+
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 22a4107c3f7cf..60b0df939ef1b 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -121,6 +121,14 @@ config ARM_QCOM_CPUFREQ_KRYO
+ 
+ 	  If in doubt, say N.
+ 
++config ARM_RASPBERRYPI_CPUFREQ
++	tristate "Raspberry Pi cpufreq support"
++	depends on CLK_RASPBERRYPI || COMPILE_TEST
++	help
++	  This adds the CPUFreq driver for Raspberry Pi
++
++	  If in doubt, say N.
++
+ config ARM_S3C_CPUFREQ
+ 	bool
+ 	help
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index e8dcb1695337d..5381629255261 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -65,6 +65,7 @@ obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
+ obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+ obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
+ obj-$(CONFIG_ARM_QCOM_CPUFREQ_KRYO)	+= qcom-cpufreq-kryo.o
++obj-$(CONFIG_ARM_RASPBERRYPI_CPUFREQ) 	+= raspberrypi-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
+ obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
+diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
+new file mode 100644
+index 0000000000000..2bc7d9734272a
+--- /dev/null
++++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+@@ -0,0 +1,97 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Raspberry Pi cpufreq driver
++ *
++ * Copyright (C) 2019, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
++ */
++
++#include <linux/clk.h>
++#include <linux/cpu.h>
++#include <linux/cpufreq.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++
++#define RASPBERRYPI_FREQ_INTERVAL	100000000
++
++static struct platform_device *cpufreq_dt;
++
++static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
++{
++	struct device *cpu_dev;
++	unsigned long min, max;
++	unsigned long rate;
++	struct clk *clk;
++	int ret;
++
++	cpu_dev = get_cpu_device(0);
++	if (!cpu_dev) {
++		pr_err("Cannot get CPU for cpufreq driver\n");
++		return -ENODEV;
++	}
++
++	clk = clk_get(cpu_dev, NULL);
++	if (IS_ERR(clk)) {
++		dev_err(cpu_dev, "Cannot get clock for CPU0\n");
++		return PTR_ERR(clk);
++	}
++
++	/*
++	 * The max and min frequencies are configurable in the Raspberry Pi
++	 * firmware, so we query them at runtime.
++	 */
++	min = roundup(clk_round_rate(clk, 0), RASPBERRYPI_FREQ_INTERVAL);
++	max = roundup(clk_round_rate(clk, ULONG_MAX), RASPBERRYPI_FREQ_INTERVAL);
++	clk_put(clk);
++
++	for (rate = min; rate <= max; rate += RASPBERRYPI_FREQ_INTERVAL) {
++		ret = dev_pm_opp_add(cpu_dev, rate, 0);
++		if (ret)
++			goto remove_opp;
++	}
++
++	cpufreq_dt = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
++	ret = PTR_ERR_OR_ZERO(cpufreq_dt);
++	if (ret) {
++		dev_err(cpu_dev, "Failed to create platform device, %d\n", ret);
++		goto remove_opp;
++	}
++
++	return 0;
++
++remove_opp:
++	dev_pm_opp_remove_all_dynamic(cpu_dev);
++
++	return ret;
++}
++
++static int raspberrypi_cpufreq_remove(struct platform_device *pdev)
++{
++	struct device *cpu_dev;
++
++	cpu_dev = get_cpu_device(0);
++	if (cpu_dev)
++		dev_pm_opp_remove_all_dynamic(cpu_dev);
++
++	platform_device_unregister(cpufreq_dt);
++
++	return 0;
++}
++
++/*
++ * Since the driver depends on clk-raspberrypi, which may return EPROBE_DEFER,
++ * all the activity is performed in the probe, which may be defered as well.
++ */
++static struct platform_driver raspberrypi_cpufreq_driver = {
++	.driver = {
++		.name = "raspberrypi-cpufreq",
++	},
++	.probe          = raspberrypi_cpufreq_probe,
++	.remove		= raspberrypi_cpufreq_remove,
++};
++module_platform_driver(raspberrypi_cpufreq_driver);
++
++MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de");
++MODULE_DESCRIPTION("Raspberry Pi cpufreq driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:raspberrypi-cpufreq");
+
+From 10ae1c1956c2a65abc828e09d331e2474a496364 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Wed, 12 Jun 2019 20:24:55 +0200
+Subject: [PATCH 06/18] firmware: raspberrypi: register clk device
+
+Commit 91f2cf4a6b2131016b1ae9c9500245f0572112c7 upstream.
+
+Since clk-raspberrypi is tied to the VC4 firmware instead of particular
+hardware it's registration should be performed by the firmware driver.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/firmware/raspberrypi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+index fcbfe5d0015e5..b61e89d9d569d 100644
+--- a/drivers/firmware/raspberrypi.c
++++ b/drivers/firmware/raspberrypi.c
+@@ -24,6 +24,7 @@
+ #define MBOX_CHAN_PROPERTY		8
+ 
+ static struct platform_device *rpi_hwmon;
++static struct platform_device *rpi_clk;
+ 
+ struct rpi_firmware {
+ 	struct mbox_client cl;
+@@ -297,6 +298,12 @@ rpi_register_hwmon_driver(struct device *dev, struct rpi_firmware *fw)
+ 	}
+ }
+ 
++static void rpi_register_clk_driver(struct device *dev)
++{
++	rpi_clk = platform_device_register_data(dev, "raspberrypi-clk",
++						-1, NULL, 0);
++}
++
+ static int rpi_firmware_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -326,6 +333,7 @@ static int rpi_firmware_probe(struct platform_device *pdev)
+ 	rpi_firmware_print_firmware_revision(fw);
+ 	rpi_firmware_print_firmware_hash(fw);
+ 	rpi_register_hwmon_driver(dev, fw);
++	rpi_register_clk_driver(dev);
+ 
+ 	return 0;
+ }
+@@ -336,6 +344,8 @@ static int rpi_firmware_remove(struct platform_device *pdev)
+ 
+ 	platform_device_unregister(rpi_hwmon);
+ 	rpi_hwmon = NULL;
++	platform_device_unregister(rpi_clk);
++	rpi_clk = NULL;
+ 	mbox_free_channel(fw->chan);
+ 	g_pdev = NULL;
+ 
+
+From 4e504a850503d75312c973974e4306f2856508e6 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Wed, 12 Jun 2019 20:24:57 +0200
+Subject: [PATCH 07/18] clk: raspberrypi: register platform device for
+ raspberrypi-cpufreq
+
+Commit e2bb18347c8e5c4187831f3700c380e3c759601a upstream.
+
+As 'clk-raspberrypi' depends on RPi's firmware interface, which might be
+configured as a module, the cpu clock might not be available for the
+cpufreq driver during it's init process. So we register the
+'raspberrypi-cpufreq' platform device after the probe sequence succeeds.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index fef1f7caee4fd..1654fd0eedc94 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -34,6 +34,7 @@
+ struct raspberrypi_clk {
+ 	struct device *dev;
+ 	struct rpi_firmware *firmware;
++	struct platform_device *cpufreq;
+ 
+ 	unsigned long min_rate;
+ 	unsigned long max_rate;
+@@ -272,6 +273,7 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 
+ 	rpi->dev = dev;
+ 	rpi->firmware = firmware;
++	platform_set_drvdata(pdev, rpi);
+ 
+ 	ret = raspberrypi_register_pllb(rpi);
+ 	if (ret) {
+@@ -283,6 +285,18 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	rpi->cpufreq = platform_device_register_data(dev, "raspberrypi-cpufreq",
++						     -1, NULL, 0);
++
++	return 0;
++}
++
++static int raspberrypi_clk_remove(struct platform_device *pdev)
++{
++	struct raspberrypi_clk *rpi = platform_get_drvdata(pdev);
++
++	platform_device_unregister(rpi->cpufreq);
++
+ 	return 0;
+ }
+ 
+@@ -291,6 +305,7 @@ static struct platform_driver raspberrypi_clk_driver = {
+ 		.name = "raspberrypi-clk",
+ 	},
+ 	.probe          = raspberrypi_clk_probe,
++	.remove		= raspberrypi_clk_remove,
+ };
+ module_platform_driver(raspberrypi_clk_driver);
+ 
+
+From 4cba307d679517be88bed464fdd2b2d22bf46b2d Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Wed, 12 Jun 2019 20:24:53 +0200
+Subject: [PATCH 08/18] clk: bcm2835: remove pllb
+
+Commit 2256d89333bd17b8b56b42734a7e1046d52f7fc3 upstream.
+
+Raspberry Pi's firmware controls this pll, we should use the firmware
+interface to access it.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Acked-by: Eric Anholt <eric@anholt.net>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/bcm/clk-bcm2835.c | 30 ++++--------------------------
+ 1 file changed, 4 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 94d239d32dc8b..d46087678d818 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1755,32 +1755,10 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.fixed_divider = 1,
+ 		.flags = CLK_SET_RATE_PARENT),
+ 
+-	/* PLLB is used for the ARM's clock. */
+-	[BCM2835_PLLB]		= REGISTER_PLL(
+-		SOC_ALL,
+-		.name = "pllb",
+-		.cm_ctrl_reg = CM_PLLB,
+-		.a2w_ctrl_reg = A2W_PLLB_CTRL,
+-		.frac_reg = A2W_PLLB_FRAC,
+-		.ana_reg_base = A2W_PLLB_ANA0,
+-		.reference_enable_mask = A2W_XOSC_CTRL_PLLB_ENABLE,
+-		.lock_mask = CM_LOCK_FLOCKB,
+-
+-		.ana = &bcm2835_ana_default,
+-
+-		.min_rate = 600000000u,
+-		.max_rate = 3000000000u,
+-		.max_fb_rate = BCM2835_MAX_FB_RATE),
+-	[BCM2835_PLLB_ARM]	= REGISTER_PLL_DIV(
+-		SOC_ALL,
+-		.name = "pllb_arm",
+-		.source_pll = "pllb",
+-		.cm_reg = CM_PLLB,
+-		.a2w_reg = A2W_PLLB_ARM,
+-		.load_mask = CM_PLLB_LOADARM,
+-		.hold_mask = CM_PLLB_HOLDARM,
+-		.fixed_divider = 1,
+-		.flags = CLK_SET_RATE_PARENT),
++	/*
++	 * PLLB is used for the ARM's clock. Controlled by firmware, see
++	 * clk-raspberrypi.c.
++	 */
+ 
+ 	/*
+ 	 * PLLC is the core PLL, used to drive the core VPU clock.
+
+From ac8773938d9bcce496347ab92e51762cd4d0e6a0 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Mon, 9 Sep 2019 23:50:44 +0100
+Subject: [PATCH 09/18] v3d_drv: Allow clock retrieval by name
+
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+---
+ drivers/gpu/drm/v3d/v3d_drv.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+index c7030ecb26ed3..08464445c2a6b 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.c
++++ b/drivers/gpu/drm/v3d/v3d_drv.c
+@@ -300,7 +300,9 @@ static int v3d_platform_drm_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
+-	v3d->clk = devm_clk_get(dev, NULL);
++	v3d->clk = devm_clk_get(dev, "v3d");
++	if (!v3d->clk)
++		v3d->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR_OR_NULL(v3d->clk)) {
+ 		if (PTR_ERR(v3d->clk) != -EPROBE_DEFER)
+ 			dev_err(dev, "Failed to get clock (%ld)\n", PTR_ERR(v3d->clk));
+
+From aa89c10f25fb70bd4db3758acf27a102ab0d847f Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Thu, 5 Sep 2019 17:59:14 +0100
+Subject: [PATCH 10/18] v3d_gem: Kick the clock so firmware knows we are using
+ firmware clock interface
+
+Setting the v3d clock to low value allows firmware to handle dvfs in case
+where v3d hardware is not being actively used (e.g. console use).
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/gpu/drm/v3d/v3d_gem.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
+index 166f048d53a25..f06ce6ddb08c9 100644
+--- a/drivers/gpu/drm/v3d/v3d_gem.c
++++ b/drivers/gpu/drm/v3d/v3d_gem.c
+@@ -1050,6 +1050,10 @@ v3d_gem_init(struct drm_device *dev)
+ 	mutex_init(&v3d->clk_lock);
+ 	INIT_DELAYED_WORK(&v3d->clk_down_work, v3d_clock_down_work);
+ 
++	/* kick the clock so firmware knows we are using firmware clock interface */
++	v3d_clock_up_get(v3d);
++	v3d_clock_up_put(v3d);
++
+ 	/* Note: We don't allocate address 0.  Various bits of HW
+ 	 * treat 0 as special, such as the occlusion query counters
+ 	 * where 0 means "disabled".
+
+From 166e33bb596fea2f34f1c2800cf088ad93dacdba Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Mon, 9 Sep 2019 15:49:56 +0100
+Subject: [PATCH 11/18] clk-raspberrypi: Allow cpufreq driver to also adjust
+ gpu clocks
+
+For performance/power it is beneficial to adjust gpu clocks with arm clock.
+This is how the downstream cpufreq driver works
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 1654fd0eedc94..e4e1392403406 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -70,7 +70,7 @@ static int raspberrypi_clock_property(struct rpi_firmware *firmware, u32 tag,
+ 	struct raspberrypi_firmware_prop msg = {
+ 		.id = cpu_to_le32(clk),
+ 		.val = cpu_to_le32(*val),
+-		.disable_turbo = cpu_to_le32(1),
++		.disable_turbo = cpu_to_le32(0),
+ 	};
+ 	int ret;
+ 
+
+From 2f93d01b2dd096fb5c0a055a09cdb06129b1fd1e Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Wed, 21 Aug 2019 14:55:56 +0100
+Subject: [PATCH 12/18] clk-raspberrypi: Also support v3d clock
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 497 ++++++++++++++++++++++++------
+ 1 file changed, 408 insertions(+), 89 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index e4e1392403406..684d62ebf1f21 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -15,33 +15,103 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+-
++#include <dt-bindings/clock/bcm2835.h>
+ #include <soc/bcm2835/raspberrypi-firmware.h>
+ 
+ #define RPI_FIRMWARE_ARM_CLK_ID		0x00000003
++#define RPI_FIRMWARE_V3D_CLK_ID		0x00000005
+ 
+ #define RPI_FIRMWARE_STATE_ENABLE_BIT	BIT(0)
+ #define RPI_FIRMWARE_STATE_WAIT_BIT	BIT(1)
+ 
+-/*
+- * Even though the firmware interface alters 'pllb' the frequencies are
+- * provided as per 'pllb_arm'. We need to scale before passing them trough.
+- */
+-#define RPI_FIRMWARE_PLLB_ARM_DIV_RATE	2
+-
+ #define A2W_PLL_FRAC_BITS		20
+ 
++#define SOC_BCM2835		BIT(0)
++#define SOC_BCM2711		BIT(1)
++#define SOC_ALL			(SOC_BCM2835 | SOC_BCM2711)
++
+ struct raspberrypi_clk {
+ 	struct device *dev;
+ 	struct rpi_firmware *firmware;
+ 	struct platform_device *cpufreq;
++};
++
++typedef int (*raspberrypi_clk_register)(struct raspberrypi_clk *rpi,
++					      const void *data);
++
++
++/* assignment helper macros for different clock types */
++#define _REGISTER(f, s, ...) { .clk_register = (raspberrypi_clk_register)f, \
++			       .supported = s,				\
++			       .data = __VA_ARGS__ }
++#define REGISTER_PLL(s, ...)	_REGISTER(&raspberrypi_register_pll,	\
++					  s,				\
++					  &(struct raspberrypi_pll_data)	\
++					  {__VA_ARGS__})
++#define REGISTER_PLL_DIV(s, ...) _REGISTER(&raspberrypi_register_pll_divider, \
++					   s,				  \
++					   &(struct raspberrypi_pll_divider_data) \
++					   {__VA_ARGS__})
++#define REGISTER_CLK(s, ...)	_REGISTER(&raspberrypi_register_clock,	\
++					  s,				\
++					  &(struct raspberrypi_clock_data)	\
++					  {__VA_ARGS__})
++
++
++struct raspberrypi_pll_data {
++	const char *name;
++	const char *const *parents;
++	int num_parents;
++	u32 clock_id;
++};
++
++struct raspberrypi_clock_data {
++	const char *name;
++	const char *const *parents;
++	int num_parents;
++	u32 flags;
++	u32 clock_id;
++};
++
++struct raspberrypi_pll_divider_data {
++	const char *name;
++	const char *divider_name;
++	const char *lookup;
++	const char *source_pll;
+ 
+-	unsigned long min_rate;
+-	unsigned long max_rate;
++	u32 fixed_divider;
++	u32 flags;
++	u32 clock_id;
++};
++
++struct raspberrypi_clk_desc {
++	raspberrypi_clk_register clk_register;
++	unsigned int supported;
++	const void *data;
++};
+ 
+-	struct clk_hw pllb;
+-	struct clk_hw *pllb_arm;
+-	struct clk_lookup *pllb_arm_lookup;
++struct raspberrypi_clock {
++	struct clk_hw hw;
++	struct raspberrypi_clk *rpi;
++	u32 min_rate;
++	u32 max_rate;
++	const struct raspberrypi_clock_data *data;
++};
++
++struct raspberrypi_pll {
++	struct clk_hw hw;
++	struct raspberrypi_clk *rpi;
++	u32 min_rate;
++	u32 max_rate;
++	const struct raspberrypi_pll_data *data;
++};
++
++struct raspberrypi_pll_divider {
++	struct clk_divider div;
++	struct raspberrypi_clk *rpi;
++	u32 min_rate;
++	u32 max_rate;
++	const struct raspberrypi_pll_divider_data *data;
+ };
+ 
+ /*
+@@ -83,56 +153,49 @@ static int raspberrypi_clock_property(struct rpi_firmware *firmware, u32 tag,
+ 	return 0;
+ }
+ 
+-static int raspberrypi_fw_pll_is_on(struct clk_hw *hw)
++static int raspberrypi_fw_is_on(struct raspberrypi_clk *rpi, u32 clock_id, const char *name)
+ {
+-	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
+-						   pllb);
+ 	u32 val = 0;
+ 	int ret;
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_CLOCK_STATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID, &val);
++					 clock_id, &val);
+ 	if (ret)
+ 		return 0;
+ 
+ 	return !!(val & RPI_FIRMWARE_STATE_ENABLE_BIT);
+ }
+ 
+-
+-static unsigned long raspberrypi_fw_pll_get_rate(struct clk_hw *hw,
+-						 unsigned long parent_rate)
++static unsigned long raspberrypi_fw_get_rate(struct raspberrypi_clk *rpi,
++						 u32 clock_id, const char *name, unsigned long parent_rate)
+ {
+-	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
+-						   pllb);
+ 	u32 val = 0;
+ 	int ret;
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_GET_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
++					 clock_id,
+ 					 &val);
+ 	if (ret)
+-		return ret;
+-
+-	return val * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++		dev_err_ratelimited(rpi->dev, "Failed to get %s frequency: %d",
++				    name, ret);
++	return val;
+ }
+ 
+-static int raspberrypi_fw_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+-				       unsigned long parent_rate)
++static int raspberrypi_fw_set_rate(struct raspberrypi_clk *rpi,
++				   u32 clock_id, const char *name, u32 rate,
++				   unsigned long parent_rate)
+ {
+-	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
+-						   pllb);
+-	u32 new_rate = rate / RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
+ 	int ret;
+ 
+ 	ret = raspberrypi_clock_property(rpi->firmware,
+ 					 RPI_FIRMWARE_SET_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &new_rate);
++					 clock_id,
++					 &rate);
+ 	if (ret)
+ 		dev_err_ratelimited(rpi->dev, "Failed to change %s frequency: %d",
+-				    clk_hw_get_name(hw), ret);
++				    name, ret);
+ 
+ 	return ret;
+ }
+@@ -141,16 +204,15 @@ static int raspberrypi_fw_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+  * Sadly there is no firmware rate rounding interface. We borrowed it from
+  * clk-bcm2835.
+  */
+-static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
++static int raspberrypi_determine_rate(struct raspberrypi_clk *rpi,
++					  u32 clock_id, const char *name, unsigned long min_rate, unsigned long max_rate,
+ 					  struct clk_rate_request *req)
+ {
+-	struct raspberrypi_clk *rpi = container_of(hw, struct raspberrypi_clk,
+-						   pllb);
+ 	u64 div, final_rate;
+ 	u32 ndiv, fdiv;
+ 
+ 	/* We can't use req->rate directly as it would overflow */
+-	final_rate = clamp(req->rate, rpi->min_rate, rpi->max_rate);
++	final_rate = clamp(req->rate, min_rate, max_rate);
+ 
+ 	div = (u64)final_rate << A2W_PLL_FRAC_BITS;
+ 	do_div(div, req->best_parent_rate);
+@@ -166,6 +228,125 @@ static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
+ 	return 0;
+ }
+ 
++static int raspberrypi_fw_clock_is_on(struct clk_hw *hw)
++{
++	struct raspberrypi_clock *pll = container_of(hw, struct raspberrypi_clock, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_clock_data *data = pll->data;
++
++	return raspberrypi_fw_is_on(rpi, data->clock_id, data->name);
++}
++
++static unsigned long raspberrypi_fw_clock_get_rate(struct clk_hw *hw,
++						 unsigned long parent_rate)
++{
++	struct raspberrypi_clock *pll = container_of(hw, struct raspberrypi_clock, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_clock_data *data = pll->data;
++
++	return raspberrypi_fw_get_rate(rpi, data->clock_id, data->name, parent_rate);
++}
++
++static int raspberrypi_fw_clock_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	struct raspberrypi_clock *pll = container_of(hw, struct raspberrypi_clock, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_clock_data *data = pll->data;
++
++	return raspberrypi_fw_set_rate(rpi, data->clock_id, data->name, rate, parent_rate);
++}
++
++static int raspberrypi_clock_determine_rate(struct clk_hw *hw,
++					  struct clk_rate_request *req)
++{
++	struct raspberrypi_clock *pll = container_of(hw, struct raspberrypi_clock, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_clock_data *data = pll->data;
++
++	return raspberrypi_determine_rate(rpi, data->clock_id, data->name, pll->min_rate, pll->max_rate, req);
++}
++
++static int raspberrypi_fw_pll_is_on(struct clk_hw *hw)
++{
++	struct raspberrypi_pll *pll = container_of(hw, struct raspberrypi_pll, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_data *data = pll->data;
++
++	return raspberrypi_fw_is_on(rpi, data->clock_id, data->name);
++}
++
++static unsigned long raspberrypi_fw_pll_get_rate(struct clk_hw *hw,
++						 unsigned long parent_rate)
++{
++	struct raspberrypi_pll *pll = container_of(hw, struct raspberrypi_pll, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_data *data = pll->data;
++
++	return raspberrypi_fw_get_rate(rpi, data->clock_id, data->name, parent_rate);
++}
++
++static int raspberrypi_fw_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	struct raspberrypi_pll *pll = container_of(hw, struct raspberrypi_pll, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_data *data = pll->data;
++
++	return raspberrypi_fw_set_rate(rpi, data->clock_id, data->name, rate, parent_rate);
++}
++
++static int raspberrypi_pll_determine_rate(struct clk_hw *hw,
++					  struct clk_rate_request *req)
++{
++	struct raspberrypi_pll *pll = container_of(hw, struct raspberrypi_pll, hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_data *data = pll->data;
++
++	return raspberrypi_determine_rate(rpi, data->clock_id, data->name, pll->min_rate, pll->max_rate, req);
++}
++
++
++static int raspberrypi_fw_pll_div_is_on(struct clk_hw *hw)
++{
++	struct raspberrypi_pll_divider *pll = container_of(hw, struct raspberrypi_pll_divider, div.hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_divider_data *data = pll->data;
++
++	return raspberrypi_fw_is_on(rpi, data->clock_id, data->name);
++}
++
++static unsigned long raspberrypi_fw_pll_div_get_rate(struct clk_hw *hw,
++						 unsigned long parent_rate)
++{
++	struct raspberrypi_pll_divider *pll = container_of(hw, struct raspberrypi_pll_divider, div.hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_divider_data *data = pll->data;
++
++	return raspberrypi_fw_get_rate(rpi, data->clock_id, data->name, parent_rate);
++}
++
++static int raspberrypi_fw_pll_div_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
++{
++	struct raspberrypi_pll_divider *pll = container_of(hw, struct raspberrypi_pll_divider, div.hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_divider_data *data = pll->data;
++
++	return raspberrypi_fw_set_rate(rpi, data->clock_id, data->name, rate, parent_rate);
++}
++
++static int raspberrypi_pll_div_determine_rate(struct clk_hw *hw,
++					  struct clk_rate_request *req)
++{
++	struct raspberrypi_pll_divider *pll = container_of(hw, struct raspberrypi_pll_divider, div.hw);
++	struct raspberrypi_clk *rpi = pll->rpi;
++	const struct raspberrypi_pll_divider_data *data = pll->data;
++
++	return raspberrypi_determine_rate(rpi, data->clock_id, data->name, pll->min_rate, pll->max_rate, req);
++}
++
++
+ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_pll_is_on,
+ 	.recalc_rate = raspberrypi_fw_pll_get_rate,
+@@ -173,87 +354,225 @@ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
+ 	.determine_rate = raspberrypi_pll_determine_rate,
+ };
+ 
+-static int raspberrypi_register_pllb(struct raspberrypi_clk *rpi)
++static const struct clk_ops raspberrypi_firmware_pll_divider_clk_ops = {
++	.is_prepared = raspberrypi_fw_pll_div_is_on,
++	.recalc_rate = raspberrypi_fw_pll_div_get_rate,
++	.set_rate = raspberrypi_fw_pll_div_set_rate,
++	.determine_rate = raspberrypi_pll_div_determine_rate,
++};
++
++static const struct clk_ops raspberrypi_firmware_clk_ops = {
++	.is_prepared = raspberrypi_fw_clock_is_on,
++	.recalc_rate = raspberrypi_fw_clock_get_rate,
++	.set_rate = raspberrypi_fw_clock_set_rate,
++	.determine_rate = raspberrypi_clock_determine_rate,
++};
++
++
++static int raspberrypi_get_clock_range(struct raspberrypi_clk *rpi, u32 clock_id, u32 *min_rate, u32 *max_rate)
+ {
+-	u32 min_rate = 0, max_rate = 0;
++	int ret;
++
++	/* Get min & max rates set by the firmware */
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_MIN_CLOCK_RATE,
++					 clock_id,
++					 min_rate);
++	if (ret) {
++		dev_err(rpi->dev, "Failed to get clock %d min freq: %d (%d)\n",
++			clock_id, *min_rate, ret);
++		return ret;
++	}
++
++	ret = raspberrypi_clock_property(rpi->firmware,
++					 RPI_FIRMWARE_GET_MAX_CLOCK_RATE,
++					 clock_id,
++					 max_rate);
++	if (ret) {
++		dev_err(rpi->dev, "Failed to get clock %d max freq: %d (%d)\n",
++			clock_id, *max_rate, ret);
++		return ret;
++	}
++	return 0;
++}
++
++
++static int raspberrypi_register_pll(struct raspberrypi_clk *rpi,
++					   const struct raspberrypi_pll_data *data)
++{
++	struct raspberrypi_pll *pll;
+ 	struct clk_init_data init;
+ 	int ret;
+ 
+ 	memset(&init, 0, sizeof(init));
+ 
+ 	/* All of the PLLs derive from the external oscillator. */
+-	init.parent_names = (const char *[]){ "osc" };
+-	init.num_parents = 1;
+-	init.name = "pllb";
++	init.parent_names = data->parents;
++	init.num_parents = data->num_parents;
++	init.name = data->name;
+ 	init.ops = &raspberrypi_firmware_pll_clk_ops;
+ 	init.flags = CLK_GET_RATE_NOCACHE | CLK_IGNORE_UNUSED;
+ 
+-	/* Get min & max rates set by the firmware */
+-	ret = raspberrypi_clock_property(rpi->firmware,
+-					 RPI_FIRMWARE_GET_MIN_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &min_rate);
++	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
++	if (!pll)
++		return -ENOMEM;
++	pll->rpi = rpi;
++	pll->data = data;
++	pll->hw.init = &init;
++
++	ret = raspberrypi_get_clock_range(rpi, data->clock_id, &pll->min_rate, &pll->max_rate);
+ 	if (ret) {
+-		dev_err(rpi->dev, "Failed to get %s min freq: %d\n",
+-			init.name, ret);
++		dev_err(rpi->dev, "%s: raspberrypi_get_clock_range(%s) failed: %d\n", __func__, init.name, ret);
+ 		return ret;
+ 	}
+ 
+-	ret = raspberrypi_clock_property(rpi->firmware,
+-					 RPI_FIRMWARE_GET_MAX_CLOCK_RATE,
+-					 RPI_FIRMWARE_ARM_CLK_ID,
+-					 &max_rate);
++	ret = devm_clk_hw_register(rpi->dev, &pll->hw);
+ 	if (ret) {
+-		dev_err(rpi->dev, "Failed to get %s max freq: %d\n",
+-			init.name, ret);
++		dev_err(rpi->dev, "%s: devm_clk_hw_register(%s) failed: %d\n", __func__, init.name, ret);
+ 		return ret;
+ 	}
++	return 0;
++}
+ 
+-	if (!min_rate || !max_rate) {
+-		dev_err(rpi->dev, "Unexpected frequency range: min %u, max %u\n",
+-			min_rate, max_rate);
+-		return -EINVAL;
+-	}
++static int
++raspberrypi_register_pll_divider(struct raspberrypi_clk *rpi,
++			     const struct raspberrypi_pll_divider_data *data)
++{
++	struct raspberrypi_pll_divider *divider;
++	struct clk_init_data init;
++	int ret;
++
++	memset(&init, 0, sizeof(init));
++
++	init.parent_names = &data->source_pll;
++	init.num_parents = 1;
++	init.name = data->name;
++	init.ops = &raspberrypi_firmware_pll_divider_clk_ops;
++	init.flags = data->flags | CLK_IGNORE_UNUSED;
+ 
+-	dev_info(rpi->dev, "CPU frequency range: min %u, max %u\n",
+-		 min_rate, max_rate);
++	divider = devm_kzalloc(rpi->dev, sizeof(*divider), GFP_KERNEL);
++	if (!divider)
++		return -ENOMEM;
++
++	divider->div.hw.init = &init;
++	divider->rpi = rpi;
++	divider->data = data;
++
++	ret = raspberrypi_get_clock_range(rpi, data->clock_id, &divider->min_rate, &divider->max_rate);
++	if (ret) {
++		dev_err(rpi->dev, "%s: raspberrypi_get_clock_range(%s) failed: %d\n", __func__, init.name, ret);
++		return ret;
++	}
+ 
+-	rpi->min_rate = min_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
+-	rpi->max_rate = max_rate * RPI_FIRMWARE_PLLB_ARM_DIV_RATE;
++	ret = devm_clk_hw_register(rpi->dev, &divider->div.hw);
++	if (ret) {
++		dev_err(rpi->dev, "%s: devm_clk_hw_register(%s) failed: %d\n", __func__, init.name, ret);
++		return ret;
++	}
+ 
+-	rpi->pllb.init = &init;
++	/*
++	 * PLLH's channels have a fixed divide by 10 afterwards, which
++	 * is what our consumers are actually using.
++	 */
++	if (data->fixed_divider != 1) {
++		struct clk_lookup *lookup;
++		struct clk_hw *clk = clk_hw_register_fixed_factor(rpi->dev,
++						    data->divider_name,
++						    data->name,
++						    CLK_SET_RATE_PARENT,
++						    1,
++						    data->fixed_divider);
++		if (IS_ERR(clk)) {
++			dev_err(rpi->dev, "%s: clk_hw_register_fixed_factor(%s) failed: %ld\n", __func__, init.name, PTR_ERR(clk));
++			return PTR_ERR(clk);
++		}
++		if (data->lookup) {
++			lookup = clkdev_hw_create(clk, NULL, data->lookup);
++			if (IS_ERR(lookup)) {
++				dev_err(rpi->dev, "%s: clk_hw_register_fixed_factor(%s) failed: %ld\n", __func__, init.name, PTR_ERR(lookup));
++				return PTR_ERR(lookup);
++			}
++		}
++	}
+ 
+-	return devm_clk_hw_register(rpi->dev, &rpi->pllb);
++	return 0;
+ }
+ 
+-static int raspberrypi_register_pllb_arm(struct raspberrypi_clk *rpi)
++static int raspberrypi_register_clock(struct raspberrypi_clk *rpi,
++					  const struct raspberrypi_clock_data *data)
+ {
+-	rpi->pllb_arm = clk_hw_register_fixed_factor(rpi->dev,
+-				"pllb_arm", "pllb",
+-				CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
+-				1, 2);
+-	if (IS_ERR(rpi->pllb_arm)) {
+-		dev_err(rpi->dev, "Failed to initialize pllb_arm\n");
+-		return PTR_ERR(rpi->pllb_arm);
+-	}
++	struct raspberrypi_clock *clock;
++	struct clk_init_data init;
++	struct clk *clk;
++	int ret;
++
++	memset(&init, 0, sizeof(init));
++	init.parent_names = data->parents;
++	init.num_parents = data->num_parents;
++	init.name = data->name;
++	init.flags = data->flags | CLK_IGNORE_UNUSED;
+ 
+-	rpi->pllb_arm_lookup = clkdev_hw_create(rpi->pllb_arm, NULL, "cpu0");
+-	if (!rpi->pllb_arm_lookup) {
+-		dev_err(rpi->dev, "Failed to initialize pllb_arm_lookup\n");
+-		clk_hw_unregister_fixed_factor(rpi->pllb_arm);
++	init.ops = &raspberrypi_firmware_clk_ops;
++
++	clock = devm_kzalloc(rpi->dev, sizeof(*clock), GFP_KERNEL);
++	if (!clock)
+ 		return -ENOMEM;
+-	}
+ 
++	clock->rpi = rpi;
++	clock->data = data;
++	clock->hw.init = &init;
++
++	ret = raspberrypi_get_clock_range(rpi, data->clock_id, &clock->min_rate, &clock->max_rate);
++	if (ret) {
++		dev_err(rpi->dev, "%s: raspberrypi_get_clock_range(%s) failed: %d\n", __func__, init.name, ret);
++		return ret;
++	}
++	clk = devm_clk_register(rpi->dev, &clock->hw);
++	if (IS_ERR(clk)) {
++		dev_err(rpi->dev, "%s: devm_clk_register(%s) failed: %ld\n", __func__, init.name, PTR_ERR(clk));
++		return PTR_ERR(clk);
++	}
++	ret = clk_register_clkdev(clk, init.name, NULL);
++	if (ret) {
++		dev_err(rpi->dev, "%s: clk_register_clkdev(%s) failed: %d\n", __func__, init.name, ret);
++		return ret;
++	}
+ 	return 0;
+ }
+ 
++
++/*
++ * the real definition of all the pll, pll_dividers and clocks
++ * these make use of the above REGISTER_* macros
++ */
++static const struct raspberrypi_clk_desc clk_desc_array[] = {
++	/* the PLL + PLL dividers */
++	[BCM2835_CLOCK_V3D]     = REGISTER_CLK(
++		SOC_ALL,
++		.name = "v3d",
++		.parents = (const char *[]){ "osc" },
++		.num_parents = 1,
++		.clock_id = RPI_FIRMWARE_V3D_CLK_ID),
++	[BCM2835_PLLB_ARM]      = REGISTER_PLL_DIV(
++		SOC_ALL,
++		.name = "pllb",
++		.source_pll = "osc",
++		.divider_name = "pllb_arm",
++		.lookup = "cpu0",
++		.fixed_divider = 2,
++		.clock_id = RPI_FIRMWARE_ARM_CLK_ID,
++		.flags = CLK_SET_RATE_PARENT),
++};
++
+ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *firmware_node;
+ 	struct device *dev = &pdev->dev;
+ 	struct rpi_firmware *firmware;
+ 	struct raspberrypi_clk *rpi;
+-	int ret;
++	const struct raspberrypi_clk_desc *desc;
++	const size_t asize = ARRAY_SIZE(clk_desc_array);
++	int i;
+ 
+ 	firmware_node = of_find_compatible_node(NULL, NULL,
+ 					"raspberrypi,bcm2835-firmware");
+@@ -275,16 +594,16 @@ static int raspberrypi_clk_probe(struct platform_device *pdev)
+ 	rpi->firmware = firmware;
+ 	platform_set_drvdata(pdev, rpi);
+ 
+-	ret = raspberrypi_register_pllb(rpi);
+-	if (ret) {
+-		dev_err(dev, "Failed to initialize pllb, %d\n", ret);
+-		return ret;
++	for (i = 0; i < asize; i++) {
++		desc = &clk_desc_array[i];
++		if (desc->clk_register && desc->data /*&&
++		    (desc->supported & pdata->soc)*/) {
++			int ret = desc->clk_register(rpi, desc->data);
++			if (ret)
++				return ret;
++		}
+ 	}
+ 
+-	ret = raspberrypi_register_pllb_arm(rpi);
+-	if (ret)
+-		return ret;
+-
+ 	rpi->cpufreq = platform_device_register_data(dev, "raspberrypi-cpufreq",
+ 						     -1, NULL, 0);
+ 
+
+From 2aa3f5054b27215059efacd8a269ef6543e780cb Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Tue, 3 Sep 2019 20:28:00 +0100
+Subject: [PATCH 13/18] clk-bcm2835: Disable v3d clock
+
+This is controlled by firmware, see clk-raspberrypi.c
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ drivers/clk/bcm/clk-bcm2835.c | 30 ++++++++++++------------------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index d46087678d818..9dff41ca6725b 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1725,16 +1725,12 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.hold_mask = CM_PLLA_HOLDCORE,
+ 		.fixed_divider = 1,
+ 		.flags = CLK_SET_RATE_PARENT),
+-	[BCM2835_PLLA_PER]	= REGISTER_PLL_DIV(
+-		SOC_ALL,
+-		.name = "plla_per",
+-		.source_pll = "plla",
+-		.cm_reg = CM_PLLA,
+-		.a2w_reg = A2W_PLLA_PER,
+-		.load_mask = CM_PLLA_LOADPER,
+-		.hold_mask = CM_PLLA_HOLDPER,
+-		.fixed_divider = 1,
+-		.flags = CLK_SET_RATE_PARENT),
++
++	/*
++	 * PLLA_PER is used for gpu clocks. Controlled by firmware, see
++	 * clk-raspberrypi.c.
++	 */
++
+ 	[BCM2835_PLLA_DSI0]	= REGISTER_PLL_DIV(
+ 		SOC_ALL,
+ 		.name = "plla_dsi0",
+@@ -2007,14 +2003,12 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.int_bits = 6,
+ 		.frac_bits = 0,
+ 		.tcnt_mux = 3),
+-	[BCM2835_CLOCK_V3D]	= REGISTER_VPU_CLK(
+-		SOC_ALL,
+-		.name = "v3d",
+-		.ctl_reg = CM_V3DCTL,
+-		.div_reg = CM_V3DDIV,
+-		.int_bits = 4,
+-		.frac_bits = 8,
+-		.tcnt_mux = 4),
++
++	/*
++	 * CLOCK_V3D is used for v3d clock. Controlled by firmware, see
++	 * clk-raspberrypi.c.
++	 */
++
+ 	/*
+ 	 * VPU clock.  This doesn't have an enable bit, since it drives
+ 	 * the bus for everything else, and is special so it doesn't need
+
+From aaf96413fa2eb15f8905f9f29e9ca718c51e3fa0 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Tue, 20 Aug 2019 17:53:47 +0100
+Subject: [PATCH 14/18] config: Switch to upstream cpufreq driver
+
+Signed-off-by: popcornmix <popcornmix@gmail.com>
+---
+ arch/arm/configs/bcm2711_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/configs/bcm2711_defconfig b/arch/arm/configs/bcm2711_defconfig
+index 7512faef9c995..307561ba4d14f 100644
+--- a/arch/arm/configs/bcm2711_defconfig
++++ b/arch/arm/configs/bcm2711_defconfig
+@@ -55,6 +55,9 @@ CONFIG_CPU_FREQ_GOV_USERSPACE=y
+ CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+ CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+ CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
++CONFIG_CPUFREQ_DT=y
++CONFIG_ARM_RASPBERRYPI_CPUFREQ=y
++# CONFIG_ARM_BCM2835_CPUFREQ is not set
+ CONFIG_VFP=y
+ CONFIG_NEON=y
+ CONFIG_KERNEL_MODE_NEON=y
+@@ -1330,6 +1333,7 @@ CONFIG_BCM2835_VCHIQ=y
+ CONFIG_SND_BCM2835=m
+ CONFIG_VIDEO_BCM2835=m
+ CONFIG_VIDEO_CODEC_BCM2835=m
++CONFIG_CLK_RASPBERRYPI=y
+ CONFIG_MAILBOX=y
+ CONFIG_BCM2835_MBOX=y
+ # CONFIG_IOMMU_SUPPORT is not set
+
+From 1107a67253ac3ac4adc0b192a88ffe9f225e725b Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Thu, 7 Nov 2019 12:25:27 +0000
+Subject: [PATCH 15/18] fixup! clk-raspberrypi: Also support v3d clock
+
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 684d62ebf1f21..718868a8c6489 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -474,7 +474,7 @@ raspberrypi_register_pll_divider(struct raspberrypi_clk *rpi,
+ 	 * PLLH's channels have a fixed divide by 10 afterwards, which
+ 	 * is what our consumers are actually using.
+ 	 */
+-	if (data->fixed_divider != 1) {
++	if (data->fixed_divider != 0) {
+ 		struct clk_lookup *lookup;
+ 		struct clk_hw *clk = clk_hw_register_fixed_factor(rpi->dev,
+ 						    data->divider_name,
+@@ -559,7 +559,7 @@ static const struct raspberrypi_clk_desc clk_desc_array[] = {
+ 		.source_pll = "osc",
+ 		.divider_name = "pllb_arm",
+ 		.lookup = "cpu0",
+-		.fixed_divider = 2,
++		.fixed_divider = 1,
+ 		.clock_id = RPI_FIRMWARE_ARM_CLK_ID,
+ 		.flags = CLK_SET_RATE_PARENT),
+ };
+
+From 9da5f6e111989fe507852ee3fba695392b94ae7c Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Thu, 7 Nov 2019 14:11:08 +0000
+Subject: [PATCH 16/18] fixup! clk-raspberrypi: Also support v3d clock
+
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 718868a8c6489..04c1eb8f84c23 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -351,21 +351,21 @@ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_pll_is_on,
+ 	.recalc_rate = raspberrypi_fw_pll_get_rate,
+ 	.set_rate = raspberrypi_fw_pll_set_rate,
+-	.determine_rate = raspberrypi_pll_determine_rate,
++	//.determine_rate = raspberrypi_pll_determine_rate,
+ };
+ 
+ static const struct clk_ops raspberrypi_firmware_pll_divider_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_pll_div_is_on,
+ 	.recalc_rate = raspberrypi_fw_pll_div_get_rate,
+ 	.set_rate = raspberrypi_fw_pll_div_set_rate,
+-	.determine_rate = raspberrypi_pll_div_determine_rate,
++	//.determine_rate = raspberrypi_pll_div_determine_rate,
+ };
+ 
+ static const struct clk_ops raspberrypi_firmware_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_clock_is_on,
+ 	.recalc_rate = raspberrypi_fw_clock_get_rate,
+ 	.set_rate = raspberrypi_fw_clock_set_rate,
+-	.determine_rate = raspberrypi_clock_determine_rate,
++	//.determine_rate = raspberrypi_clock_determine_rate,
+ };
+ 
+ 
+
+From 07b47fa7c3420568a3b6513298de4ceffd0aafd8 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Fri, 13 Sep 2019 13:45:11 +0100
+Subject: [PATCH 17/18] raspberrypi-cpufreq: Only report integer pll divisor
+ frequencies
+
+---
+ drivers/cpufreq/raspberrypi-cpufreq.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/cpufreq/raspberrypi-cpufreq.c b/drivers/cpufreq/raspberrypi-cpufreq.c
+index 2bc7d9734272a..8bcfab2749a8d 100644
+--- a/drivers/cpufreq/raspberrypi-cpufreq.c
++++ b/drivers/cpufreq/raspberrypi-cpufreq.c
+@@ -8,6 +8,7 @@
+ #include <linux/clk.h>
+ #include <linux/cpu.h>
+ #include <linux/cpufreq.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_opp.h>
+@@ -22,6 +23,7 @@ static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
+ 	unsigned long min, max;
+ 	unsigned long rate;
+ 	struct clk *clk;
++	int div;
+ 	int ret;
+ 
+ 	cpu_dev = get_cpu_device(0);
+@@ -44,7 +46,10 @@ static int raspberrypi_cpufreq_probe(struct platform_device *pdev)
+ 	max = roundup(clk_round_rate(clk, ULONG_MAX), RASPBERRYPI_FREQ_INTERVAL);
+ 	clk_put(clk);
+ 
+-	for (rate = min; rate <= max; rate += RASPBERRYPI_FREQ_INTERVAL) {
++	for (div = 2; ; div++) {
++		rate = div_u64((u64)max * 2, div);
++		if (rate < min)
++			break;
+ 		ret = dev_pm_opp_add(cpu_dev, rate, 0);
+ 		if (ret)
+ 			goto remove_opp;
+
+From 6947ec57569b6c2ce9f5d8a393490f46932d3550 Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Thu, 7 Nov 2019 14:23:38 +0000
+Subject: [PATCH 18/18] fixup! clk-raspberrypi: Also support v3d clock
+
+---
+ drivers/clk/bcm/clk-raspberrypi.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/clk/bcm/clk-raspberrypi.c b/drivers/clk/bcm/clk-raspberrypi.c
+index 04c1eb8f84c23..8daf26df54308 100644
+--- a/drivers/clk/bcm/clk-raspberrypi.c
++++ b/drivers/clk/bcm/clk-raspberrypi.c
+@@ -208,6 +208,9 @@ static int raspberrypi_determine_rate(struct raspberrypi_clk *rpi,
+ 					  u32 clock_id, const char *name, unsigned long min_rate, unsigned long max_rate,
+ 					  struct clk_rate_request *req)
+ {
++#if 1
++	req->rate = clamp(req->rate, min_rate, max_rate);
++#else
+ 	u64 div, final_rate;
+ 	u32 ndiv, fdiv;
+ 
+@@ -225,6 +228,7 @@ static int raspberrypi_determine_rate(struct raspberrypi_clk *rpi,
+ 
+ 	req->rate = final_rate >> A2W_PLL_FRAC_BITS;
+ 
++#endif
+ 	return 0;
+ }
+ 
+@@ -351,21 +355,21 @@ static const struct clk_ops raspberrypi_firmware_pll_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_pll_is_on,
+ 	.recalc_rate = raspberrypi_fw_pll_get_rate,
+ 	.set_rate = raspberrypi_fw_pll_set_rate,
+-	//.determine_rate = raspberrypi_pll_determine_rate,
++	.determine_rate = raspberrypi_pll_determine_rate,
+ };
+ 
+ static const struct clk_ops raspberrypi_firmware_pll_divider_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_pll_div_is_on,
+ 	.recalc_rate = raspberrypi_fw_pll_div_get_rate,
+ 	.set_rate = raspberrypi_fw_pll_div_set_rate,
+-	//.determine_rate = raspberrypi_pll_div_determine_rate,
++	.determine_rate = raspberrypi_pll_div_determine_rate,
+ };
+ 
+ static const struct clk_ops raspberrypi_firmware_clk_ops = {
+ 	.is_prepared = raspberrypi_fw_clock_is_on,
+ 	.recalc_rate = raspberrypi_fw_clock_get_rate,
+ 	.set_rate = raspberrypi_fw_clock_set_rate,
+-	//.determine_rate = raspberrypi_clock_determine_rate,
++	.determine_rate = raspberrypi_clock_determine_rate,
+ };
+ 
+ 
