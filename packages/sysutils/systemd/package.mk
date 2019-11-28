@@ -89,6 +89,7 @@ PKG_MESON_OPTS_TARGET="--libdir=/usr/lib \
                        -Dkmod-path=/usr/bin/kmod \
                        -Dmount-path=/usr/bin/mount \
                        -Dumount-path=/usr/bin/umount \
+                       -Drc-local=/storage/.config/rc.local \
                        -Ddebug-tty=$DEBUG_TTY \
                        -Dversion-tag=${PKG_VERSION}"
 
@@ -159,7 +160,8 @@ post_makeinstall_target() {
   # remove unneeded generators
   for gen in $INSTALL/usr/lib/systemd/system-generators/*; do
     case "$gen" in
-      */systemd-debug-generator)
+      */systemd-debug-generator | \
+      */systemd-rc-local-generator)
         # keep it
         ;;
       *)
