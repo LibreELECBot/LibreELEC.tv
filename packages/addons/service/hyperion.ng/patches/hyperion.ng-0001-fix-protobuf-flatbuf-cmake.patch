@@ -1,0 +1,75 @@
+diff --git a/dependencies/CMakeLists.txt b/dependencies/CMakeLists.txt
+index 4c4094e8..3a30b56a 100644
+--- a/dependencies/CMakeLists.txt
++++ b/dependencies/CMakeLists.txt
+@@ -16,11 +16,7 @@ endif()
+ set(USE_SYSTEM_FLATBUFFERS_LIBS ${DEFAULT_USE_SYSTEM_FLATBUFFERS_LIBS} CACHE BOOL "use flatbuffers library from system")
+ 
+ if (USE_SYSTEM_FLATBUFFERS_LIBS)
+-	if (ENABLE_AMLOGIC)
+-		find_program(FLATBUFFERS_FLATC_EXECUTABLE NAMES flatc REQUIRED)
+-	else ()
+-		find_package(flatbuffers REQUIRED)
+-	endif()
++	find_program(FLATBUFFERS_FLATC_EXECUTABLE NAMES flatc REQUIRED)
+ 	include_directories(${FLATBUFFERS_INCLUDE_DIRS})
+ else ()
+ 	set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared flatbuffers library")
+@@ -58,22 +54,12 @@ message(STATUS "Using flatbuffers compiler: " ${FLATBUFFERS_FLATC_EXECUTABLE})
+ 
+ function(compile_flattbuffer_schema SRC_FBS OUTPUT_DIR)
+ 	string(REGEX REPLACE "\\.fbs$" "_generated.h" GEN_HEADER ${SRC_FBS})
+-	if (ENABLE_AMLOGIC)
+-		add_custom_command(
+-			OUTPUT ${GEN_HEADER}
+-			COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -c --no-includes --gen-mutable
+-					--gen-object-api
+-					-o "${OUTPUT_DIR}"
+-					"${SRC_FBS}")
+-	else()
+-		add_custom_command(
+-			OUTPUT ${GEN_HEADER}
+-			COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -c --no-includes --gen-mutable
+-					--gen-object-api
+-					-o "${OUTPUT_DIR}"
+-					"${SRC_FBS}"
+-			DEPENDS flatc)
+-	endif()
++	add_custom_command(
++		OUTPUT ${GEN_HEADER}
++		COMMAND "${FLATBUFFERS_FLATC_EXECUTABLE}" -c --no-includes --gen-mutable
++				--gen-object-api
++				-o "${OUTPUT_DIR}"
++				"${SRC_FBS}")
+ endfunction()
+ 
+ #=============================================================================
+@@ -84,10 +70,8 @@ set(USE_SYSTEM_PROTO_LIBS ${DEFAULT_USE_SYSTEM_PROTO_LIBS} CACHE BOOL "use proto
+ 
+ if (USE_SYSTEM_PROTO_LIBS)
+ 	find_package(Protobuf REQUIRED)
+-	if (ENABLE_AMLOGIC)
+-		set(PROTOBUF_INCLUDE_DIRS "${Protobuf_INCLUDE_DIRS}" PARENT_SCOPE)
+-		set(PROTOBUF_PROTOC_EXECUTABLE "${Protobuf_PROTOC_EXECUTABLE}" PARENT_SCOPE)
+-	endif()
++	set(PROTOBUF_INCLUDE_DIRS "${Protobuf_INCLUDE_DIRS}" PARENT_SCOPE)
++	set(PROTOBUF_PROTOC_EXECUTABLE "${Protobuf_PROTOC_EXECUTABLE}" PARENT_SCOPE)
+ 	include_directories(${PROTOBUF_INCLUDE_DIRS})
+ else ()
+ 	set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared protobuf library")
+diff --git a/include/bonjour/bonjourservicebrowser.h b/include/bonjour/bonjourservicebrowser.h
+index 948fdb9f..c189bffa 100644
+--- a/include/bonjour/bonjourservicebrowser.h
++++ b/include/bonjour/bonjourservicebrowser.h
+@@ -30,11 +30,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define BONJOURSERVICEBROWSER_H
+ 
+ #include <QtCore/QObject>
+-#ifndef PLATFORM_AMLOGIC
+-#include <dns_sd.h>
+-#else
+ #include <avahi-compat-libdns_sd/dns_sd.h>
+-#endif
+ #include "bonjour/bonjourrecord.h"
+ 
+ 

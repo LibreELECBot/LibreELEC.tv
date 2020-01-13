@@ -1,0 +1,109 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 496779ea..9f5487c4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -318,6 +318,15 @@ IF ( "${Qt5Core_VERSION}" VERSION_LESS "${QT_MIN_VERSION}" )
+ 	message( FATAL_ERROR "Your Qt version is to old! Minimum required ${QT_MIN_VERSION}" )
+ ENDIF()
+ 
++foreach(plugin ${Qt5Sql_PLUGINS} Qt5::Sql)
++       get_target_property(_loc ${plugin} LOCATION)
++       set(plugin_libs ${plugin_libs} ${_loc})
++endforeach()
++foreach(plugin ${Qt5Gui_PLUGINS} Qt5::Gui)
++       get_target_property(_loc ${plugin} LOCATION)
++       set(plugin_libs ${plugin_libs} ${_loc})
++endforeach()
++
+ # Add libusb and pthreads
+ find_package(libusb-1.0 REQUIRED)
+ find_package(Threads REQUIRED)
+diff --git a/libsrc/db/CMakeLists.txt b/libsrc/db/CMakeLists.txt
+index e420fd00..b1531422 100644
+--- a/libsrc/db/CMakeLists.txt
++++ b/libsrc/db/CMakeLists.txt
+@@ -15,4 +15,5 @@ target_link_libraries(database
+ 	hyperion-utils
+ 	Qt5::Core
+ 	Qt5::Sql
++	${plugin_libs}
+ )
+diff --git a/libsrc/db/DBManager.cpp b/libsrc/db/DBManager.cpp
+index fe0d5575..4036c467 100644
+--- a/libsrc/db/DBManager.cpp
++++ b/libsrc/db/DBManager.cpp
+@@ -8,6 +8,9 @@
+ #include <QUuid>
+ #include <QDir>
+ 
++#include <QtPlugin>
++Q_IMPORT_PLUGIN(QSQLiteDriverPlugin)
++
+ // not in header because of linking
+ static QString _rootPath;
+ static QThreadStorage<QSqlDatabase> _databasePool;
+diff --git a/src/hyperion-aml/CMakeLists.txt b/src/hyperion-aml/CMakeLists.txt
+index 571077c9..83235455 100644
+--- a/src/hyperion-aml/CMakeLists.txt
++++ b/src/hyperion-aml/CMakeLists.txt
+@@ -33,6 +33,7 @@ target_link_libraries(${PROJECT_NAME}
+ 	Qt5::Core
+ 	Qt5::Gui
+ 	Qt5::Network
++	${plugin_libs}
+ )
+ 
+ if (ENABLE_AMLOGIC)
+diff --git a/src/hyperion-framebuffer/CMakeLists.txt b/src/hyperion-framebuffer/CMakeLists.txt
+index 1e82137d..e7f27578 100644
+--- a/src/hyperion-framebuffer/CMakeLists.txt
++++ b/src/hyperion-framebuffer/CMakeLists.txt
+@@ -32,6 +32,7 @@ target_link_libraries( ${PROJECT_NAME}
+ 	Qt5::Core
+ 	Qt5::Gui
+ 	Qt5::Network
++	${plugin_libs}
+ )
+ 
+ if (ENABLE_AMLOGIC)
+diff --git a/src/hyperion-remote/CMakeLists.txt b/src/hyperion-remote/CMakeLists.txt
+index 041b77cd..44e0f808 100644
+--- a/src/hyperion-remote/CMakeLists.txt
++++ b/src/hyperion-remote/CMakeLists.txt
+@@ -28,7 +28,9 @@ target_link_libraries(${PROJECT_NAME}
+ 	ssdp
+ 	Qt5::Gui
+ 	Qt5::Core
+-	Qt5::Network)
++	Qt5::Network
++	${plugin_libs}
++)
+ 
+ if (ENABLE_AMLOGIC)
+ 	target_link_libraries(${PROJECT_NAME}
+diff --git a/src/hyperiond/CMakeLists.txt b/src/hyperiond/CMakeLists.txt
+index 8667ac30..97df1d51 100644
+--- a/src/hyperiond/CMakeLists.txt
++++ b/src/hyperiond/CMakeLists.txt
+@@ -25,6 +25,7 @@ target_link_libraries(hyperiond
+ 		resources
+ 		${PYTHON_LIBRARIES}
+ 		Qt5::Widgets
++		${plugin_libs}
+ )
+ 
+ if (ENABLE_AMLOGIC)
+diff --git a/src/hyperiond/hyperiond.cpp b/src/hyperiond/hyperiond.cpp
+index 8fde0c5c..7ce63bc8 100644
+--- a/src/hyperiond/hyperiond.cpp
++++ b/src/hyperiond/hyperiond.cpp
+@@ -26,6 +26,9 @@
+ #include <HyperionConfig.h> // Required to determine the cmake options
+ #include "hyperiond.h"
+ 
++#include <QtPlugin>
++Q_IMPORT_PLUGIN(QJpegPlugin)
++
+ // Flatbuffer Server
+ #include <flatbufserver/FlatBufferServer.h>
+ 

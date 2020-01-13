@@ -1,0 +1,33 @@
+diff --git a/include/bonjour/bonjourserviceregister.h b/include/bonjour/bonjourserviceregister.h
+index 1893e954..6c8698f6 100644
+--- a/include/bonjour/bonjourserviceregister.h
++++ b/include/bonjour/bonjourserviceregister.h
+@@ -34,11 +34,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #include "bonjourrecord.h"
+ class QSocketNotifier;
+ 
+-#ifndef PLATFORM_AMLOGIC
+-#include <dns_sd.h>
+-#else
+ #include <avahi-compat-libdns_sd/dns_sd.h>
+-#endif
+ 
+ class BonjourServiceRegister : public QObject
+ {
+diff --git a/include/bonjour/bonjourserviceresolver.h b/include/bonjour/bonjourserviceresolver.h
+index ed10e1ba..d8073a0d 100644
+--- a/include/bonjour/bonjourserviceresolver.h
++++ b/include/bonjour/bonjourserviceresolver.h
+@@ -31,11 +31,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include <QtCore/QObject>
+ 
+-#ifndef PLATFORM_AMLOGIC
+-#include <dns_sd.h>
+-#else
+ #include <avahi-compat-libdns_sd/dns_sd.h>
+-#endif
++
+ class QSocketNotifier;
+ class QHostInfo;
+ class BonjourRecord;
