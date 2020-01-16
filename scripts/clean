@@ -28,7 +28,7 @@ clean_package() {
       # force clean if no stamp found (previous unpack failed)
       . "${i}/.libreelec-package"
       if [ "${INFO_PKG_NAME}" = "${1}" ]; then
-        build_msg "" "" "* Removing ${i} ..."
+        build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${i} ...")"
         rm -rf "${i}"
       fi
     fi
@@ -37,7 +37,7 @@ clean_package() {
 }
 
 if [ "${1}" = "--all" -a -n "${2}" ]; then
-  for build_dir in $(ls -1d "${ROOT}/build."*); do
+  for build_dir in $(ls -1d "${BUILD_ROOT}/${BUILD_BASE}."*); do
     load_build_config "${build_dir}" && "${SCRIPTS}/clean" "${2}"
   done
 elif [ -n "${1}" ]; then
