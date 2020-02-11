@@ -158,13 +158,28 @@ pre_make_target() {
 
   PKG_NEWOPTIONS="$(kernel_make listnewconfig | grep -E '^CONFIG_' || true)"
   if [ -n "${PKG_NEWOPTIONS}" ]; then
-    echo "INCOMPLETE KERNEL CONFIG! THE FOLLOWING ARE NEW OPTIONS:"
-    echo "***********************************"
-    echo "${PKG_NEWOPTIONS}"
-    echo "***********************************"
-    echo "Run 'make oldconfig' and update ${PKG_KERNEL_CFG_FILE}"
-    echo "so that unknown options are not resolved at build time!"
-    [ "${KERNEL_PARANOID_CONFIG}" = "yes" ] && die
+    cat >&2 <<EOF
+KERNEL CONFIG: ${PKG_KERNEL_CFG_FILE}
+
+INCOMPLETE KERNEL CONFIG! THE FOLLOWING ARE NEW OPTIONS:
+********************************************************
+${PKG_NEWOPTIONS}
+********************************************************
+
+Run 'make oldconfig' and update your kernel config so
+that unknown options are not resolved at build time!
+
+EOF
+    if [ "${KERNEL_PARANOID_CONFIG}" = "yes" ]; then
+      cat >&2 <<EOF
+To convert this to a non-fatal message, add the following
+to your \$HOME/.libreelec/options or command line:
+
+KERNEL_PARANOID_CONFIG=no
+
+EOF
+      die
+    fi
   fi
   kernel_make oldconfig
 }
