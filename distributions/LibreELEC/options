@@ -7,6 +7,9 @@
 # HARDENING (security relevant linker and compiler flags) support
   HARDENING_SUPPORT="no"
 
+# Abort kernel build when unknown options are present
+  KERNEL_PARANOID_CONFIG="yes"
+
 # Name of the Distro to build (full name, without special characters)
   DISTRONAME="LibreELEC"
 
