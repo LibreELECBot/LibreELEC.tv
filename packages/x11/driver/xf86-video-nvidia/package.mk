@@ -6,8 +6,8 @@ PKG_NAME="xf86-video-nvidia"
 # Remember to run "python packages/x11/driver/xf86-video-nvidia/scripts/make_nvidia_udev.py" and commit changes to
 # "packages/x11/driver/xf86-video-nvidia/udev.d/96-nvidia.rules" whenever bumping version.
 # Host may require installation of python-lxml and python-requests packages.
-PKG_VERSION="430.50"
-PKG_SHA256="19ff49073e88245666825722e2c814d369ab4d01b2883a954ce0bfbe9c3b22ab"
+PKG_VERSION="440.59"
+PKG_SHA256="87c05aeadd260034b4d429de5be8032ead2103adee7aedc1adbb15c0ce3c6f28"
 PKG_ARCH="x86_64"
 PKG_LICENSE="nonfree"
 PKG_SITE="http://www.nvidia.com/"
@@ -50,7 +50,7 @@ makeinstall_target() {
       ln -sf /var/lib/libnvidia-ml.so.1 $INSTALL/usr/lib/libnvidia-ml.so.1
     cp -P libnvidia-tls.so.$PKG_VERSION $INSTALL/usr/lib
   # rename to not conflicting with Mesa libGL.so
-    cp -P libGL.so.$PKG_VERSION $INSTALL/usr/lib/libGL_nvidia.so.1
+    cp -P libGLX_nvidia.so.$PKG_VERSION $INSTALL/usr/lib/libGL_nvidia.so.1
 
   mkdir -p $INSTALL/$(get_full_module_dir)/nvidia
     ln -sf /var/lib/nvidia.ko $INSTALL/$(get_full_module_dir)/nvidia/nvidia.ko
