@@ -811,6 +811,12 @@ is_sequential_build() {
   [ "${MTWITHLOCKS}" != "yes" ] && return 0 || return 1
 }
 
+# Append an item (arg 1) to fakeroot
+# Since this could happen concurrently in multiple processes, guard against it
+add_fakeroot_item() {
+  exec_thread_safe echo "$1" >> "${FAKEROOT_SCRIPT}"
+}
+
 
 ### PACKAGE HELPERS ###
 # get variable ($2) for package ($1).
