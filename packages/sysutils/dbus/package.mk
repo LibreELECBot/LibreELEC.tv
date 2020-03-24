@@ -43,6 +43,6 @@ post_install() {
   add_group dbus 81
   add_group netdev 497
 
-  echo "chmod 4750 $INSTALL/usr/lib/dbus/dbus-daemon-launch-helper" >> $FAKEROOT_SCRIPT
-  echo "chown 0:81 $INSTALL/usr/lib/dbus/dbus-daemon-launch-helper" >> $FAKEROOT_SCRIPT
+  add_fakeroot_item "chmod 4750 $INSTALL/usr/lib/dbus/dbus-daemon-launch-helper"
+  add_fakeroot_item "chown 0:81 $INSTALL/usr/lib/dbus/dbus-daemon-launch-helper"
 }
