@@ -1,0 +1,22 @@
+From e0280200274616105509c2e940942ab7f1422c9d Mon Sep 17 00:00:00 2001
+From: fritsch <Peter.Fruehberger@gmail.com>
+Date: Sun, 15 Mar 2020 20:54:55 +0100
+Subject: [PATCH] USBCECAdapterDetection: Only scan tty
+
+---
+ src/libcec/adapter/Pulse-Eight/USBCECAdapterDetection.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/libcec/adapter/Pulse-Eight/USBCECAdapterDetection.cpp b/src/libcec/adapter/Pulse-Eight/USBCECAdapterDetection.cpp
+index d3efc193..d669b754 100644
+--- a/src/libcec/adapter/Pulse-Eight/USBCECAdapterDetection.cpp
++++ b/src/libcec/adapter/Pulse-Eight/USBCECAdapterDetection.cpp
+@@ -356,6 +356,8 @@ uint8_t CUSBCECAdapterDetection::FindAdaptersUdev(cec_adapter_descriptor *device
+   struct udev_list_entry *devices, *dev_list_entry;
+   struct udev_device *dev, *pdev;
+   enumerate = udev_enumerate_new(udev);
++
++  udev_enumerate_add_match_subsystem(enumerate, "tty");
+   udev_enumerate_scan_devices(enumerate);
+   devices = udev_enumerate_get_list_entry(enumerate);
+   udev_list_entry_foreach(dev_list_entry, devices)
