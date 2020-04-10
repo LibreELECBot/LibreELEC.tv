@@ -1,0 +1,36 @@
+From 98f55396d8a494b64ae0dc65fb77c17e4e7e7844 Mon Sep 17 00:00:00 2001
+From: MilhouseVH <milhouseVH.github@nmacleod.com>
+Date: Fri, 10 Apr 2020 15:01:03 +0100
+Subject: [PATCH] fix build with 5.6+ kernel
+
+---
+ sapphire.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/sapphire.c b/sapphire.c
+index 3d1ddb0..df11132 100644
+--- a/sapphire.c
++++ b/sapphire.c
+@@ -648,11 +648,19 @@ static ssize_t sapphire_newproc_read (struct file *file, char __user *buffer, si
+ 	return len;
+ }
+ 
++#if LINUX_VERSION_CODE >= KERNEL_VERSION(5, 6, 0)
++static const struct proc_ops sapphire_newproc_fops = {
++	.proc_read = sapphire_newproc_read,
++	.proc_write = sapphire_newproc_write,
++	.proc_lseek = default_llseek,
++};
++#else
+ static const struct file_operations sapphire_newproc_fops = {
+ 	.read = sapphire_newproc_read,
+ 	.write = sapphire_newproc_write,
+ 	.llseek = default_llseek,
+ };
++#endif
+ 
+ static void sapphire_create_proc_entry (void)
+ {
+-- 
+2.20.1
+
