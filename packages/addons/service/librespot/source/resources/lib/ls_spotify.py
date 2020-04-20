@@ -74,7 +74,9 @@ class Spotify:
         listitem.setArt(dict(fanart=thumb, thumb=thumb))
         listitem.setInfo('music', dict(
             album=album, artist=artist, title=title))
-        log('{}#{}#{}#{}'.format(title, artist, album, thumb))
-
+        log('{}#{}#{}#{}'.format(title.encode('ascii', 'ignore'),
+                                 artist.encode('ascii', 'ignore'),
+                                 album.encode('ascii', 'ignore'),
+                                 thumb))
 
 SPOTIFY = Spotify()
