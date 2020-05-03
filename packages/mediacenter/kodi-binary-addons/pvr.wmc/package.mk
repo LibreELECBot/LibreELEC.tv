@@ -3,8 +3,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.wmc"
-PKG_VERSION="3.2.6-Matrix"
-PKG_SHA256="11e21a96321dc529cf8f2599bdefe21ccf2965e302ab1a0e1b8ce86b2fd71e3c"
+PKG_VERSION="3.2.7-Matrix"
+PKG_SHA256="121a77fafa025643a7196b5bc00f03115e368c823f7b10b3806981ebc9e65f39"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"

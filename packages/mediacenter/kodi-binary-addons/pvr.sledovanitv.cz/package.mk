@@ -2,8 +2,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.sledovanitv.cz"
-PKG_VERSION="2.5.0-Matrix"
-PKG_SHA256="67c19d998ad4f07c191653807aaab22a2b07b008aaf2892b83ccf62854b47fe9"
+PKG_VERSION="2.5.2-Matrix"
+PKG_SHA256="306a450013ab3774dba028b2f7a4ce79e7bf3c779178092125741b6505c7718a"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPLv2"
