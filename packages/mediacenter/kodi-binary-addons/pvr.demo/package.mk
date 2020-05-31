@@ -3,8 +3,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.demo"
-PKG_VERSION="4.1.5-Matrix"
-PKG_SHA256="2f97162798e60ca01cb9ab64467070cfc17a7b2df93faede2d74ad77b485052e"
+PKG_VERSION="5.0.0-Matrix"
+PKG_SHA256="8931b6a17082402fcdd7636b955a8ad4f7e8bec8c594e62dea4fda3e240d7704"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
