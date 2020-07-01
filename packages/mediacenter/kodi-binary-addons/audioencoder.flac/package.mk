@@ -3,12 +3,12 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="audioencoder.flac"
-PKG_VERSION="7bce2e5aeb5b9f272520a096805a40ea9421b96d"
-PKG_SHA256="5c65d789e7a9180208b539a63fcb092a84f1d4c4fadd85a53805f21bb2427c45"
-PKG_REV="2"
+PKG_VERSION="2.1.1-Matrix"
+PKG_SHA256="5a9f9d85fa7f18fcdfeeeba30d1c82344eb3d4d72451c3113acea83714707f59"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/xbmc/audioencoder.flac"
 PKG_URL="https://github.com/xbmc/audioencoder.flac/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform flac"
 PKG_SECTION=""

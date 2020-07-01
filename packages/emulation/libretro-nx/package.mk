@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-nx"
-PKG_VERSION="b460024c23ef2cb8a70e1ae00b6b425abaaf49a4"
-PKG_SHA256="26b5bb43fc124c0cc8cf3c2c37ef03ba1c3cf8b707e2edbf3b9eeb4d8b9fd37d"
+PKG_VERSION="f39250e54f20c616dd4403cb8d4cab14032530b5"
+PKG_SHA256="445f1a4e532561847f271b615bbe68685d9c251c0374817946685591f1a64fe5"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/nxengine-libretro"
 PKG_URL="https://github.com/libretro/nxengine-libretro/archive/$PKG_VERSION.tar.gz"

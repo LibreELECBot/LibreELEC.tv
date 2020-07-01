@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="media_tree"
-PKG_VERSION="2018-12-07-e159b6074c82"
-PKG_SHA256="8df4e76878239881cf69bddab2f1c69be698c25682d114b706d75123972c95b7"
+PKG_VERSION="2020-02-09-bb6d3fb354c5"
+PKG_SHA256="d6b7088393b4676a94f628b37722e9a36efef65408d003e0b3bafa4933a5416b"
 PKG_LICENSE="GPL"
 PKG_SITE="https://git.linuxtv.org/media_tree.git"
 PKG_URL="http://linuxtv.org/downloads/drivers/linux-media-${PKG_VERSION}.tar.bz2"
@@ -15,7 +15,9 @@ PKG_TOOLCHAIN="manual"
 unpack() {
   mkdir -p $PKG_BUILD/
   tar -xf $SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.bz2 -C $PKG_BUILD/
+}
 
+post_unpack() {
   # hack/workaround for borked upstream kernel/media_build
   # without removing atomisp there a lot additional includes that 
   # slowdown build process after modpost from 3min to 6min

@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-fceumm"
-PKG_VERSION="efb578323408fe2b14598af298f918335fd79fa5"
-PKG_SHA256="ee69059caf5dc184420678f39c95b05097ffec48f933e2ee3e5f65cb0c2dd8c7"
+PKG_VERSION="0d569e9bab054f215f828184c1d63fa69f8abd0c"
+PKG_SHA256="1aae47c75abaf3d5a8e1250498956abc484cfcfbfec111ebadb46cbec63df36e"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/libretro-fceumm"
 PKG_URL="https://github.com/libretro/libretro-fceumm/archive/$PKG_VERSION.tar.gz"

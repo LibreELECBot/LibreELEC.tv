@@ -1,12 +1,13 @@
-diff -Naur a/Makefile b/Makefile
---- a/Makefile	2017-03-09 16:17:23.000000000 -0800
-+++ b/Makefile	2017-05-31 16:04:29.052439734 -0700
-@@ -134,7 +134,7 @@
- LIBFDT_objdir = libfdt
- LIBFDT_srcdir = libfdt
- LIBFDT_archive = $(LIBFDT_objdir)/libfdt.a
--LIBFDT_lib = $(LIBFDT_objdir)/libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT)
-+LIBFDT_lib = $(LIBFDT_objdir)/libfdt.$(SHAREDLIB_EXT)
- LIBFDT_include = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_INCLUDES))
- LIBFDT_version = $(addprefix $(LIBFDT_srcdir)/,$(LIBFDT_VERSION))
+diff --git a/libfdt/Makefile.libfdt b/libfdt/Makefile.libfdt
+index e546397..dd71746 100644
+--- a/libfdt/Makefile.libfdt
++++ b/libfdt/Makefile.libfdt
+@@ -10,7 +10,7 @@ LIBFDT_VERSION = version.lds
+ LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c fdt_empty_tree.c \
+ 	fdt_addresses.c fdt_overlay.c
+ LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
+-LIBFDT_LIB = libfdt-$(DTC_VERSION).$(SHAREDLIB_EXT)
++LIBFDT_LIB = libfdt.$(SHAREDLIB_EXT)
  
+ libfdt_clean:
+ 	@$(VECHO) CLEAN "(libfdt)"

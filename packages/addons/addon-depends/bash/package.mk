@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="bash"
@@ -14,3 +14,8 @@ PKG_CONFIGURE_OPTS_TARGET="--with-curses \
                            --enable-readline \
                            --without-bash-malloc \
                            --with-installed-readline"
+
+pre_make_target() {
+  # precreate this generated header because it may be created too late
+  make pathnames.h
+}

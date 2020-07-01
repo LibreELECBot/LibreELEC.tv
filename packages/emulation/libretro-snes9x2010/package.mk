@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-snes9x2010"
-PKG_VERSION="ead24f29b2af0df83f3365d3e887bdd81979c1a2"
-PKG_SHA256="eb23f0fd0179db95fa26f650030cc7e35c0ab01108e12f4ba8229bc5e629a750"
+PKG_VERSION="ba9f2240360f8db270fb6ba5465c79c317070560"
+PKG_SHA256="1dd5f2952ae74d3adb2c0e269beaa25390afe0cd46a62e06e13c9161ed11f789"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/snes9x2010"
 PKG_URL="https://github.com/libretro/snes9x2010/archive/$PKG_VERSION.tar.gz"

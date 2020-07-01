@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.snes9x2002"
-PKG_VERSION="ece08d1a3bac2705462c049d0d4af4f6d5884ba8"
-PKG_SHA256="2fcbb48e95903a85ad2dc17be98a323f77552e375c4c7d1fbdb1b13395b8c6fc"
-PKG_REV="109"
+PKG_VERSION="7.2.0.10-Leia"
+PKG_SHA256="f5a5ddaaa76d923fdc7c565c31b56a5ef7116a9fb071ad715d2e0ff0e750fcbe"
+PKG_REV="1"
 # neon optimizations make it only useful for arm
 PKG_ARCH="arm"
 PKG_LICENSE="GPL"

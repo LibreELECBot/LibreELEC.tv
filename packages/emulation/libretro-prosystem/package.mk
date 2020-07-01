@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-prosystem"
-PKG_VERSION="247d5f2dccd748495c5310081e6a9c4ff33a377f"
-PKG_SHA256="6eb3e5bd342a0a0b34668e988e9a110e4c6250584823fa04bab4f4cd6486a442"
+PKG_VERSION="6f7e34aea89db5ba2fbf674e5ff0ad6fc68a198e"
+PKG_SHA256="e77431df23402614618ea0242e31a7f8e1cc330f6232830a2a2b046412f3f09f"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/prosystem-libretro"
 PKG_URL="https://github.com/libretro/prosystem-libretro/archive/$PKG_VERSION.tar.gz"

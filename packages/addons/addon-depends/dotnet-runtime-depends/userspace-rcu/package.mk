@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="userspace-rcu"
-PKG_VERSION="0.10.1"
-PKG_SHA256="4ddbca9927b459b7a295dec612cf43df5886d398161d50c59d0097995e368a3b"
+PKG_VERSION="0.12.0"
+PKG_SHA256="6b0cdee07a651c56daea8d03285f379afab898ebc83c785a23927320e45a3012"
 PKG_LICENSE="LGPLv2.1"
 PKG_SITE="http://liburcu.org"
 PKG_URL="https://github.com/urcu/userspace-rcu/archive/v$PKG_VERSION.tar.gz"

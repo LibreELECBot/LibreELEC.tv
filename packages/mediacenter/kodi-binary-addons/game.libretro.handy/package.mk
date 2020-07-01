@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.handy"
-PKG_VERSION="fc15d43eeeaadaf372ea9d022c3a6f09c2b8ad51"
-PKG_SHA256="8c61af5f5028ad1d0468412063bed18685063f487a2878e00d96e9f4008b7712"
-PKG_REV="110"
+PKG_VERSION="0.97.0.6-Leia"
+PKG_SHA256="6fbc0bb8b2b5315053761ef2569d4719b1c29ac571c6786f304a7a85389ee5f4"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.handy"

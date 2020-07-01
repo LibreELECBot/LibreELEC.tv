@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-dosbox"
-PKG_VERSION="8f2d7318b6e66e397448a5905b30bc4f92de7133"
-PKG_SHA256="ee1bd0d04f9aa0e11eb827b8badbceec5bd9f0727765688436bd1d67fdb65816"
+PKG_VERSION="e4ed503b14ed59d5d745396ef1cc7d52cf912328"
+PKG_SHA256="f13b4235762db542a2ab0ae62a048d30ef71062af5dea1662864e27956eea2c9"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/dosbox-libretro"
 PKG_URL="https://github.com/libretro/dosbox-libretro/archive/$PKG_VERSION.tar.gz"

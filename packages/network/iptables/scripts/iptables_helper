@@ -1,6 +1,6 @@
-#!/bin/sh -
+#!/bin/sh
 
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 IPTABLES4="/usr/sbin/iptables"
@@ -14,15 +14,22 @@ SYSTEMCTL="/usr/bin/systemctl"
 CONNMANCTL="/usr/bin/connmanctl"
 
 check_docker() {
-    $SYSTEMCTL is-active --quiet $DOCKER && $SYSTEMCTL restart $DOCKER
+  $SYSTEMCTL is-active --quiet $DOCKER && $SYSTEMCTL restart $DOCKER
+}
+
+get_technology_config() {
+  $CONNMANCTL technologies | awk -v pattern="^/.*/technology/$1$" -e 'BEGIN {S=0}; /^\/.*/ {S=0}; $0 ~ pattern {S=1}; S==1 {print $0}'
 }
 
 check_tether() {
-    if [ -n "`$CONNMANCTL technologies|grep 'Tethering = True'`" ]; then
-	$CONNMANCTL tether wifi off
-	sleep 1
-	$CONNMANCTL tether wifi on
+  for technology in wifi ethernet; do
+    if get_technology_config $technology | grep -q 'Tethering = True'; then
+      $CONNMANCTL tether $technology off
+      sleep 1
+      $CONNMANCTL tether $technology on
+      break
     fi
+  done
 }
 
 flush() {

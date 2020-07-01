@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="hid_mapper"
@@ -9,7 +9,9 @@ PKG_SITE="https://github.com/s-leroux/hid_mapper"
 PKG_URL="https://github.com/s-leroux/hid_mapper/archive/v${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="A Generic HID mapper."
+PKG_BUILD_FLAGS="-sysroot"
 
 makeinstall_target() {
-  : # nope
+  mkdir -p $INSTALL/usr/bin
+  cp -p hid_mapper $INSTALL/usr/bin
 }

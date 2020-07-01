@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-mame"
-PKG_VERSION="1347e1cf946e8402164acaaea1e12e08de6ca14d"
-PKG_SHA256="c7d43ff48134a77e3ee2229949cf01cebdc190d876896ade0546db24069b392c"
+PKG_VERSION="cdff081ffdd0f4b599874d9f8e18b0fe008b75a7"
+PKG_SHA256="cac90f3d9876f44a9e377cf60ccb06c1bb6a11425ec07cdedb9473fc8adb988d"
 PKG_ARCH="x86_64 arm"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/mame"
@@ -13,24 +13,26 @@ PKG_LONGDESC="game.libretro.mame: MAME for Kodi"
 PKG_BUILD_FLAGS="-gold -lto"
 PKG_TOOLCHAIN="make"
 
-PKG_LIBNAME="mamearcade_libretro.so"
+PKG_LIBNAME="mame_libretro.so"
 PKG_LIBPATH="$PKG_LIBNAME"
 PKG_LIBVAR="MAME_LIB"
 
-make_target() {
-  PTR64="0"
-  NOASM="0"
+pre_make_target() {
+  PKG_MAKE_OPTS_TARGET=" \
+    REGENIE=1 VERBOSE=1 NOWERROR=1 PYTHON_EXECUTABLE=python3 CONFIG=libretro \
+    LIBRETRO_OS="unix" ARCH="" PROJECT="" LIBRETRO_CPU="${ARCH}" DISTRO="debian-stable" \
+    CROSS_BUILD="1" OVERRIDE_CC="${CC}" OVERRIDE_CXX="${CXX}" \
+    TARGET="mame" SUBTARGET="arcade" PLATFORM="${ARCH}" RETRO=1 OSD="retro""
 
-  if [ "$ARCH" == "arm" ]; then
-    NOASM="1"
-  elif [ "$ARCH" == "x86_64" ]; then
-    PTR64="1"
+  if [ "$ARCH" = "arm" ]; then
+    PKG_MAKE_OPTS_TARGET+=" NOASM="1" ARCHITECTURE="""
+  elif [ "$ARCH" = "x86_64" ]; then
+    PKG_MAKE_OPTS_TARGET+=" NOASM="0" PTR64="1""
   fi
+}
 
-  make REGENIE=1 VERBOSE=1 NOWERROR=1 PYTHON_EXECUTABLE=python2 CONFIG=libretro \
-       LIBRETRO_OS="unix" ARCH="" PROJECT="" LIBRETRO_CPU="$ARCH" DISTRO="debian-stable" \
-       CC="$CC" CXX="$CXX" LD="$LD" CROSS_BUILD="" PTR64="$PTR64" TARGET="mame" \
-       SUBTARGET="arcade" PLATFORM="$ARCH" RETRO=1 OSD="retro"
+post_make_target() {
+  mv $PKG_BUILD/mamearcade_libretro.so $PKG_BUILD/mame_libretro.so
 }
 
 makeinstall_target() {

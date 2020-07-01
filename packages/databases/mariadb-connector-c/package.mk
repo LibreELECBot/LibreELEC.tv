@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="mariadb-connector-c"
-PKG_VERSION="3.0.6"
-PKG_SHA256="46181f8c95c096ac1aa6cb0ca80f4ed0e746873cfd6af84f3bac925d7e2cd091"
+PKG_VERSION="3.1.7"
+PKG_SHA256="c6bda309fd71aa01e5d32c48768cb4fb5abcb760b1272e270901f4e47cd759d6"
 PKG_LICENSE="LGPL"
 PKG_SITE="https://mariadb.org/"
 PKG_URL="https://github.com/MariaDB/mariadb-connector-c/archive/v$PKG_VERSION.tar.gz"

@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-virtualjaguar"
-PKG_VERSION="f3cf607b20ee69e78dbfd80010d3f485fdf67283"
-PKG_SHA256="1c48798476ebf1a666e899920286512bbce6bfeae426fcd07879392eaf24978a"
+PKG_VERSION="a162fb75926f5509f187e9bfc69958bced40b0a6"
+PKG_SHA256="3d02418fa669ef2074245a583cf67bfaf06ed1b3b3fc30ee252e39b59101fb41"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/virtualjaguar-libretro"
 PKG_URL="https://github.com/libretro/virtualjaguar-libretro/archive/$PKG_VERSION.tar.gz"

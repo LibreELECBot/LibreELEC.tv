@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-uae"
-PKG_VERSION="a739e451e37f3227bc37380049508250af6adcd3"
-PKG_SHA256="0f5a661ac5d7dc4f174f1c944d01bb68f001d71fd47ea1b7862cd497a2a24c3c"
+PKG_VERSION="16a5fd7932b7ede88317e08b7464762fde0880c5"
+PKG_SHA256="ce358b3b660f894e0d5855b3809e0f50006b82e1dfa8942aed467fbb12b11738"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/libretro/libretro-uae"
 PKG_URL="https://github.com/libretro/libretro-uae/archive/$PKG_VERSION.tar.gz"
@@ -16,6 +16,7 @@ PKG_LIBPATH="$PKG_LIBNAME"
 PKG_LIBVAR="UAE_LIB"
 
 pre_configure_target() {
+  CFLAGS="$CFLAGS -fcommon"
   if [ "$TARGET_ARCH" = "arm" ]; then
     CFLAGS="$CFLAGS -DARM -marm"
   fi

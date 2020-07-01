@@ -1,13 +1,13 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.teleboy"
-PKG_VERSION="1956113e4ec824ab930bd237ca8a6e662b18c19a"
-PKG_SHA256="49ed188aabaff018e0624af4c242691f81591006624dde3a3ae8457bdbaaddf4"
+PKG_VERSION="19.6.0-Matrix"
+PKG_SHA256="99ca4372f5988a99c19d9554d3055ce43a39224a9a698049d703156dc69e882a"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/rbuehlma/pvr.teleboy"
 PKG_URL="https://github.com/rbuehlma/pvr.teleboy/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""

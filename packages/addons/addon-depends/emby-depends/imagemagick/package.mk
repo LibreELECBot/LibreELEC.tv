@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="imagemagick"
-PKG_VERSION="7.0.8-11"
-PKG_SHA256="95e4da5fa109bc8b59b5e7a54cdfcf1af3230067c95adf608ff21c08eca1de20"
+PKG_VERSION="7.0.10-9"
+PKG_SHA256="ea08c7379b0ce40217656699e664d51a93eac819dde778f50ca457b110ffc5e3"
 PKG_LICENSE="http://www.imagemagick.org/script/license.php"
 PKG_SITE="http://www.imagemagick.org/"
 PKG_URL="https://github.com/ImageMagick/ImageMagick/archive/$PKG_VERSION.tar.gz"

@@ -4,8 +4,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="open-vm-tools"
-PKG_VERSION="stable-10.3.0"
-PKG_SHA256="b3d0b5fd272a8dc35cab1ddd732f9d436f72682925212a6cdeccdab283e2f5ec"
+PKG_VERSION="stable-11.1.0"
+PKG_SHA256="5930448c65cf298e3dded2a3670750f4affaf3a631500a1774eeb4cfe0a32b80"
 PKG_ARCH="x86_64"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/vmware/open-vm-tools"
@@ -24,7 +24,6 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-docs \
                            --without-x \
                            --without-xerces \
                            --without-icu \
-                           --without-procps \
                            --without-kernel-modules \
                            --with-udev-rules-dir=/usr/lib/udev/rules.d/ \
                            --with-sysroot=$SYSROOT_PREFIX"
@@ -32,8 +31,12 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-docs \
 post_unpack() {
   mv $PKG_BUILD/$PKG_NAME/* $PKG_BUILD/
 
-  sed -i -e 's|.*common-agent/etc/config/Makefile.*||' $PKG_BUILD/configure.ac
+  sed -e 's|.*common-agent/etc/config/Makefile.*||' -i $PKG_BUILD/configure.ac
+
   mkdir -p $PKG_BUILD/common-agent/etc/config
+
+  # Hack to allow package to be bumped without linking against old libraries
+  rm -f ${SYSROOT_PREFIX}/usr/lib/libvmtools*
 }
 
 pre_configure_target() {
@@ -44,6 +47,8 @@ post_makeinstall_target() {
   rm -rf $INSTALL/sbin
   rm -rf $INSTALL/usr/share
   rm -rf $INSTALL/etc/vmware-tools/scripts/vmware/network
+
+  chmod -x $INSTALL/usr/lib/udev/rules.d/*.rules
 
   find $INSTALL/etc/vmware-tools/ -type f | xargs sed -i '/.*expr.*/d'
 }

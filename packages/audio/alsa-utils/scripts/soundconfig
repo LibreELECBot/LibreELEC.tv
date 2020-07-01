@@ -2,6 +2,7 @@
 
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2009-2014 Stephan Raue (stephan@openelec.tv)
+# Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 # setup alsa (especially the mixer config)
 
@@ -114,6 +115,35 @@ else
 
 # NVidia CK804 sound devices
   mixer $card 'IEC958 Playback AC97-SPSA' 100%
+
+# Allwinner H3 Analog
+  mixer $card 'Line Out' 0db on
+
+# Allwinner A20 Analog
+  mixer $card 'Power Amplifier' 0db
+  mixer $card 'Power Amplifier DAC' on
+  mixer $card 'Power Amplifier Mute' on
+
+# Allwinner A64 Analog
+  mixer $card Headphone 0db on
+  mixer $card 'AIF1 Slot 0 Digital DAC' on
+
+# Amlogic G12 HDMI to PCM0
+  mixer $card 'FRDDR_A SINK 1 SEL' 'OUT 1'
+  mixer $card 'FRDDR_A SRC 1 EN' on
+  mixer $card 'TDMOUT_B SRC SEL' 'IN 0'
+  mixer $card 'TOHDMITX I2S SRC' 'I2S B'
+  mixer $card 'TOHDMITX' on
+
+# Amlogic G12 S/PDIF to PCM1
+  mixer $card 'FRDDR_B SINK 1 SEL' 'OUT 3'
+  mixer $card 'FRDDR_B SRC 1 EN' on
+  mixer $card 'SPDIFOUT SRC SEL' 'IN 1'
+  mixer $card 'SPDIFOUT Playback' on
+
+# Amlogic GX HDMI and S/PDIF
+  mixer $card 'AIU HDMI CTRL SRC' 'I2S'
+  mixer $card 'AIU SPDIF SRC SEL' 'SPDIF'
 fi
 
 exit 0

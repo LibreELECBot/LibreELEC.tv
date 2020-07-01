@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-bnes"
-PKG_VERSION="cc082d12525aef654a815ecd4e03a6d0f52ceaa9"
-PKG_SHA256="fcc139da5b073f60c93eea641c91959ff2e4c8b672c660c4600a15121db2076c"
+PKG_VERSION="8e26e89a93bef8eb8992d1921b539dce1792660a"
+PKG_SHA256="c151e1296b8f6c035014dc62919692097feeebb19ae73294f1b9781edf1921b1"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/bnes-libretro"
 PKG_URL="https://github.com/libretro/bnes-libretro/archive/$PKG_VERSION.tar.gz"

@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-vb"
-PKG_VERSION="93f5b60cf82025a88c88b1cb9b4546a060f0265a"
-PKG_SHA256="fe257a95e4e04fce285fe6607952e6460b77e8636afb1439e6f3bc6b326c07f0"
+PKG_VERSION="9a4e604a7320a3c6ed30601989fe0bc417fa9ad3"
+PKG_SHA256="25a53560105b71797fd5172834b3f5a792962c26af876ab3821924bfa71b2ce2"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-vb-libretro"
 PKG_URL="https://github.com/libretro/beetle-vb-libretro/archive/$PKG_VERSION.tar.gz"

@@ -1,14 +1,15 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-picodrive"
-PKG_VERSION="c64747fd2b28fa2c48058678f035a3379838a182"
-PKG_SHA256="f1442132ea417122fc5cc3e9a634201fc486b5adb810a05111f37a29cccc9905"
+PKG_VERSION="600894ec6eb657586a972a9ecd268f50907a279c"
+PKG_SHA256="2142883e7d1f83572dbd8a19685c286905758f87485463472cce8e58dfda0152"
 PKG_LICENSE="MAME"
 PKG_SITE="https://github.com/libretro/picodrive"
 PKG_URL="https://github.com/libretro/picodrive/archive/$PKG_VERSION.tar.gz"
+PKG_DEPENDS_HOST="toolchain:host"
 PKG_DEPENDS_TARGET="toolchain kodi-platform $PKG_NAME:host"
-PKG_DEPENDS_HOST="cyclone68000"
+PKG_DEPENDS_UNPACK="cyclone68000"
 PKG_LONGDESC="Fast MegaDrive/MegaCD/32X emulator"
 PKG_TOOLCHAIN="manual"
 PKG_BUILD_FLAGS="-gold"
@@ -28,7 +29,7 @@ pre_configure_host() {
 }
 
 make_host() {
-  if [ "$ARCH" == "arm" ]; then
+  if [ "$ARCH" = "arm" ]; then
     make -C cpu/cyclone CONFIG_FILE=../cyclone_config.h
   fi
 }
@@ -39,8 +40,12 @@ pre_configure_target() {
   rm -rf .$TARGET_NAME
 }
 
+post_configure_target() {
+  sed -e "s|^GIT_VERSION :=.*$|GIT_VERSION := \" ${PKG_VERSION:0:7}\"|" -i Makefile.libretro
+}
+
 make_target() {
-  make -f Makefile.libretro
+  R= make -f Makefile.libretro
 }
 
 makeinstall_target() {

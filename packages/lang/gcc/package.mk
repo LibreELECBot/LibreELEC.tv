@@ -3,14 +3,15 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="gcc"
-PKG_VERSION="8.2.0"
-PKG_SHA256="196c3c04ba2613f893283977e6011b2345d1cd1af9abeac58e916b1aab3e0080"
+PKG_VERSION="10.1.0"
+PKG_SHA256="b6898a23844b656f1b68691c5c012036c2e694ac4b53a8918d4712ad876e7ea2"
 PKG_LICENSE="GPL"
 PKG_SITE="http://gcc.gnu.org/"
 PKG_URL="http://ftpmirror.gnu.org/gcc/$PKG_NAME-$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_BOOTSTRAP="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host"
-PKG_DEPENDS_TARGET="gcc:host"
+PKG_DEPENDS_TARGET="toolchain"
 PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host glibc"
+PKG_DEPENDS_INIT="toolchain"
 PKG_LONGDESC="This package contains the GNU Compiler Collection."
 
 GCC_COMMON_CONFIGURE_OPTS="--target=$TARGET_NAME \
@@ -38,11 +39,11 @@ GCC_COMMON_CONFIGURE_OPTS="--target=$TARGET_NAME \
                            --disable-libquadmath \
                            --disable-libgomp \
                            --disable-libmpx \
-                           --disable-libssp"
+                           --disable-libssp \
+                           --enable-__cxa_atexit"
 
 PKG_CONFIGURE_OPTS_BOOTSTRAP="$GCC_COMMON_CONFIGURE_OPTS \
                               --enable-languages=c \
-                              --disable-__cxa_atexit \
                               --disable-libsanitizer \
                               --enable-cloog-backend=isl \
                               --disable-shared \
@@ -54,7 +55,6 @@ PKG_CONFIGURE_OPTS_BOOTSTRAP="$GCC_COMMON_CONFIGURE_OPTS \
 
 PKG_CONFIGURE_OPTS_HOST="$GCC_COMMON_CONFIGURE_OPTS \
                          --enable-languages=c,c++ \
-                         --enable-__cxa_atexit \
                          --enable-decimal-float \
                          --enable-tls \
                          --enable-shared \
@@ -68,7 +68,6 @@ PKG_CONFIGURE_OPTS_HOST="$GCC_COMMON_CONFIGURE_OPTS \
                          $GCC_OPTS"
 
 pre_configure_host() {
-  export CXXFLAGS="$CXXFLAGS -std=gnu++98"
   unset CPP
 }
 
@@ -87,7 +86,7 @@ post_makeinstall_host() {
   cp -PR $TARGET_NAME/libstdc++-v3/src/.libs/libstdc++.so* $SYSROOT_PREFIX/usr/lib
 
   GCC_VERSION=`$TOOLCHAIN/bin/${TARGET_NAME}-gcc -dumpversion`
-  DATE="0501`echo $GCC_VERSION | sed 's/\([0-9]\)/0\1/g' | sed 's/\.//g'`"
+  DATE="0501`echo $GCC_VERSION | sed 's/\./0/g'`"
   CROSS_CC=${TARGET_PREFIX}gcc-${GCC_VERSION}
   CROSS_CXX=${TARGET_PREFIX}g++-${GCC_VERSION}
 

@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="krb5"
-PKG_VERSION="1.16.2-final"
-PKG_SHA256="92f62e5a54404d22aa2a7eee9fba64d1be8d10d8dd3aa052e1799993208acce4"
+PKG_VERSION="1.18.1-final"
+PKG_SHA256="5d11bfcc8151a8a752177636e10cdcc6ace88407662949b5f031dd44ec42ffc7"
 PKG_LICENSE="MIT"
 PKG_SITE="http://web.mit.edu/kerberos/"
 PKG_URL="https://github.com/krb5/krb5/archive/krb5-$PKG_VERSION.tar.gz"

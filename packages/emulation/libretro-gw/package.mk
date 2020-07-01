@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-gw"
-PKG_VERSION="92717c64928274f12ea8db645f962cd1e4a1bc5b"
-PKG_SHA256="44b49848786bc04e5a3efd7c6a7594741f52040137da2cb7841f16d858158ece"
+PKG_VERSION="819b1dde560013003eeac86c2069c5be7af25c6d"
+PKG_SHA256="e5dc930b9f835a617211c78d5efd7998b3e4d12660465ad2e53fc8e09da0d86f"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/gw-libretro"
 PKG_URL="https://github.com/libretro/gw-libretro/archive/$PKG_VERSION.tar.gz"

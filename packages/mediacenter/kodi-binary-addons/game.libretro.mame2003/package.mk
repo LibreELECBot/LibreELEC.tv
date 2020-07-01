@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.mame2003"
-PKG_VERSION="905128e53c4a9aeb1a76c9f25a18cd63e3656cea"
-PKG_SHA256="13eae6df5622e2535ec13c9457ad88cc2bc54a873c16c726cd127bafbe47e7b2"
-PKG_REV="103"
+PKG_VERSION="0.78.0.16-Leia"
+PKG_SHA256="8f6bb0d2e90995ec9c8e247e24f12a4840125305f78400318434ddebfb0b0a60"
+PKG_REV="1"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.mame2003"
 PKG_URL="https://github.com/kodi-game/game.libretro.mame2003/archive/$PKG_VERSION.tar.gz"

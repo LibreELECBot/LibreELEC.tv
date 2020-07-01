@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-lynx"
-PKG_VERSION="6816829ae785e2d468256d346fcd90b5baaa7327"
-PKG_SHA256="15a66e65ba7306de06c598d4f82ab3e1b1afaad6baa0b298db6729aea6e0d2c4"
+PKG_VERSION="74dde204c0ec6c4bc4cd7821c14548387fbd9ce8"
+PKG_SHA256="2cf62c74d5fbfd6ead0a83a6778b932a18d5ab6957b5603b56539fefd819e820"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-lynx-libretro"
 PKG_URL="https://github.com/libretro/beetle-lynx-libretro/archive/$PKG_VERSION.tar.gz"

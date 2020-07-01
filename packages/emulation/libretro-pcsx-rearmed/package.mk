@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-pcsx-rearmed"
-PKG_VERSION="28ea3e2d87c4e239d8853b10c4496f82feb9d982"
-PKG_SHA256="521c4e22bf3b43dfaa0511046adde08daeb1565092f0f93794bd55cf2caac5e0"
+PKG_VERSION="3c4ac5bb44b41d23eec217369eaa34f4e155f733"
+PKG_SHA256="9ab6a392266319b8897f2129dff88f025990218fb4a47354879649c2e9e4befe"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/pcsx_rearmed"
 PKG_URL="https://github.com/libretro/pcsx_rearmed/archive/$PKG_VERSION.tar.gz"

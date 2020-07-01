@@ -1,63 +1,80 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
-# Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
-
-import base64
-import json
+import requests
 import time
-import urllib
-import urllib2
-
-from ls_log import log as log
-
-_CLIENT_ID = '169df5532dee47a59913f8528e83ae71'
-_CLIENT_SECRET = '1f3d8b507bbe4f68beb3a4472e8ad411'
 
 
-def _get(default, tree, *indices):
+from ls_addon import ADDON_ICON as ADDON_ICON
+from ls_addon import log as log
+
+
+SPOTIFY_ENDPOINT_EPISODES = 'https://api.spotify.com/v1/episodes/'
+SPOTIFY_ENDPOINT_TRACKS = 'https://api.spotify.com/v1/tracks/'
+SPOTIFY_HEADERS = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+}
+SPOTIFY_REQUEST_TOKEN = {
+    'url': 'https://accounts.spotify.com/api/token',
+    'data': {'grant_type': 'client_credentials'},
+    'headers': {'Authorization': 'Basic MTY5ZGY1NTMyZGVlNDdhNTk5MTNmODUyOGU4M2FlNzE6MWYzZDhiNTA3YmJlNGY2OGJlYjNhNDQ3MmU4YWQ0MTE='}
+}
+
+
+def get(info, indices, default):
     try:
         for index in indices:
-            tree = tree[index]
+            info = info[index]
+        return info.encode('utf-8')
     except LookupError:
-        tree = default
-    return tree
+        return default
 
 
-class Spotify():
+class Spotify:
 
     def __init__(self):
-        self.headers = None
+        self.headers = SPOTIFY_HEADERS
         self.expiration = time.time()
-        self.request = [
-            'https://accounts.spotify.com/api/token',
-            urllib.urlencode({'grant_type': 'client_credentials'}),
-            {'Authorization': 'Basic {}'.format(base64.b64encode(
-                '{}:{}'.format(_CLIENT_ID, _CLIENT_SECRET)))}
-        ]
 
-    def getTrack(self, track_id):
+    def get_headers(self):
+        if time.time() > self.expiration:
+            log('token expired')
+            token = requests.post(**SPOTIFY_REQUEST_TOKEN).json()
+            log(token)
+            self.expiration = time.time() + float(token['expires_in']) - 5
+            self.headers['Authorization'] = 'Bearer {}'.format(
+                token['access_token'])
+
+    def get_endpoint(self, endpoint, id, market):
         try:
-            if time.time() > self.expiration:
-                log('token expired')
-                token = json.loads(urllib2.urlopen(
-                    urllib2.Request(*self.request)).read())
-                log('token {} expires in {} seconds'.format(
-                    token['access_token'], token['expires_in']))
-                self.expiration = time.time() + float(token['expires_in']) - 60
-                self.headers = {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer {}'.format(token['access_token'])
-                }
-            track = json.loads(urllib2.urlopen(urllib2.Request(
-                'https://api.spotify.com/v1/tracks/{}'.format(track_id), None,
-                self.headers)).read())
+            self.get_headers()
+            return requests.get(url=endpoint + id,
+                                headers=self.headers,
+                                params=dict(market=market)).json()
         except Exception as e:
-            log('failed to get track {} from Spotify: {}'.format(e))
-            track = dict()
-        return {
-            'album': _get('', track, 'album', 'name'),
-            'artist': _get('', track, 'artists', 0, 'name'),
-            'duration': _get(0, track, 'duration_ms') / 1000,
-            'thumb': _get('', track, 'album', 'images', 0, 'url'),
-            'title': _get('', track, 'name')
-        }
+            log('failed to get {} from Spotify {}'.format(endpoint, e))
+            return {}
+
+    def update_listitem(self, listitem, type, id, market='SE'):
+        if type == 'Podcast':
+            info = self.get_endpoint(SPOTIFY_ENDPOINT_EPISODES, id, market)
+            album = get(info, ['show', 'name'], 'unknown show',)
+            artist = get(info, ['show', 'publisher'], 'unknown publisher')
+            thumb = get(info, ['images', 0, 'url'], ADDON_ICON)
+            title = get(info, ['name'], 'unknown episode')
+        elif type == 'Track':
+            info = self.get_endpoint(SPOTIFY_ENDPOINT_TRACKS, id, market)
+            album = get(info, ['album', 'name'], 'unknown album')
+            artist = get(info, ['artists', 0, 'name'], 'unknown artist')
+            thumb = get(info, ['album', 'images', 0, 'url'], ADDON_ICON)
+            title = get(info, ['name'], 'unknown title')
+        else:
+            album = ''
+            artist = 'Unknown Media Type'
+            thumb = ADDON_ICON
+            title = ''
+        listitem.setArt(dict(fanart=thumb, thumb=thumb))
+        listitem.setInfo('music', dict(
+            album=album, artist=artist, title=title))
+        log('{}#{}#{}#{}'.format(title, artist, album, thumb))
+
+
+SPOTIFY = Spotify()

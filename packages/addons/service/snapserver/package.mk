@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="snapserver"
@@ -20,7 +20,7 @@ PKG_MAINTAINER="Anton Voyl (awiouy)"
 
 addon() {
   mkdir -p "$ADDON_BUILD/$PKG_ADDON_ID/bin"
-  cp "$(get_build_dir shairport-sync)/.$TARGET_NAME/shairport-sync" \
-     "$(get_build_dir snapcast)/server/snapserver" \
+  cp "$(get_install_dir shairport-sync)/usr/bin/shairport-sync" \
+     "$(get_install_dir snapcast)/usr/bin/snapserver" \
      "$ADDON_BUILD/$PKG_ADDON_ID/bin"
 }

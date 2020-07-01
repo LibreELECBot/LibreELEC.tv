@@ -3,12 +3,12 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="audiodecoder.nosefart"
-PKG_VERSION="7629ccffe3ea8f72a4ce3ea25d6c0b9cf9c310b0"
-PKG_SHA256="8d41b0701d5a684820d9371e9f4f5022cc9eec8de8d12965b06741c477dd8134"
-PKG_REV="2"
+PKG_VERSION="2.3.0-Matrix"
+PKG_SHA256="0b9266fda41b5f16ffec201e9d7222d83a11026f9b10203ead16d844c5553d76"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/xbmc/audiodecoder.nosefart"
 PKG_URL="https://github.com/xbmc/audiodecoder.nosefart/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""

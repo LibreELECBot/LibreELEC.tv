@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.tgbdual"
-PKG_VERSION="004ea3ff2a822322e3f37f4559c580a15d2a8233"
-PKG_SHA256="6fdd8c28f20740f2326d3c9118198e7645417b29f9c59368aba3f4a16d8819ff"
-PKG_REV="109"
+PKG_VERSION="0.8.3.7-Leia"
+PKG_SHA256="e24e5e204be685d259f379f25e947a9e7034377b1c10658bfb348fb0c3202000"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.tgbdual"

@@ -1,15 +1,22 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="unrar"
-PKG_VERSION="5.6.3"
-PKG_SHA256="c590e70a745d840ae9b9f05ba6c449438838c8280d76ce796a26b3fcd0a1972e"
+PKG_VERSION="5.9.3"
+PKG_SHA256="28c176c29da86d7efe3cb9a227255d8340f761ba95969195982ec87c8eb2dd69"
 PKG_LICENSE="free"
-PKG_SITE="http://www.rarlab.com"
-PKG_URL="http://www.rarlab.com/rar/unrarsrc-$PKG_VERSION.tar.gz"
+PKG_SITE="https://www.rarlab.com/rar_add.htm"
+PKG_URL="http://www.rarlab.com/rar/unrarsrc-${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="unrar extract, test and view RAR archives"
 PKG_TOOLCHAIN="manual"
+PKG_BUILD_FLAGS="+pic -sysroot -parallel"
+
+unpack() {
+  mkdir -p $PKG_BUILD/unrar lib
+  tar -xf $SOURCES/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.gz -C $PKG_BUILD/
+  cp -a $PKG_BUILD/unrar $PKG_BUILD/lib
+}
 
 make_target() {
   make CXX="$CXX" \
@@ -17,5 +24,24 @@ make_target() {
      RANLIB="$RANLIB" \
      AR="$AR" \
      STRIP="$STRIP" \
+     -C unrar \
      -f makefile
+
+  make CXX="$CXX" \
+     CXXFLAGS="$TARGET_CXXFLAGS" \
+     RANLIB="$RANLIB" \
+     AR="$AR" \
+     -C lib \
+     -f makefile lib
+}
+
+post_make_target() {
+  rm -f libunrar.so
+}
+
+makeinstall_target() {
+  mkdir -p $INSTALL/usr/include/unrar $INSTALL/usr/lib $INSTALL/usr/bin
+  cp -p lib/*.hpp $INSTALL/usr/include/unrar/
+  cp -p lib/libunrar.a $INSTALL/usr/lib/
+  cp -p unrar/unrar $INSTALL/usr/bin/
 }

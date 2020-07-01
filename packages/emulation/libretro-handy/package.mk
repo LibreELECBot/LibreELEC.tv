@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-handy"
-PKG_VERSION="08cc63376cd8886aea6e6cd38297ba7c9ea0344c"
-PKG_SHA256="e2e70fcf4d983549fa2a33791cd570958087f4dbf3664374dcc38a82d29139ce"
+PKG_VERSION="5ff55817eafbb1930e222ea2493c22804c872904"
+PKG_SHA256="b04334edcc041db9e8c0ae9e3c75dc9b074adda44db12db434f157f8b5b0159e"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/libretro-handy"
 PKG_URL="https://github.com/libretro/libretro-handy/archive/$PKG_VERSION.tar.gz"

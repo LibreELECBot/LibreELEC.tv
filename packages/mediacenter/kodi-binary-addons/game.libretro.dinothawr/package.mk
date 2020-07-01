@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.dinothawr"
-PKG_VERSION="9ce2edfd4b5b76e5ef3a7b1fd2c2ae30dd96cafc"
-PKG_SHA256="6fe7c8b5ac493ee7b27570b23037bb4b916c689fa55d61e9c54f3202c070a1e9"
-PKG_REV="110"
+PKG_VERSION="1.0.0.8-Leia"
+PKG_SHA256="9a0eae45381541d283858cdcac66b4e85a3cbbded19bf79ea7b7928c05ee5b91"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.dinothawr"

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="sshfs"
@@ -9,7 +9,4 @@ PKG_SITE="https://github.com/libfuse/sshfs"
 PKG_URL="https://github.com/libfuse/sshfs/releases/download/sshfs-$PKG_VERSION/sshfs-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain fuse glib"
 PKG_LONGDESC="A filesystem client based on the SSH File Transfer Protocol."
-
-makeinstall_target() {
-  :
-}
+PKG_BUILD_FLAGS="-sysroot"

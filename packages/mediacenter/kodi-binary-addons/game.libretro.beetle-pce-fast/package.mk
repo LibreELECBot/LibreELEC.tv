@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.beetle-pce-fast"
-PKG_VERSION="ec3a53495c776af2bee0cb2be5c6c70d5fa2e1ad"
-PKG_SHA256="8be0d07aa8ec843de1676eb59d4e1b6c3744a834d9a10dabbb442df90785947f"
-PKG_REV="111"
+PKG_VERSION="0.9.38.7-Leia"
+PKG_SHA256="abb2169d8afabfa3069bb29d3e37522a207a0023361501f56fe14da9aae9a544"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.beetle-pce-fast"

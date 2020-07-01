@@ -1,20 +1,22 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="tvheadend42"
-PKG_VERSION="036b9cbab12ea9f76ea8ffd2d704163e5e43427c"
-PKG_SHA256="adc1a74790aac532f8bf4a10e662ad30e55f1eb083fd690205e4ac2c26230627"
-PKG_VERSION_NUMBER="4.2.7-34"
-PKG_REV="117"
+PKG_VERSION="5bdcfd8ac97b3337e1c7911ae24127df76fa693a"
+PKG_SHA256="b562a26248cdc02dc94cc62038deea172668fa4c079b2ea4e1b4220f3b1d34f5"
+PKG_VERSION_NUMBER="4.2.8-36"
+PKG_REV="123"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.tvheadend.org"
 PKG_URL="https://github.com/tvheadend/tvheadend/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain avahi comskip curl dvb-apps ffmpegx libdvbcsa libhdhomerun \
-                    libiconv openssl pngquant:host Python2:host tvh-dtv-scan-tables"
+                    libiconv openssl pngquant:host Python3:host tvh-dtv-scan-tables"
+PKG_DEPENDS_CONFIG="ffmpegx"
 PKG_SECTION="service"
 PKG_SHORTDESC="Tvheadend: a TV streaming server for Linux"
 PKG_LONGDESC="Tvheadend ($PKG_VERSION_NUMBER): is a TV streaming server for Linux supporting DVB-S/S2, DVB-C, DVB-T/T2, IPTV, SAT>IP, ATSC and ISDB-T"
+PKG_BUILD_FLAGS="-sysroot"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="Tvheadend Server 4.2"
@@ -61,7 +63,7 @@ pre_configure_target() {
                              --enable-bundle \
                              --disable-dbus_1 \
                              --enable-dvbcsa \
-                             --enable-dvben50221 \
+                             --disable-dvben50221 \
                              --disable-dvbscan \
                              --enable-hdhomerun_client \
                              --disable-hdhomerun_static \
@@ -82,23 +84,23 @@ pre_configure_target() {
   rm -rf .$TARGET_NAME
 
 # pass ffmpegx to build
-  PKG_CONFIG_PATH="$(get_build_dir ffmpegx)/.INSTALL_PKG/usr/local/lib/pkgconfig"
-  CFLAGS="$CFLAGS -I$(get_build_dir ffmpegx)/.INSTALL_PKG/usr/local/include"
-  LDFLAGS="$LDFLAGS -L$(get_build_dir ffmpegx)/.INSTALL_PKG/usr/local/lib"
+  CFLAGS+=" -I$(get_install_dir ffmpegx)/usr/local/include"
+  LDFLAGS+=" -L$(get_install_dir ffmpegx)/usr/local/lib"
 
 # pass libhdhomerun to build
-  CFLAGS="$CFLAGS -I$(get_build_dir libhdhomerun)"
+  CFLAGS+=" -I$SYSROOT_PREFIX/usr/include/hdhomerun"
 
   export CROSS_COMPILE="$TARGET_PREFIX"
-  export CFLAGS="$CFLAGS -I$SYSROOT_PREFIX/usr/include/iconv -L$SYSROOT_PREFIX/usr/lib/iconv"
+  export CFLAGS+=" -I$SYSROOT_PREFIX/usr/include/iconv -L$SYSROOT_PREFIX/usr/lib/iconv"
 }
 
 post_make_target() {
   $CC -O -fbuiltin -fomit-frame-pointer -fPIC -shared -o capmt_ca.so src/extra/capmt_ca.c -ldl
 }
 
-makeinstall_target() {
-  :
+post_makeinstall_target() {
+  mkdir -p $INSTALL/usr/lib
+  cp -p capmt_ca.so $INSTALL/usr/lib
 }
 
 addon() {
@@ -110,14 +112,12 @@ addon() {
   sed -e "s|@ADDON_VERSION@|$ADDON_VERSION|g" \
       -i $ADDON_BUILD/$PKG_ADDON_ID/addon.xml
 
-  cp -P $PKG_BUILD/build.linux/tvheadend $ADDON_BUILD/$PKG_ADDON_ID/bin
-  cp -P $PKG_BUILD/capmt_ca.so $ADDON_BUILD/$PKG_ADDON_ID/bin
-  cp -P $(get_build_dir comskip)/.install_pkg/usr/bin/comskip $ADDON_BUILD/$PKG_ADDON_ID/bin
+  cp -P $PKG_INSTALL/usr/bin/tvheadend $ADDON_BUILD/$PKG_ADDON_ID/bin
+  cp -P $PKG_INSTALL/usr/lib/capmt_ca.so $ADDON_BUILD/$PKG_ADDON_ID/bin
+  cp -P $(get_install_dir comskip)/usr/bin/comskip $ADDON_BUILD/$PKG_ADDON_ID/bin
 
-  #dvb-scan files
+  # dvb-scan files
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/dvb-scan
-  cp -r $(get_build_dir tvh-dtv-scan-tables)/atsc \
-        $(get_build_dir tvh-dtv-scan-tables)/dvb-* \
-        $(get_build_dir tvh-dtv-scan-tables)/isdb-t \
+  cp -r $(get_install_dir tvh-dtv-scan-tables)/usr/share/dvbv5/* \
         $ADDON_BUILD/$PKG_ADDON_ID/dvb-scan
 }

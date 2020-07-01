@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-quicknes"
-PKG_VERSION="1b85b4cf209a337faf8038c21c1d64d5d916ddd9"
-PKG_SHA256="8a782a643af23d9aeb17726e97bbf5c32d509989b6a138db939ff6b63ae710f4"
+PKG_VERSION="31654810b9ebf8b07f9c4dc27197af7714364ea7"
+PKG_SHA256="c05865407952cd102d78a6f4a1bc19666091357294cfe12909bc8dcdba019189"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/QuickNES_Core"
 PKG_URL="https://github.com/libretro/QuickNES_Core/archive/$PKG_VERSION.tar.gz"

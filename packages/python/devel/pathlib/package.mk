@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pathlib"
@@ -12,5 +12,5 @@ PKG_LONGDESC="This module offers a set of classes featuring all the common opera
 PKG_TOOLCHAIN="manual"
 
 makeinstall_host() {
-  python3 setup.py install --prefix=$TOOLCHAIN
+  exec_thread_safe python3 setup.py install --prefix=$TOOLCHAIN
 }

@@ -1,14 +1,15 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="grub"
-PKG_VERSION="2.02"
-PKG_SHA256="4ff6999add483bf640e130bc076ca1464901b4677ee01297901b40fe55de03c4"
+PKG_VERSION="6a34fdb76a07305b95e31659bc27b1d190101cbf"
+PKG_SHA256="825328841e2e7e8654518808965afe19a421f6e272d946a5fe11bd90b8582f76"
 PKG_ARCH="x86_64"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://www.gnu.org/software/grub/index.html"
 PKG_URL="http://git.savannah.gnu.org/cgit/grub.git/snapshot/$PKG_NAME-$PKG_VERSION.tar.gz"
-PKG_DEPENDS_TARGET="toolchain flex freetype:host"
+PKG_DEPENDS_TARGET="toolchain flex freetype:host gettext:host"
+PKG_DEPENDS_UNPACK="gnulib"
 PKG_LONGDESC="GRUB is a Multiboot boot loader."
 PKG_TOOLCHAIN="configure"
 
@@ -24,7 +25,8 @@ pre_configure_target() {
   unset CPP
 
   cd $PKG_BUILD
-    ./autogen.sh
+    # keep grub synced with gnulib
+    ./bootstrap --gnulib-srcdir=$(get_build_dir gnulib) --copy --no-git --no-bootstrap-sync --skip-po
 }
 
 make_target() {

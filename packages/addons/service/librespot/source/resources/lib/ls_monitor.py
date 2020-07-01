@@ -1,22 +1,35 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
-# Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
-
 import xbmc
 
-from ls_log import log as log
-from ls_player import Player as Player
+from ls_addon import log as log
+from ls_addon import notification as notification
+from ls_librespot import Librespot as Librespot
 
 
 class Monitor(xbmc.Monitor):
 
-    def __init__(self):
-        log('monitor started')
-        self.player = Player()
-
     def onSettingsChanged(self):
-        self.player.onSettingsChanged()
+        self.is_changed = True
 
-    def waitForAbort(self):
-        super(Monitor, self).waitForAbort()
-        self.player.onAbortRequested()
+    def run(self):
+        log('monitor started')
+        is_aborted = False
+        is_dead = False
+        while not (is_aborted or is_dead):
+            self.is_changed = False
+            librespot = Librespot()
+            with librespot:
+                while True:
+                    is_aborted = self.waitForAbort(1)
+                    if is_aborted:
+                        log('monitor aborted')
+                        librespot.is_aborted = True
+                        break
+                    is_dead = librespot.is_dead
+                    if is_dead:
+                        log('librespot died')
+                        notification('Too many errors')
+                        break
+                    if self.is_changed:
+                        log('settings changed')
+                        break
         log('monitor stopped')

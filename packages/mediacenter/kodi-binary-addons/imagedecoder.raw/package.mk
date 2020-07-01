@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="imagedecoder.raw"
-PKG_VERSION="7846d49f62893c2320ae3711768af9b8019b33ea"
-PKG_SHA256="b9f36752789414f64f2115233335c113d18b9224d041e4cf7cb439879ed27bf9"
-PKG_REV="2"
+PKG_VERSION="3.0.1-Matrix"
+PKG_SHA256="aeb18567485681631eb518876555555999464480a9854434f465354914ef66c2"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/imagedecoder.raw"

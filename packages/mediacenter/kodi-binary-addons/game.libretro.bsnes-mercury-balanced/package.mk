@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.bsnes-mercury-balanced"
-PKG_VERSION="68627ba7b2178a62309287c128ab0db7f8d9fd55"
-PKG_SHA256="606a6899284a6f219ede2a1f20192e7e6573766c012b37ecda8fb306ac75e7d0"
-PKG_REV="111"
+PKG_VERSION="0.94.0.5-Leia"
+PKG_SHA256="81f0070e504c33795c95ea216fe225099b0813a7ffad4f20e564f590a57b2a62"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.bsnes-mercury-balanced"

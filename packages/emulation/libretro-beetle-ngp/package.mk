@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-ngp"
-PKG_VERSION="b9fff92d68bed67e44a4d07fb8c43af5d61b0021"
-PKG_SHA256="24d735fe5f7c528cbe88884741367212efb328db33781553eec424b5510db92a"
+PKG_VERSION="6f15532b6ad17a2d5eb9dc8241d6af62416e796b"
+PKG_SHA256="4b88ab57bac0d5d61a24c7f9d5aa193cd21a6feb3a95b2c54611b165b79f8c19"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-ngp-libretro"
 PKG_URL="https://github.com/libretro/beetle-ngp-libretro/archive/$PKG_VERSION.tar.gz"

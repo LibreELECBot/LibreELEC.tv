@@ -5,31 +5,30 @@
 PKG_NAME="kodi"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
-PKG_DEPENDS_TARGET="toolchain JsonSchemaBuilder:host TexturePacker:host Python2 zlib systemd pciutils lzo pcre swig:host libass curl fontconfig fribidi tinyxml libjpeg-turbo freetype libcdio taglib libxml2 libxslt rapidjson sqlite ffmpeg crossguid giflib libdvdnav libhdhomerun libfmt lirc libfstrcmp flatbuffers:host flatbuffers"
+PKG_DEPENDS_TARGET="toolchain JsonSchemaBuilder:host TexturePacker:host Python3 zlib systemd lzo pcre swig:host libass curl fontconfig fribidi tinyxml libjpeg-turbo freetype libcdio taglib libxml2 libxslt rapidjson sqlite ffmpeg crossguid giflib libdvdnav libhdhomerun libfmt lirc libfstrcmp flatbuffers:host flatbuffers libudfread spdlog"
 PKG_LONGDESC="A free and open source cross-platform media player."
+PKG_BUILD_FLAGS="+speed"
 
 PKG_PATCH_DIRS="$KODI_VENDOR"
 
 case $KODI_VENDOR in
   raspberrypi)
-    PKG_VERSION="newclock5_18.0rc4-Leia"
-    PKG_SHA256="d4151ff73ab7790764100bf1b47908419bed9b04e1eb00f2e0480f95827b50b2"
+    PKG_VERSION="newclock5_20200419"
+    PKG_SHA256="f50ea08a4f7f4dc2083c8470115063eaeb67c9b8682ecc6bfaf42dafcb69fd5c"
     PKG_URL="https://github.com/popcornmix/xbmc/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="kodi-$KODI_VENDOR-$PKG_VERSION.tar.gz"
     ;;
-  rockchip)
-    PKG_VERSION="rockchip_18.0rc4-Leia"
-    PKG_SHA256="1c5ee8235319e957f5c7e2c5d601ee6816e7a710318fbd047201f02e9f0acbc6"
-    PKG_URL="https://github.com/kwiboo/xbmc/archive/$PKG_VERSION.tar.gz"
-    PKG_SOURCE_NAME="kodi-$KODI_VENDOR-$PKG_VERSION.tar.gz"
-    ;;
   *)
-    PKG_VERSION="18.0rc4-Leia"
-    PKG_SHA256="90f7a8c32e571654d2503a4e97e438b597ff19ae7876e926aaa06b8de516b72b"
+    PKG_VERSION="06d904b5aab0ede4a777ac644051fc52fd74dc61"
+    PKG_SHA256="51634aadfbe2e7ce5c5295673336f9be1f351dee320275bd39661aa01dfb13d1"
     PKG_URL="https://github.com/xbmc/xbmc/archive/$PKG_VERSION.tar.gz"
     PKG_SOURCE_NAME="kodi-$PKG_VERSION.tar.gz"
     ;;
 esac
+
+if [ "$KODIPLAYER_DRIVER" = bcm2835-driver -a "$KODI_VENDOR" = "default" ]; then
+  PKG_PATCH_DIRS+=" rpi-hevc"
+fi
 
 configure_package() {
   # Single threaded LTO is very slow so rely on Kodi for parallel LTO support
@@ -39,16 +38,22 @@ configure_package() {
 
   get_graphicdrivers
 
+  if [ "$TARGET_ARCH" = "x86_64" ]; then
+    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET pciutils"
+  fi
+
   PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET dbus"
 
   if [ "$DISPLAYSERVER" = "x11" ]; then
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET libX11 libXext libdrm libXrandr"
-    KODI_XORG="-DCORE_PLATFORM_NAME=x11"
+    KODI_XORG="-DCORE_PLATFORM_NAME=x11 -DX11_RENDER_SYSTEM=gl"
   elif [ "$DISPLAYSERVER" = "weston" ]; then
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET wayland waylandpp"
     CFLAGS="$CFLAGS -DMESA_EGL_NO_X11_HEADERS"
     CXXFLAGS="$CXXFLAGS -DMESA_EGL_NO_X11_HEADERS"
-    KODI_XORG="-DCORE_PLATFORM_NAME=wayland -DWAYLAND_RENDER_SYSTEM=gles"
+    KODI_XORG="-DCORE_PLATFORM_NAME=wayland \
+               -DWAYLAND_RENDER_SYSTEM=gles \
+               -DWAYLANDPP_PROTOCOLS_DIR=${SYSROOT_PREFIX}/usr/share/waylandpp/protocols"
   fi
 
   if [ ! "$OPENGL" = "no" ]; then
@@ -82,6 +87,10 @@ configure_package() {
     KODI_CEC="-DENABLE_CEC=ON"
   else
     KODI_CEC="-DENABLE_CEC=OFF"
+  fi
+
+  if [ "$CEC_FRAMEWORK_SUPPORT" = "yes" ]; then
+    PKG_PATCH_DIRS+=" cec-framework"
   fi
 
   if [ "$KODI_OPTICAL_SUPPORT" = yes ]; then
@@ -190,12 +199,10 @@ configure_package() {
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $KODIPLAYER_DRIVER libinput libxkbcommon"
     if [ "$KODIPLAYER_DRIVER" = bcm2835-driver ]; then
       KODI_PLAYER="-DCORE_PLATFORM_NAME=rbpi"
-    elif [ "$KODIPLAYER_DRIVER" = mesa -o "$KODIPLAYER_DRIVER" = rkmpp ]; then
+    elif [ "$OPENGLES_SUPPORT" = yes -a "$KODIPLAYER_DRIVER" = "$OPENGLES" ]; then
       KODI_PLAYER="-DCORE_PLATFORM_NAME=gbm -DGBM_RENDER_SYSTEM=gles"
-      CFLAGS="$CFLAGS -DMESA_EGL_NO_X11_HEADERS"
-      CXXFLAGS="$CXXFLAGS -DMESA_EGL_NO_X11_HEADERS"
-    elif [ "$KODIPLAYER_DRIVER" = libamcodec ]; then
-      KODI_PLAYER="-DCORE_PLATFORM_NAME=aml"
+      CFLAGS="$CFLAGS -DEGL_NO_X11"
+      CXXFLAGS="$CXXFLAGS -DEGL_NO_X11"
     fi
   fi
 
@@ -207,13 +214,15 @@ configure_package() {
                          -DWITH_TEXTUREPACKER=$TOOLCHAIN/bin/TexturePacker \
                          -DWITH_JSONSCHEMABUILDER=$TOOLCHAIN/bin/JsonSchemaBuilder \
                          -DDEPENDS_PATH=$PKG_BUILD/depends \
+                         -DSWIG_EXECUTABLE=$TOOLCHAIN/bin/swig \
                          -DPYTHON_EXECUTABLE=$TOOLCHAIN/bin/$PKG_PYTHON_VERSION \
                          -DPYTHON_INCLUDE_DIRS=$SYSROOT_PREFIX/usr/include/$PKG_PYTHON_VERSION \
                          -DGIT_VERSION=$PKG_VERSION \
-                         -DWITH_FFMPEG=$(get_build_dir ffmpeg) \
+                         -DFFMPEG_PATH=$SYSROOT_PREFIX/usr \
                          -DENABLE_INTERNAL_FFMPEG=OFF \
-                         -DFFMPEG_INCLUDE_DIRS=$SYSROOT_PREFIX/usr \
                          -DENABLE_INTERNAL_CROSSGUID=OFF \
+                         -DENABLE_INTERNAL_UDFREAD=OFF \
+                         -DENABLE_INTERNAL_SPDLOG=OFF \
                          -DENABLE_UDEV=ON \
                          -DENABLE_DBUS=ON \
                          -DENABLE_XSLT=ON \
@@ -223,7 +232,9 @@ configure_package() {
                          -DENABLE_LDGOLD=ON \
                          -DENABLE_DEBUGFISSION=OFF \
                          -DENABLE_APP_AUTONAME=OFF \
+                         -DENABLE_TESTING=OFF \
                          -DENABLE_INTERNAL_FLATBUFFERS=OFF \
+                         -DENABLE_LCMS2=OFF \
                          $PKG_KODI_USE_LTO \
                          $KODI_ARCH \
                          $KODI_NEON \
@@ -249,6 +260,12 @@ pre_configure_target() {
 }
 
 post_makeinstall_target() {
+  mkdir -p $INSTALL/.noinstall
+    mv $INSTALL/usr/share/kodi/addons/skin.estouchy \
+       $INSTALL/usr/share/kodi/addons/skin.estuary \
+       $INSTALL/usr/share/kodi/addons/service.xbmc.versioncheck \
+       $INSTALL/.noinstall
+
   rm -rf $INSTALL/usr/bin/kodi
   rm -rf $INSTALL/usr/bin/kodi-standalone
   rm -rf $INSTALL/usr/bin/xbmc
@@ -257,10 +274,6 @@ post_makeinstall_target() {
   rm -rf $INSTALL/usr/share/applications
   rm -rf $INSTALL/usr/share/icons
   rm -rf $INSTALL/usr/share/pixmaps
-  rm -rf $INSTALL/usr/share/kodi/addons/skin.estouchy
-  rm -rf $INSTALL/usr/share/kodi/addons/skin.estuary
-  rm -rf $INSTALL/usr/share/kodi/addons/service.xbmc.versioncheck
-  rm -rf $INSTALL/usr/share/kodi/addons/visualization.vortex
   rm -rf $INSTALL/usr/share/xsessions
 
   mkdir -p $INSTALL/usr/lib/kodi
@@ -279,6 +292,8 @@ post_makeinstall_target() {
   mkdir -p $INSTALL/usr/bin
     cp $PKG_DIR/scripts/kodi-remote $INSTALL/usr/bin
     cp $PKG_DIR/scripts/setwakeup.sh $INSTALL/usr/bin
+    cp $PKG_DIR/scripts/pastekodi $INSTALL/usr/bin
+    ln -sf /usr/bin/pastekodi $INSTALL/usr/bin/pastecrash
 
   mkdir -p $INSTALL/usr/share/kodi/addons
     cp -R $PKG_DIR/config/os.openelec.tv $INSTALL/usr/share/kodi/addons
@@ -287,9 +302,13 @@ post_makeinstall_target() {
     sed -e "s|@OS_VERSION@|$OS_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.libreelec.tv/addon.xml
     cp -R $PKG_DIR/config/repository.libreelec.tv $INSTALL/usr/share/kodi/addons
     sed -e "s|@ADDON_URL@|$ADDON_URL|g" -i $INSTALL/usr/share/kodi/addons/repository.libreelec.tv/addon.xml
+    sed -e "s|@ADDON_VERSION@|$ADDON_VERSION|g" -i $INSTALL/usr/share/kodi/addons/repository.libreelec.tv/addon.xml
     cp -R $PKG_DIR/config/repository.kodi.game $INSTALL/usr/share/kodi/addons
 
   mkdir -p $INSTALL/usr/share/kodi/config
+
+  ln -sf /run/libreelec/cacert.pem $INSTALL/usr/share/kodi/system/certs/cacert.pem
+
   mkdir -p $INSTALL/usr/share/kodi/system/settings
 
   $PKG_DIR/scripts/xml_merge.py $PKG_DIR/config/guisettings.xml \
@@ -320,7 +339,9 @@ post_makeinstall_target() {
   xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.libreelec.tv" $ADDON_MANIFEST
   xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.openelec.tv" $ADDON_MANIFEST
   xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.libreelec.tv" $ADDON_MANIFEST
-  xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.libreelec.settings" $ADDON_MANIFEST
+  if [ -n "$DISTRO_PKG_SETTINGS" ]; then
+    xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "$DISTRO_PKG_SETTINGS_ID" $ADDON_MANIFEST
+  fi
 
   if [ "$DRIVER_ADDONS_SUPPORT" = "yes" ]; then
     xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "script.program.driverselect" $ADDON_MANIFEST
@@ -339,6 +360,9 @@ post_makeinstall_target() {
     mkdir -p $INSTALL/usr/share/kodi/media/Fonts
       cp $PKG_DIR/fonts/*.ttf $INSTALL/usr/share/kodi/media/Fonts
   fi
+
+  # Compile kodi Python site-packages to .pyc bytecode, and remove .py source code
+  python_compile $INSTALL/usr/lib/$PKG_PYTHON_VERSION/site-packages/kodi
 
   debug_strip $INSTALL/usr/lib/kodi/kodi.bin
 }

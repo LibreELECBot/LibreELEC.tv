@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="aixlog"
@@ -9,4 +9,6 @@ PKG_SITE="https://github.com/badaix/aixlog"
 PKG_URL="https://github.com/badaix/aixlog/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="Header-only C++ logging library."
-PKG_TOOLCHAIN="manual"
+PKG_BUILD_FLAGS="-sysroot"
+
+PKG_CMAKE_OPTS_TARGET="-DBUILD_EXAMPLE=OFF"

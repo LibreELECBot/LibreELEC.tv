@@ -1,9 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
+# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pciutils"
-PKG_VERSION="3.5.4"
-PKG_SHA256="64293c6ab9318c40ef262b76d87bd9097531759752bac556e50979b1e63cfe66"
+PKG_VERSION="3.6.4"
+PKG_SHA256="f67ff732976e2db2a5ccdf3960020796526ba6b05f6b1cdd24b7b206af706055"
 PKG_ARCH="x86_64"
 PKG_LICENSE="GPL"
 PKG_SITE="http://mj.ucw.cz/pciutils.shtml"

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="unclutter"
@@ -16,6 +16,6 @@ make_target() {
 }
 
 makeinstall_target() {
-  mkdir -p .install_pkg/usr/bin
-  install -m 755 unclutter .install_pkg/usr/bin/
+  mkdir -p $INSTALL/usr/bin
+  install -m 755 unclutter $INSTALL/usr/bin/
 }

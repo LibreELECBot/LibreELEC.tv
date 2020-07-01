@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="hd-idle"
@@ -9,3 +9,4 @@ PKG_SITE="http://hd-idle.sourceforge.net/"
 PKG_URL="http://downloads.sourceforge.net/project/hd-idle/${PKG_NAME}-${PKG_VERSION}.tgz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="A utility for spinning-down external disks after a period of idle time."
+PKG_BUILD_FLAGS="-sysroot"

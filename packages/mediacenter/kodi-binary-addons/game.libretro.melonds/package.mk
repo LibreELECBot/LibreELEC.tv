@@ -1,11 +1,12 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.melonds"
-PKG_VERSION="ca4ba7eda1463e2cf6476f7b6fd9bb4b32970dcd"
-PKG_SHA256="91fe244fd4e4bfe94608985209a8e0fd48d4ce1652488ae5dffc4876925b90a1"
-PKG_REV="104"
-PKG_ARCH="any"
+PKG_VERSION="0.8.3.7-Leia"
+PKG_SHA256="9902693442b77e3ec9fc86b3d0a4a66f0b3e69f5fe65441e5848b7a26c387cb6"
+PKG_REV="1"
+# no openGL suport in retroplayer yet
+PKG_ARCH="none"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.melonds"
 PKG_URL="https://github.com/kodi-game/game.libretro.melonds/archive/$PKG_VERSION.tar.gz"

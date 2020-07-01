@@ -1,13 +1,13 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="vfs.libarchive"
-PKG_VERSION="6d39012c73750a80e4d3ab623d1b394c9a2c0ed8"
-PKG_SHA256="7a35387977d78a5c986c5cecd7cc844fde1e71e26c3d1a6b1d8a8f928b0e14a6"
+PKG_VERSION="1.3.0-Matrix"
+PKG_SHA256="0c82ef5917a01dca78590209206538e775e73dd4be23a8ed1e9cbae6d93ec989"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/xbmc/vfs.libarchive"
 PKG_URL="https://github.com/xbmc/vfs.libarchive/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform bzip2 libarchive lz4 lzo xz zlib"
 PKG_SECTION=""

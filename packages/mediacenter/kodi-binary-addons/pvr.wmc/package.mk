@@ -3,12 +3,12 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.wmc"
-PKG_VERSION="2697409c6c1213937e9ca3d50143f1776af97441"
-PKG_SHA256="44cbc9a69cc43548c73ba5fdb36884ff977a1107798454b5d4a6371e2dedae83"
-PKG_REV="2"
+PKG_VERSION="5.0.1-Matrix"
+PKG_SHA256="041f786b9d634cf43c5023c82570094bc5832a980a01b6abf50e7413be73edb0"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/kodi-pvr/pvr.wmc"
 PKG_URL="https://github.com/kodi-pvr/pvr.wmc/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform"
 PKG_SECTION=""

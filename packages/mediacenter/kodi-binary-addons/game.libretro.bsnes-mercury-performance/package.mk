@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.bsnes-mercury-performance"
-PKG_VERSION="8d24e31c5821863424d9ebf75ed465312aa7ff84"
-PKG_SHA256="b7422949142da8999fafc1d151124e2ffffe27c42d7aed941f68d87e51d090f5"
-PKG_REV="111"
+PKG_VERSION="0.94.0.5-Leia"
+PKG_SHA256="21cb9b29ab62b794f1f571f136f607497ae468e78f9daced537a7b5861a565b8"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.bsnes-mercury-performance"

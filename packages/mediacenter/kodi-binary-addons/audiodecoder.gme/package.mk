@@ -3,9 +3,9 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="audiodecoder.gme"
-PKG_VERSION="8d7401385fa4af4961318b1f3820c251381632be"
-PKG_SHA256="5e69e67e8460d2f0faae2027dd5ab32681003dabfd277dc5c8bad2f7b4b0e8ed"
-PKG_REV="2"
+PKG_VERSION="2.2.3-Matrix"
+PKG_SHA256="b2f7d883e9d272bcac1c3b2e5eea75525d0fa82096727289c43c10cf06600213"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/audiodecoder.gme"

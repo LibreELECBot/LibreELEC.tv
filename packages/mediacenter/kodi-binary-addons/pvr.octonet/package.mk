@@ -1,13 +1,13 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.octonet"
-PKG_VERSION="203f800eaaada32a010dde94679ec34818cb2916"
-PKG_SHA256="8ae56c61134b8b59dacb5324fd47c84e243e5331207b3e89646575c8b774bb40"
-PKG_REV="2"
+PKG_VERSION="2.0.0-Matrix"
+PKG_SHA256="37a9d54dceb1b638e661b51d90b3fdf573a9546ac350796425290abf79a0c071"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
-PKG_SITE="http://www.kodi.tv"
+PKG_SITE="https://github.com/DigitalDevices/pvr.octonet"
 PKG_URL="https://github.com/DigitalDevices/pvr.octonet/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform jsoncpp"
 PKG_SECTION=""

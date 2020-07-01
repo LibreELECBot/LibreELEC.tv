@@ -1,10 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2010-2011 Roman Weber (roman@openelec.tv)
 # Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
+# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libcap"
-PKG_VERSION="2.25"
-PKG_SHA256="693c8ac51e983ee678205571ef272439d83afe62dd8e424ea14ad9790bc35162"
+PKG_VERSION="2.31"
+PKG_SHA256="c6088de41e1c97fa8047e2e7de0e4ee0cd13e6cc16538022230ae76727a87c46"
 PKG_LICENSE="GPL"
 PKG_SITE=""
 PKG_URL="http://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/$PKG_NAME-$PKG_VERSION.tar.xz"

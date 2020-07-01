@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-supergrafx"
-PKG_VERSION="c92d975f4e572b84a219e96573a92e17af21dbe7"
-PKG_SHA256="5aa844efb11dd53e70e03caaa1bc1535bdae4c6929d73715b1a07fabfd76865d"
+PKG_VERSION="fadef23d59fa5ec17bc99e1e722cfd9e10535695"
+PKG_SHA256="2059ab1e76b9bf22224683cc33205d81b7ec0edfdd8487ac431c2bbfbdf3e9dd"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-supergrafx-libretro"
 PKG_URL="https://github.com/libretro/beetle-supergrafx-libretro/archive/$PKG_VERSION.tar.gz"

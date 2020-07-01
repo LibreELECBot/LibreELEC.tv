@@ -1,12 +1,17 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="tvh-dtv-scan-tables"
-PKG_VERSION="421c08b31b24e0cd5d8fb54e6f3278a1ef9d3666"
-PKG_SHA256="2377c0edec0997d320f121a8f7944b37935e0fd40249252d4098b7002df82693"
+PKG_VERSION="6bb0a70a0dcb97d5457c1ef4a7ccce634ea419b0"
+PKG_SHA256="a5f375d28e52ff3f527fecb7968f3ede6bc2e128d1ad78537ab4f0f7844edb45"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/tvheadend"
 PKG_URL="https://github.com/tvheadend/dtv-scan-tables/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="Digital TV scan tables, a fork from Tvh to support more recent tables."
 PKG_TOOLCHAIN="manual"
+PKG_BUILD_FLAGS="-sysroot"
+
+makeinstall_target() {
+  make install DATADIR=$INSTALL/usr/share
+}

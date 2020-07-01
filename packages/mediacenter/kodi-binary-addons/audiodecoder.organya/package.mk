@@ -3,9 +3,9 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="audiodecoder.organya"
-PKG_VERSION="a94a3dc5c56bd43bf460b54f5c1f35d8a60db6b8"
-PKG_SHA256="f8f30b4f6cba2c066cb0c2cd766152874e80d7ddf1550c58a6853b537c32ac8f"
-PKG_REV="2"
+PKG_VERSION="2.1.2-Matrix"
+PKG_SHA256="53aadae33bc6864e605e00d6c5c8944121f03e921b7b7a5b3ec6c65a0c1193b4"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/xbmc/audiodecoder.organya"

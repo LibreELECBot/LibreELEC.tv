@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-melonds"
-PKG_VERSION="ee2f3e3b7057729b05fd4cb5f2a3f3a6998e4c06"
-PKG_SHA256="008aab83d55dbb0aed05020d6f39b7fd91eccc2e12e65f674c67110fc48b5d88"
+PKG_VERSION="42c1acd5c47dcda17288dcb64ea4adb8e13b8732"
+PKG_SHA256="a21581bfdc122cfe740750f8049eb514cb82a8c2a0127a4488d7b7a08f61b0a3"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/melonds"
 PKG_URL="https://github.com/libretro/melonds/archive/$PKG_VERSION.tar.gz"

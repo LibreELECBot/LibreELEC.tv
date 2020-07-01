@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-mrboom"
-PKG_VERSION="2ea24c0a857af14030fa2e68b0dbade6d73ffb20"
-PKG_SHA256="aaec7aaeead4729575a0213af7149bbe56bad0930db8b59531eef4131cb438b8"
+PKG_VERSION="a47e81ce1c4126a977780f6b0d797990161ddd20"
+PKG_SHA256="175feef1844993ae886abafedd1e094124837062fa1e8c4dd302c6166546f65a"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/mrboom-libretro"
 PKG_URL="https://github.com/libretro/mrboom-libretro/archive/$PKG_VERSION.tar.gz"
@@ -13,6 +13,13 @@ PKG_LONGDESC="game.libretro.mrboom: mrboom for Kodi"
 PKG_LIBNAME="mrboom_libretro.so"
 PKG_LIBPATH="$PKG_LIBNAME"
 PKG_LIBVAR="MRBOOM_LIB"
+
+pre_make_target() {
+  # Disable NEON otherwise build fails
+  if target_has_feature neon; then
+    CFLAGS+=" -DDONT_WANT_ARM_OPTIMIZATIONS"
+  fi
+}
 
 make_target() {
   make

@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-sameboy"
-PKG_VERSION="e1bdc710d86a80b4344ce52c2856405015f7a83a"
-PKG_SHA256="458423330d554b44d01c62f9be9d53e6789f23ba9f461e5e427782d6e663bd5f"
+PKG_VERSION="c9e547c1063fd62c40a4b7a86e7db99dc9089051"
+PKG_SHA256="6f7ad1eec4b28a22b6ceb8578af7e177fbb89dc4bceba36b7f4dab495fbb64fb"
 PKG_LICENSE="MIT"
 PKG_SITE="https://github.com/libretro/sameboy"
 PKG_URL="https://github.com/libretro/sameboy/archive/$PKG_VERSION.tar.gz"

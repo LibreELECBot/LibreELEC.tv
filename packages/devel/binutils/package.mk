@@ -3,13 +3,13 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="binutils"
-PKG_VERSION="2.31.1"
-PKG_SHA256="e88f8d36bd0a75d3765a4ad088d819e35f8d7ac6288049780e2fefcad18dde88"
+PKG_VERSION="2.34"
+PKG_SHA256="f00b0e8803dc9bab1e2165bd568528135be734df3fabf8d0161828cd56028952"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.gnu.org/software/binutils/"
-PKG_URL="http://ftpmirror.gnu.org/binutils/$PKG_NAME-$PKG_VERSION.tar.gz"
+PKG_URL="http://ftp.gnu.org/gnu/binutils/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_HOST="ccache:host bison:host flex:host linux:host"
-PKG_DEPENDS_TARGET="toolchain binutils:host"
+PKG_DEPENDS_TARGET="toolchain zlib binutils:host"
 PKG_LONGDESC="A GNU collection of binary utilities."
 
 PKG_CONFIGURE_OPTS_HOST="--target=$TARGET_NAME \
@@ -31,6 +31,7 @@ PKG_CONFIGURE_OPTS_HOST="--target=$TARGET_NAME \
 PKG_CONFIGURE_OPTS_TARGET="--target=$TARGET_NAME \
                          --with-sysroot=$SYSROOT_PREFIX \
                          --with-lib-path=$SYSROOT_PREFIX/lib:$SYSROOT_PREFIX/usr/lib \
+                         --with-system-zlib \
                          --without-ppl \
                          --without-cloog \
                          --enable-static \
@@ -66,10 +67,16 @@ make_target() {
   make configure-host
   make -C libiberty
   make -C bfd
+  make -C opcodes
+  make -C binutils strings
 }
 
 makeinstall_target() {
   mkdir -p $SYSROOT_PREFIX/usr/lib
     cp libiberty/libiberty.a $SYSROOT_PREFIX/usr/lib
   make DESTDIR="$SYSROOT_PREFIX" -C bfd install
+  make DESTDIR="$SYSROOT_PREFIX" -C opcodes install
+
+  mkdir -p ${INSTALL}/usr/bin
+    cp binutils/strings ${INSTALL}/usr/bin
 }

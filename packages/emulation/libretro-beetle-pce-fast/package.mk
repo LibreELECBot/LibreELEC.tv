@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-pce-fast"
-PKG_VERSION="433fb7a36fa26996a37f2107fb5189f243024f7d"
-PKG_SHA256="33d13fdbf315e4de9c04f6a70417a4afc25a82ca95f66f45e45818f1d3d37d6a"
+PKG_VERSION="019179ce335b68a22dcba94ae6c51cad8135ee16"
+PKG_SHA256="0304948b3a5300e16d14907d6c19ce21a353f25f46e77648d3ce8244c89ccabf"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-pce-fast-libretro"
 PKG_URL="https://github.com/libretro/beetle-pce-fast-libretro/archive/$PKG_VERSION.tar.gz"

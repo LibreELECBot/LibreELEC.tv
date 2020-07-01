@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-snes9x2002"
-PKG_VERSION="142b0ed8aa7487f73d401736d3b24ce6e851a060"
-PKG_SHA256="d208b0c08c7ee56f1b7f48cfb1f542ac1156a7b806714efb85e7aa7c9f5e9dbf"
+PKG_VERSION="a869da7f22c63ee1cb316f79c6dd7691a369da3e"
+PKG_SHA256="282c9b4f13e688c9af38d3ade0822d2ef8dbdef866a857bb64fcd680f7ddd67f"
 PKG_ARCH="arm"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/libretro/snes9x2002"

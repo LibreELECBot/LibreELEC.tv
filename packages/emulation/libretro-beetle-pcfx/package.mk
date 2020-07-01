@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-beetle-pcfx"
-PKG_VERSION="84b7ca6af37525af126069f812d53784bc1702fe"
-PKG_SHA256="30b85929a9b9d23c730c26ea823ba9a3a9963f4db18698025874e247ed9473fa"
+PKG_VERSION="7bba6699d6f903bd701b0aa525d845de8427fee6"
+PKG_SHA256="484d5f757e21c95f574365e7b1bf1ee41e574662396d469eff44ed08d20d4123"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://github.com/libretro/beetle-pcfx-libretro"
 PKG_URL="https://github.com/libretro/beetle-pcfx-libretro/archive/$PKG_VERSION.tar.gz"
@@ -19,7 +19,7 @@ make_target() {
     arm1176jzf-s)
       make platform=armv6-hardfloat
       ;;
-    cortex-a7)
+    cortex-a7|cortex-a8)
       make platform=armv7-neon-hardfloat
       ;;
     cortex-a9|*cortex-a53|cortex-a17)

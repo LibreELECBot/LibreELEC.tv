@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="bchunk"
@@ -9,11 +9,13 @@ PKG_SITE="http://he.fi/bchunk/"
 PKG_URL="http://he.fi/bchunk/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="Tool to convert a CD image in a .bin/.cue format to a set of .iso and .cdr tracks."
-
-makeinstall_target() {
-  :
-}
+PKG_BUILD_FLAGS="-sysroot"
 
 make_target() {
   make $PKG_MAKE_OPTS_TARGET CC=$CC LD=$CC
+}
+
+makeinstall_target() {
+  mkdir -p $INSTALL/usr/bin
+  cp -p bchunk $INSTALL/usr/bin
 }

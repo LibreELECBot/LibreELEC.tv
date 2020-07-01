@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="emby"
@@ -28,8 +28,8 @@ addon() {
         -d $ADDON_BUILD/$PKG_ADDON_ID/emby
 
   mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/lib
-  cp -L $(get_build_dir imagemagick)/.install_pkg/usr/lib/libMagickCore-7.Q16HDRI.so.? \
+  cp -L $(get_install_dir imagemagick)/usr/lib/libMagickCore-7.Q16HDRI.so.? \
         $ADDON_BUILD/$PKG_ADDON_ID/lib/
-  cp -L $(get_build_dir imagemagick)/.install_pkg/usr/lib/libMagickWand-7.Q16HDRI.so \
+  cp -L $(get_install_dir imagemagick)/usr/lib/libMagickWand-7.Q16HDRI.so \
         $ADDON_BUILD/$PKG_ADDON_ID/lib/CORE_RL_Wand_.so
 }

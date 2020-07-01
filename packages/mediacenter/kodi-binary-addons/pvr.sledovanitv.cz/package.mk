@@ -1,13 +1,13 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="pvr.sledovanitv.cz"
-PKG_VERSION="677a50759ca28da2ee51517d8f92463b27bbf22e"
-PKG_SHA256="bcbfba748a39ebae328e41ca0a8dc97ebe0b0f495f058109ce50875687d2cebe"
+PKG_VERSION="4.0.0-Matrix"
+PKG_SHA256="44cc5faaf9a39e479538424286258c5095fc130fe406a5f663fb12314c0ce4e8"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPLv2"
-PKG_SITE="https://kodi.tv"
+PKG_SITE="https://github.com/palinek/pvr.sledovanitv.cz"
 PKG_URL="https://github.com/palinek/pvr.sledovanitv.cz/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain kodi-platform jsoncpp"
 PKG_SECTION=""

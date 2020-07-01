@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.pokemini"
-PKG_VERSION="c3cb76e899e8fb15cd282ccef2caff45c1850b0e"
-PKG_SHA256="112d42125f7ee5da93ba5d1d9d6bd8818db58f2c7cc4dc387fedae7e8ba9c852"
-PKG_REV="105"
+PKG_VERSION="0.60.0.10-Leia"
+PKG_SHA256="ea2bfd3c7ce9ff9dc296d88e8f4b20da15b731e1f36551b21da1392ade2cfddd"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.pokemini"

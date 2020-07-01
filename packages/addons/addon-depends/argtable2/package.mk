@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="argtable2"
@@ -9,7 +9,7 @@ PKG_SITE="http://argtable.sourceforge.net/"
 PKG_URL="https://downloads.sourceforge.net/project/argtable/argtable/argtable-${PKG_VERSION}/argtable2-${PKG_VERSION:2:4}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="Argtable is an open source ANSI C library that parses GNU-style command-line options."
+PKG_TOOLCHAIN="configure"
+PKG_BUILD_FLAGS="-sysroot"
 
-make_target() {
-  :
-}
+PKG_CONFIGURE_OPTS_TARGET="--enable-static --disable-shared"

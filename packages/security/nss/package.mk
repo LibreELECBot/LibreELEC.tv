@@ -1,12 +1,13 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2009-2012 Stephan Raue (stephan@openelec.tv)
+# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="nss"
-PKG_VERSION="3.37.1"
-PKG_SHA256="5ac4a388b06b2785fb7f4f0ae3c909d8cbb2ab370147ff61fe2517cc5bf3c685"
+PKG_VERSION="3.47.1"
+PKG_SHA256="07d4276168f59bb3038c7826dabb5fbfbab8336ddf65e4e6e43bce89ada78c64"
 PKG_LICENSE="Mozilla Public License"
 PKG_SITE="http://ftp.mozilla.org/"
-PKG_URL="http://ftp.mozilla.org/pub/security/nss/releases/NSS_3_37_1_RTM/src/nss-3.37.1-with-nspr-4.19.tar.gz"
+PKG_URL="http://ftp.mozilla.org/pub/security/nss/releases/NSS_3_47_1_RTM/src/nss-3.47.1-with-nspr-4.23.tar.gz"
 PKG_DEPENDS_HOST="nspr:host zlib:host"
 PKG_DEPENDS_TARGET="toolchain nss:host nspr zlib sqlite"
 PKG_LONGDESC="The Network Security Services (NSS) package is a set of libraries designed to support cross-platform development of security-enabled client and server applications"
@@ -74,6 +75,6 @@ makeinstall_target() {
   cp -RL dist/{public,private}/nss/* $SYSROOT_PREFIX/usr/include/nss
   cp -L dist/Linux*/lib/pkgconfig/nss.pc $SYSROOT_PREFIX/usr/lib/pkgconfig
 
-  mkdir -p .install_pkg/usr/lib
-    cp -PL dist/Linux*/lib/*.so .install_pkg/usr/lib
+  mkdir -p $PKG_INSTALL/usr/lib
+    cp -PL dist/Linux*/lib/*.so $PKG_INSTALL/usr/lib
 }

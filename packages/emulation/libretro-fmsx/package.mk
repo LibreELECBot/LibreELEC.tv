@@ -1,9 +1,9 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-fmsx"
-PKG_VERSION="95ebaa7d5eb983eb550a989384656c418946f35f"
-PKG_SHA256="bb655bbceef2ac37248a69e9c7bde4e321d14a97f6775b2a0b249a83ec3b523b"
+PKG_VERSION="3de916bbf15062de1ab322432d38a1fee29d5e68"
+PKG_SHA256="3947737df79a97be2dd156420a3951f4424d7a51e68a7cacc661ee3e2fa1d767"
 PKG_LICENSE="GPLv3"
 PKG_SITE="https://github.com/libretro/fmsx-libretro"
 PKG_URL="https://github.com/libretro/fmsx-libretro/archive/$PKG_VERSION.tar.gz"

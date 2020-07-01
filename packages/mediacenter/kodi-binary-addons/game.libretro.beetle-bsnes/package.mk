@@ -1,10 +1,10 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.beetle-bsnes"
-PKG_VERSION="06c9f8e8e9f7387ec1a1caf57c9cb4aa166e243a"
-PKG_SHA256="25f41861b9b314e09bfe2604652c5ae0a7b9b5907ba32fbf5919b6cc171374a7"
-PKG_REV="110"
+PKG_VERSION="0.9.26.7-Leia"
+PKG_SHA256="4fc1772740ac349154248bfda5882c8f4ca461c5a313cfd2afc6d186c1da69b2"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/kodi-game/game.libretro.beetle-bsnes"

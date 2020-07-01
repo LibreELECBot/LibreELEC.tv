@@ -1,10 +1,11 @@
-# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-License-Identifier: GPL-2.0
 # Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="lcdd"
-PKG_VERSION="466edd3"
-PKG_SHA256="786aab192a788fd09119645d60576ba258eec3de1a455aaa6d9ddea5e30e1749"
-PKG_REV="106"
+PKG_VERSION="e08546c13a4157ed98cd4a8e9086e7acd66f93c0"
+PKG_SHA256="23d0fd14e16767d4907d724404b96216c0c7338c6206760e53cf6a7662dd3af2"
+PKG_VERSION_DATE="0.5dev+2018-11-04"
+PKG_REV="107"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="http://lcdproc.org/"
@@ -39,11 +40,11 @@ addon() {
 
   cp -PR $PKG_DIR/resources $ADDON_BUILD/$PKG_ADDON_ID
 
-  cp -PR $PKG_BUILD/.install_pkg/etc/LCDd.conf $ADDON_BUILD/$PKG_ADDON_ID/config/
-  cp -PR $PKG_BUILD/.install_pkg/usr/lib       $ADDON_BUILD/$PKG_ADDON_ID/lib/
-  cp -PR $PKG_BUILD/.install_pkg/usr/sbin      $ADDON_BUILD/$PKG_ADDON_ID/bin/
+  cp -PR $PKG_INSTALL/etc/LCDd.conf $ADDON_BUILD/$PKG_ADDON_ID/config/
+  cp -PR $PKG_INSTALL/usr/lib       $ADDON_BUILD/$PKG_ADDON_ID/lib/
+  cp -PR $PKG_INSTALL/usr/sbin      $ADDON_BUILD/$PKG_ADDON_ID/bin/
 
-  cp -L $(get_build_dir serdisplib)/.install_pkg/usr/lib/libserdisp.so.1 $ADDON_BUILD/$PKG_ADDON_ID/lib/
+  cp -L $(get_install_dir serdisplib)/usr/lib/libserdisp.so.1 $ADDON_BUILD/$PKG_ADDON_ID/lib/
 
   sed -e "s|^DriverPath=.*$|DriverPath=/storage/.kodi/addons/service.lcdd/lib/lcdproc/|" \
       -e "s|^#Foreground=.*$|Foreground=no|" \

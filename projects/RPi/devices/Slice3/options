@@ -2,9 +2,6 @@
 # Device defaults
 ################################################################################
 
-  # Additional kernel make parameters
-    KERNEL_MAKE_EXTRACMD+=" overlays/slice.dtbo overlays/ws2812.dtbo"
-
   # NOOBS supported hex versions (legacy)
     NOOBS_HEX="1040,1041,2082"
 
@@ -16,3 +13,6 @@
 
   # Additional drivers
     ADDITIONAL_DRIVERS="${ADDITIONAL_DRIVERS} slice-drivers"
+
+  # set the addon project
+    ADDON_PROJECT="RPi2"

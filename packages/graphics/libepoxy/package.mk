@@ -8,23 +8,22 @@
 # in Xorg.log
 
 PKG_NAME="libepoxy"
-PKG_VERSION="1.5.2"
-PKG_SHA256="a9562386519eb3fd7f03209f279f697a8cba520d3c155d6e253c3e138beca7d8"
+PKG_VERSION="1.5.4"
+PKG_SHA256="0bd2cc681dfeffdef739cb29913f8c3caa47a88a451fd2bc6e606c02997289d2"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/anholt/libepoxy"
-PKG_URL="https://github.com/anholt/libepoxy/releases/download/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="https://github.com/anholt/libepoxy/releases/download/${PKG_VERSION}/libepoxy-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="Epoxy is a library for handling OpenGL function pointer management for you."
-PKG_TOOLCHAIN="autotools"
 
-if [ "$OPENGL" != "no" ]; then
-  PKG_DEPENDS_TARGET+=" $OPENGL"
+if [ "${OPENGL_SUPPORT}" = "yes" ]; then
+  PKG_DEPENDS_TARGET+=" ${OPENGL}"
 fi
 
-if [ "$OPENGLES" != "no" ]; then
-  PKG_DEPENDS_TARGET+=" $OPENGLES"
+if [ "${OPENGLES_SUPPORT}" = "yes" ]; then
+  PKG_DEPENDS_TARGET+=" ${OPENGLES}"
 fi
 
-if [ "$DISPLAYSERVER" != "x11" ]; then
-  PKG_CONFIGURE_OPTS_TARGET="--disable-glx"
+if [ "${DISPLAYSERVER}" != "x11" ]; then
+  PKG_MESON_OPTS_TARGET="-Dglx=no"
 fi
