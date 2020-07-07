@@ -3,12 +3,20 @@
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="ffmpeg"
-# Current branch is: release/4.2-kodi
-PKG_VERSION="4.2.2-Matrix-Alpha1"
-PKG_SHA256="0dba571f9809588cfbdc29d6a551dab4cd5736701653d9263847c9ac67bcde86"
+
+if [ "${PROJECT}" = "RPi" ]; then
+  # 4.3-libreelec-rpi integration branch
+  PKG_VERSION="7e2ca588bd9d6563530c8f184f6361e6c70a6537"
+  PKG_SHA256="5ad0f5edfbbf3276bc43c7b36dc95b4762dca7aa520ed8d97734cc904380415b"
+else
+  # 4.3-libreelec integration branch
+  PKG_VERSION="a4fb36597421f507c2474d6f9eddebbc72b74528"
+  PKG_SHA256="5a218a9688e0ac9237f8eeafc3060f66437ee65f21513906433fc81055ba5479"
+fi
+
 PKG_LICENSE="LGPLv2.1+"
 PKG_SITE="https://ffmpeg.org"
-PKG_URL="https://github.com/xbmc/FFmpeg/archive/${PKG_VERSION}.tar.gz"
+PKG_URL="https://github.com/LibreELEC/FFmpeg/archive/${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain zlib bzip2 gnutls speex"
 PKG_LONGDESC="FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."
 PKG_BUILD_FLAGS="-gold"
