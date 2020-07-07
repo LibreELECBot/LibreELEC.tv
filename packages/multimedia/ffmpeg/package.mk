@@ -42,6 +42,7 @@ if [ "${V4L2_SUPPORT}" = "yes" ]; then
     PKG_FFMPEG_HWACCEL="--disable-hwaccel=h264_v4l2request \
                         --disable-hwaccel=mpeg2_v4l2request \
                         --disable-hwaccel=vp8_v4l2request"
+    PKG_FFMPEG_V4L2+=" --enable-sand"
   else
     PKG_V4L2_REQUEST="no"
   fi
