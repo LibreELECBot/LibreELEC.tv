@@ -52,7 +52,7 @@ PKG_DEPENDS_TARGET="toolchain \
                     ytop"
 
 if [ "$TARGET_ARCH" = "x86_64" ]; then
-  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET efibootmgr"
+  PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET efibootmgr rxvt-unicode"
 fi
 
 addon() {
@@ -139,6 +139,9 @@ addon() {
 
     # pv
     cp -P $(get_install_dir pv)/usr/bin/pv $ADDON_BUILD/$PKG_ADDON_ID/bin
+
+    # rxvt-unicode
+    cp -P $(get_install_dir rxvt-unicode)/usr/bin/urxvt $ADDON_BUILD/$PKG_ADDON_ID/bin
 
     # screen
     cp -L $(get_install_dir screen)/usr/bin/screen $ADDON_BUILD/$PKG_ADDON_ID/bin
