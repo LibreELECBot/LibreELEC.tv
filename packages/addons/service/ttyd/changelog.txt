@@ -1,2 +1,5 @@
+101
+- fix persistent disconnections
+
 100
 - initial LibreELEC version
