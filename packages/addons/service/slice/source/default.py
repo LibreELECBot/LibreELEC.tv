@@ -56,28 +56,15 @@ class PNGPatternPlayer(threading.Thread):
     'get pixel data from a cache if available, otherwise load and calculate'
     if file not in self.memo:
       image = Image.open(file)
-      pixels = image.load()
       width, height = image.size
-      data = []
+      n = width * 4
+      im_data = image.tobytes()
+      self.memo[file] = [im_data[i:i+n] for i in range(0, len(im_data), n)]
 
-      for y in range(height):
-        x_pixels = []
-        for x in range(width):
-          pixel = []
-          r, g, b, a = pixels[x, y]
-          pixel.append(hex(r)[2:].zfill(2))
-          pixel.append(hex(g)[2:].zfill(2))
-          pixel.append(hex(b)[2:].zfill(2))
-          pixel.append(hex(a)[2:].zfill(2))
-          x_pixels.append(''.join(str(e) for e in pixel))
-        data.append(' '.join(str(e) for e in x_pixels))
-
-      self.memo[file] = data
-
-    for hexline in self.memo[file]:
+    for led_line in self.memo[file]:
       if not self.stopped:
         with open('/dev/ws2812', 'wb') as f:
-          f.write(bytearray.fromhex(hexline))
+          f.write(led_line)
         time.sleep(delay)
       else:
         break
