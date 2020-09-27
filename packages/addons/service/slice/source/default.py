@@ -56,6 +56,8 @@ class PNGPatternPlayer(threading.Thread):
     'get pixel data from a cache if available, otherwise load and calculate'
     if file not in self.memo:
       image = Image.open(file)
+      if image.mode != 'RGBA':
+        image = image.convert('RGBA')
       width, height = image.size
       n = width * 4
       im_data = image.tobytes()
