@@ -3,8 +3,8 @@
 # Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="kodi"
-PKG_VERSION="fbef8cf4aca97418eb04f231a973ed4e4945c164"
-PKG_SHA256="ce2459ae7180e044139ec8f6a274fa463a0afbf9275fa0e28ce0fb404302fb3b"
+PKG_VERSION="ce1232862b929a5e1ab26e57e0502d0ee7be25c8"
+PKG_SHA256="699edc31c664a7912618ac1ebbf736137f5b972c3d720ed6143527e4d9c2c6f5"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
 PKG_URL="https://github.com/xbmc/xbmc/archive/$PKG_VERSION.tar.gz"
@@ -169,10 +169,6 @@ configure_package() {
     KODI_ARCH="-DWITH_ARCH=$TARGET_ARCH"
   fi
 
-  if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
-    PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET led_tools"
-  fi
-
   if [ ! "$KODIPLAYER_DRIVER" = default ]; then
     PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET $KODIPLAYER_DRIVER libinput libxkbcommon"
     if [ "$OPENGLES_SUPPORT" = yes -a "$KODIPLAYER_DRIVER" = "$OPENGLES" ]; then
@@ -315,10 +311,6 @@ post_makeinstall_target() {
 
   if [ "$DRIVER_ADDONS_SUPPORT" = "yes" ]; then
     xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "script.program.driverselect" $ADDON_MANIFEST
-  fi
-
-  if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
-    xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $ADDON_MANIFEST
   fi
 
   # more binaddons cross compile badness meh
