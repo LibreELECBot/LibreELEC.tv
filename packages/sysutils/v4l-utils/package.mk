@@ -74,16 +74,8 @@ post_makeinstall_target() {
     mkdir -p $INSTALL/usr/lib/udev/rules.d
     cp -PR $PKG_DIR/udev.d/*.rules $INSTALL/usr/lib/udev/rules.d
 
-  # install additional keymaps without overwriting upstream maps
-  (
-    set -C
-    for f in $PKG_DIR/keymaps/* ; do
-      if [ -e $f ] ; then
-        keymap=$(basename $f)
-        cat $f > $INSTALL/usr/lib/udev/rc_keymaps/$keymap
-      fi
-    done
-  )
+  # install additional keymaps and protocols without overwriting upstream maps
+  rsync -a -v --ignore-existing $PKG_DIR/keymaps/ $INSTALL/usr/lib/udev/rc_keymaps/
 
   # create multi keymap to support several remotes OOTB
   if [ -n "$IR_REMOTE_KEYMAPS" ]; then
