@@ -1,0 +1,22 @@
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+index 4c6704e4c57e..ad3e16ea2d96 100644
+--- a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -20,6 +20,7 @@ / {
+ 	aliases {
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
++		ethernet0 = &emac;
+ 	};
+ 
+ 	chosen {
+@@ -151,3 +152,9 @@ &usbphy {
+ 	 */
+ 	status = "okay";
+ };
++
++&emac {
++	status = "okay";
++	phy-handle = <&int_mii_phy>;
++	phy-mode = "mii";
++};
