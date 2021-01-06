@@ -1,0 +1,50 @@
+From 7b5a8a1e7b56f0b3be1cd627c867bfa0a62ca60c Mon Sep 17 00:00:00 2001
+From: popcornmix <popcornmix@gmail.com>
+Date: Mon, 16 Sep 2019 16:04:28 +0100
+Subject: [PATCH] DVDOverlayCodecFFmpeg: Fix for distorted subtitles in 3D
+ modes
+
+See: https://github.com/xbmc/xbmc/issues/16362
+---
+ .../Overlay/DVDOverlayCodecFFmpeg.cpp          | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
+index cd51247b09..4195f93657 100644
+--- a/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
++++ b/xbmc/cores/VideoPlayer/DVDCodecs/Overlay/DVDOverlayCodecFFmpeg.cpp
+@@ -232,7 +232,8 @@ CDVDOverlay* CDVDOverlayCodecFFmpeg::GetOverlay()
+     }
+ 
+     RENDER_STEREO_MODE render_stereo_mode = CServiceBroker::GetWinSystem()->GetGfxContext().GetStereoMode();
+-    if (render_stereo_mode != RENDER_STEREO_MODE_OFF)
++    if (render_stereo_mode != RENDER_STEREO_MODE_OFF &&
++        m_pCodecContext->codec_id != AV_CODEC_ID_HDMV_PGS_SUBTITLE)
+     {
+       if (rect.h > m_height / 2)
+       {
+@@ -261,8 +262,19 @@ CDVDOverlay* CDVDOverlayCodecFFmpeg::GetOverlay()
+     overlay->height   = rect.h;
+     overlay->bForced  = rect.flags != 0;
+ 
+-    overlay->source_width  = m_width;
+-    overlay->source_height = m_height;
++    if (render_stereo_mode != RENDER_STEREO_MODE_OFF &&
++        m_pCodecContext->codec_id == AV_CODEC_ID_HDMV_PGS_SUBTITLE)
++    {
++      // For PGS subtitles we don't set source_width and source_height here.
++      // Later this will lead to 'video alignment' being chosen for that subtitle.
++      overlay->source_width  = 0;
++      overlay->source_height = 0;
++    }
++    else
++    {
++      overlay->source_width  = m_width;
++      overlay->source_height = m_height;
++    }
+ 
+     uint8_t* s = rect.data[0];
+     uint8_t* t = overlay->data;
+-- 
+2.17.1
+
