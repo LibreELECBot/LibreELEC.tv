@@ -194,20 +194,16 @@ devices = \
   },
   'NXP': {
     'iMX6': {
-      'generic': {
-        'dtb': '*.dtb',
-        'config': 'mx6cuboxi_defconfig'
-      },
       'cubox': {
-        'dtb': '*cubox*.dtb',
+        'dtb': 'imx6dl-cubox-i.dtb;imx6dl-cubox-i-emmc-som-v15.dtb;imx6dl-cubox-i-som-v15.dtb;imx6q-cubox-i.dtb;imx6q-cubox-i-emmc-som-v15.dtb;imx6q-cubox-i-som-v15.dtb',
         'config': 'mx6cuboxi_defconfig'
       },
       'udoo': {
-        'dtb': '*udoo*.dtb',
+        'dtb': 'imx6dl-udoo.dtb imx6q-udoo.dtb',
         'config': 'udoo_defconfig'
       },
       'wandboard': {
-        'dtb': '*wandboard*.dtb',
+        'dtb': 'imx6dl-wandboard.dtb imx6dl-wandboard-revb1.dtb imx6dl-wandboard-revd1.dtb imx6dl-wandboard.dtb imx6dl-wandboard-revb1.dtb imx6dl-wandboard-revd1.dtb',
         'config': 'wandboard_defconfig'
       },
     },
