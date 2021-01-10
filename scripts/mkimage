@@ -215,11 +215,16 @@ elif [ "${BOOTLOADER}" = "u-boot" -a -n "${UBOOT_SYSTEM}" ]; then
   DTB="$(${SCRIPTS}/uboot_helper ${PROJECT} ${DEVICE} ${UBOOT_SYSTEM} dtb)"
   if [ -n "${DTB}" ]; then
     mkdir -p "${LE_TMP}/dtbs"
-    while IFS= read -r -d '' file; do
-      echo "image: adding device tree file $(basename "$file")"
-      mcopy -n "$file" "${LE_TMP}/dtbs/$(basename "$file")"
-    done < <(find "${RELEASE_DIR}/3rdparty/bootloader/" -maxdepth 1 -name "${DTB}" -print0)
-    dtbfiles=$(find "${RELEASE_DIR}/3rdparty/bootloader/" -maxdepth 1 -name "${DTB}" -printf '.' | wc -c)
+    OLDIFS="$IFS"    
+    IFS=';'
+    for file in ${DTB[@]}; do
+      if [ -f "${RELEASE_DIR}/3rdparty/bootloader/${file}" ]; then
+        echo "image: adding device tree file ${file}"
+        mcopy "${RELEASE_DIR}/3rdparty/bootloader/${file}" "${LE_TMP}/dtbs/${file}"
+      fi
+    done
+    IFS="${OLDIFS}"
+    dtbfiles=$(find "${LE_TMP}/dtbs/" -maxdepth 1 -name "*.dtb" -printf '.' | wc -c)
     if [ "${dtbfiles}" -gt 1 ]; then
        FDTSTRING="FDTDIR /dtbs"
        echo "image: u-boot using ${dtbfiles} device tree files in folder /dtbs"
