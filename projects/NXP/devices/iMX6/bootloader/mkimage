@@ -10,3 +10,30 @@ if [ -f "$RELEASE_DIR/3rdparty/bootloader/SPL" ]; then
   echo "Writing SPL to $(basename $DISK)"
   dd if="$RELEASE_DIR/3rdparty/bootloader/SPL" of="$DISK" bs=1K seek=1 conv=fsync,notrunc >"$SAVE_ERROR" 2>&1 || show_error
 fi
+  echo "image: copying device trees..."
+  declare -i dtbfiles
+  dtbfiles=0
+  for file in ${DTB[@]}; do
+    if [ -f "${RELEASE_DIR}/3rdparty/bootloader/${file}" ]; then
+       echo "image: ${file} added"
+       dtbfiles=${dtbfiles}+1
+       mcopy -s -o "${RELEASE_DIR}/3rdparty/bootloader"/${file} ::
+    fi
+  done
+
+  echo "image: creating extlinux.conf file..."
+    if [ "${dtbfiles}" -gt 1 ]; then
+       echo "image: setting up u-boot using 'FDTDIR /' with ${dtbfiles} files "
+    else
+       echo "image: setting up u-boot using 'FDTDIR /' with single file '${DTB}'"
+    fi
+
+  mkdir -p "${LE_TMP}/extlinux"
+  cat << EOF > "${LE_TMP}/extlinux/extlinux.conf"
+LABEL ${DISTRO}
+  LINUX /${KERNEL_NAME}
+  FDTDIR /
+  APPEND boot=UUID=${UUID_SYSTEM} disk=UUID=${UUID_STORAGE} quiet ${EXTRA_CMDLINE}
+EOF
+  mcopy -s -o "${LE_TMP}/extlinux" ::
+
