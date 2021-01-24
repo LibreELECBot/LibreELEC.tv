@@ -48,6 +48,10 @@ show_config() {
     config_message+="\n - Include firmware:\t\t\t $config_firmware"
   done
 
+  for config_enabled_dtoverlay in $ENABLED_DTOVERLAYS; do
+    config_message+="\n - Enable DT overlay:\t\t\t $config_enabled_dtoverlay"
+  done
+
   # Misc. Filesystems
 
   config_message+="\n\n Misc. Filesystems:"

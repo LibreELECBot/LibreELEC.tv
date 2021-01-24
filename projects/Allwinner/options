@@ -64,3 +64,8 @@
 
   # additional packages to install:
     ADDITIONAL_PACKAGES="dt-overlays"
+
+  # u-boot device-tree overlays to enable:
+  # Whitespace separated list without path and extension,
+  # e.g. ENABLED_DTOVERLAYS="sun8i-h2-plus-bpi-m2-zero-ethernet"
+    ENABLED_DTOVERLAYS=""

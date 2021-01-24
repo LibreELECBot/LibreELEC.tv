@@ -225,12 +225,17 @@ elif [ "${BOOTLOADER}" = "u-boot" -a -n "${UBOOT_SYSTEM}" ]; then
 
     mkdir -p "${LE_TMP}/extlinux"
 
-    cat << EOF > "${LE_TMP}/extlinux/extlinux.conf"
+    EXTLINUX_CONF="${LE_TMP}/extlinux/extlinux.conf"
+    cat << EOF > "${EXTLINUX_CONF}"
 LABEL ${DISTRO}
   LINUX /${KERNEL_NAME}
   FDT /${DTB}
   APPEND boot=UUID=${UUID_SYSTEM} disk=UUID=${UUID_STORAGE} quiet ${EXTRA_CMDLINE}
 EOF
+    if [ -n "${ENABLED_DTOVERLAYS}" ]; then
+      dtoverlays=($ENABLED_DTOVERLAYS)
+      echo "  FDTOVERLAYS" $(printf "/overlays/%s.dtbo" ${dtoverlays[@]}) >> ${EXTLINUX_CONF}
+    fi
 
     mcopy -s "${LE_TMP}/extlinux" ::
   fi
