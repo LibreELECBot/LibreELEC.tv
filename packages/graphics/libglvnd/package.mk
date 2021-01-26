@@ -12,7 +12,7 @@ PKG_LONGDESC="libglvnd is a vendor-neutral dispatch layer for arbitrating OpenGL
 PKG_TOOLCHAIN="autotools"
 
 if [ "${OPENGLES_SUPPORT}" = "no" ]; then
-  PKG_CONFIGURE_OPTS_TARGET+=" --disable-gles"
+  PKG_CONFIGURE_OPTS_TARGET+=" --disable-gles1 --disable-gles2"
 fi
 
 post_makeinstall_target() {
