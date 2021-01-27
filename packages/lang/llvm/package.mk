@@ -5,7 +5,6 @@
 PKG_NAME="llvm"
 PKG_VERSION="10.0.1"
 PKG_SHA256="c5d8e30b57cbded7128d78e5e8dad811bff97a8d471896812f57fa99ee82cdf3"
-PKG_ARCH="x86_64"
 PKG_LICENSE="Apache-2.0"
 PKG_SITE="http://llvm.org/"
 PKG_URL="https://github.com/llvm/llvm-project/releases/download/llvmorg-${PKG_VERSION}/llvm-${PKG_VERSION}.src.tar.xz"
@@ -29,7 +28,6 @@ PKG_CMAKE_OPTS_COMMON="-DCMAKE_BUILD_TYPE=MinSizeRel \
                        -DLLVM_ENABLE_SPHINX=OFF \
                        -DLLVM_ENABLE_OCAMLDOC=OFF \
                        -DLLVM_ENABLE_BINDINGS=OFF \
-                       -DLLVM_TARGETS_TO_BUILD="AMDGPU" \
                        -DLLVM_ENABLE_TERMINFO=OFF \
                        -DLLVM_ENABLE_ASSERTIONS=OFF \
                        -DLLVM_ENABLE_WERROR=OFF \
@@ -41,6 +39,23 @@ PKG_CMAKE_OPTS_COMMON="-DCMAKE_BUILD_TYPE=MinSizeRel \
                        -DLLVM_ENABLE_RTTI=ON \
                        -DLLVM_ENABLE_UNWIND_TABLES=OFF \
                        -DLLVM_ENABLE_Z3_SOLVER=OFF"
+
+if listcontains "${GRAPHIC_DRIVERS}" "swrast"; then
+
+  if [ ${TARGET_ARCH} = "x86_64" ]; then
+     PKG_CMAKE_OPTS_COMMON+=" -DLLVM_TARGETS_TO_BUILD="X86; AMDGPU""
+  fi
+
+  if [ ${TARGET_ARCH} = "arm" ]; then
+     PKG_CMAKE_OPTS_COMMON+=" -DLLVM_TARGETS_TO_BUILD="ARM""
+  fi
+
+  if [ ${TARGET_ARCH} = "arm64" ]; then
+     PKG_CMAKE_OPTS_COMMON+=" -DLLVM_TARGETS_TO_BUILD="AArch64""
+  fi
+else
+  PKG_CMAKE_OPTS_COMMON+=" -DLLVM_TARGETS_TO_BUILD="AMDGPU""
+fi
 
 pre_configure_host() {
   CXXFLAGS+=" -DLLVM_CONFIG_EXEC_PREFIX=\\\"${SYSROOT_PREFIX}/usr\\\""
