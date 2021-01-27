@@ -124,7 +124,7 @@ post_makeinstall_target() {
       sed -i -e "s|@NVIDIA_VERSION@|$(get_pkg_version xf86-video-nvidia)|g" ${INSTALL}/usr/lib/xorg/xorg-configure
       sed -i -e "s|@NVIDIA_LEGACY_VERSION@|$(get_pkg_version xf86-video-nvidia-legacy)|g" ${INSTALL}/usr/lib/xorg/xorg-configure
 
-  if [ ! "${OPENGL}" = "no" ]; then
+  if [ ! "${OPENGL}" = "no" -a ${INSTALLER_SUPPORT} = "yes" ]; then
     if [ -f ${INSTALL}/usr/lib/xorg/modules/extensions/libglx.so ]; then
       mv ${INSTALL}/usr/lib/xorg/modules/extensions/libglx.so \
          ${INSTALL}/usr/lib/xorg/modules/extensions/libglx_mesa.so # rename for cooperate with nvidia drivers

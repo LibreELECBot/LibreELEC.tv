@@ -16,7 +16,7 @@ if [ "${OPENGLES_SUPPORT}" = "no" ]; then
 fi
 
 post_makeinstall_target() {
-  if [ "${DISPLAYSERVER}" = "x11" ]; then
+  if [ "${DISPLAYSERVER}" = "x11" -a ${INSTALLER_SUPPORT} = "yes" ]; then
     # Remove old symlinks to GLVND libGL.so.1.7.0
     safe_remove              ${INSTALL}/usr/lib/libGL.so
     safe_remove              ${INSTALL}/usr/lib/libGL.so.1
