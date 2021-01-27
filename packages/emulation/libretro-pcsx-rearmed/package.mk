@@ -34,7 +34,7 @@ make_target() {
       make -f Makefile.libretro DYNAREC=lightrec platform=aarch64 GIT_VERSION=${PKG_VERSION}
       ;;
     arm)
-      make -f Makefile.libretro DYNAREC=ari64 GIT_VERSION=${PKG_VERSION}
+      make -f Makefile.libretro DYNAREC=ari64 GIT_VERSION=${PKG_VERSION} BUILTIN_GPU=unai
       ;;
     x86_64)
       make -f Makefile.libretro DYNAREC=lightrec GIT_VERSION=${PKG_VERSION}
