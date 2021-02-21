@@ -1,0 +1,64 @@
+--- a/xbmc/platform/linux/CPUInfoLinux.cpp
++++ b/xbmc/platform/linux/CPUInfoLinux.cpp
+@@ -72,6 +72,12 @@
+   CSysfsPath machinePath{"/sys/bus/soc/devices/soc0/machine"};
+   if (machinePath.Exists())
+     m_cpuHardware = machinePath.Get<std::string>();
++  else
++  {  
++    CSysfsPath modelPath{"/sys/firmware/devicetree/base/model"};
++    if (modelPath.Exists())
++      m_cpuHardware = modelPath.Get<std::string>();
++  }
+ 
+   CSysfsPath familyPath{"/sys/bus/soc/devices/soc0/family"};
+   if (familyPath.Exists())
+@@ -80,6 +86,20 @@
+   CSysfsPath socPath{"/sys/bus/soc/devices/soc0/soc_id"};
+   if (socPath.Exists())
+     m_cpuSoC += " " + socPath.Get<std::string>();
++
++  CSysfsPath serialPath{"/sys/bus/soc/devices/soc0/serial_number"};
++  if (serialPath.Exists())
++    m_cpuSerial = serialPath.Get<std::string>();
++  else
++  {  
++    CSysfsPath serial2Path{"/sys/firmware/devicetree/base/serial-number"};
++    if (serial2Path.Exists())
++      m_cpuSerial = serial2Path.Get<std::string>();
++  }
++
++  CSysfsPath revisionPath{"/sys/bus/soc/devices/soc0/revision"};
++  if (revisionPath.Exists())
++    m_cpuRevision = revisionPath.Get<std::string>();
+ 
+   const std::string freqStr{"/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"};
+   CSysfsPath freqPath{freqStr};
+@@ -240,13 +260,23 @@
+           m_cpuBogoMips = value.str();
+ 
+         if (line.find("Hardware") != std::string::npos)
+-          m_cpuHardware = value.str();
++        {
++          std::string cpuHardware = value.str();
++          if(cpuHardware.find(" (Device Tree)") != std::string::npos)
++            cpuHardware = cpuHardware.substr(0, cpuHardware.find(" (Device Tree)"));
++          if ((std::strlen(m_cpuHardware.c_str()) != 0) && (std::strlen(m_cpuSoC.c_str()) == 0))
++            m_cpuSoC = cpuHardware;
++          if (std::strlen(m_cpuHardware.c_str()) == 0)
++            m_cpuHardware = cpuHardware;
++        }
+ 
+         if (line.find("Serial") != std::string::npos)
+-          m_cpuSerial = value.str();
++          if (std::strlen(m_cpuSerial.c_str()) == 0)
++            m_cpuSerial = value.str();
+ 
+         if (line.find("Revision") != std::string::npos)
+-          m_cpuRevision = value.str();
++          if (std::strlen(m_cpuRevision.c_str()) == 0)
++            m_cpuRevision = value.str();
+       }
+     }
+   }
+
