@@ -17,7 +17,6 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-doc \
                            --disable-libdane \
                            --disable-padlock \
                            --disable-tests \
-                           --disable-tools \
                            --disable-valgrind-tests \
                            --enable-local-libopts \
                            --with-idn \
@@ -25,3 +24,12 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-doc \
                            --with-included-unistring \
                            --without-p11-kit \
                            --without-tpm"
+
+post_makeinstall_target() {
+  # only keep gnutls-cli
+  for i in ${INSTALL}/usr/bin/* ; do
+    [[ $i == */gnutls-cli ]] || rm -f $i
+  done
+
+  debug_strip ${INSTALL}/usr/bin/gnutls-cli
+}
