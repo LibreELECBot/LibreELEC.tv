@@ -3,7 +3,7 @@
 
 PKG_NAME="wireguard-tools"
 PKG_VERSION="1.0.20210223"
-PKG_SHA256="1f72da217044622d79e0bab57779e136a3df795e3761a3fc1dc0941a9055877c"
+PKG_SHA256="65b1c6a96137296603df2e7576e7e69d955c542b4af7f0389853e53f1b754f17"
 PKG_LICENSE="GPLv2"
 PKG_SITE="https://www.wireguard.com"
 PKG_URL="https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-v${PKG_VERSION}.tar.xz"
