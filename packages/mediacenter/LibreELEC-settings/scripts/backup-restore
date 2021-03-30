@@ -20,7 +20,8 @@ if [ -f "${BACKUP_FILE}" ]; then
   echo -e "Please do not reboot or turn off your @DISTRONAME@ device!\n"
 
   StartProgress spinner "Checking backup file... "
-    tar tf "${BACKUP_FILE}" &>/dev/null
+    CLOCK_YEAR=$(date +%Y)
+    RESTORE_FILE_LIST=$(tar tf "${BACKUP_FILE}" 2&>/dev/null)
 
   if [ $? -eq 0 ]; then
     StopProgress "OK"
@@ -33,6 +34,13 @@ if [ -f "${BACKUP_FILE}" ]; then
              /storage/.config &>/dev/null
       tar xf "${BACKUP_FILE}" -C / &>/dev/null
       rm -f "${BACKUP_FILE}" &>/dev/null
+
+      # XXX: system clock wasn't set before restore started; set new mtime
+      if [ "${CLOCK_YEAR}" -eq "1970" ]; then
+        for FILE in ${RESTORE_FILE_LIST}; do
+          touch "/${FILE}"
+        done
+      fi
       sync
       StopProgress "done!"
 
