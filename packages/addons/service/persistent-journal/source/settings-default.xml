@@ -1,0 +1,4 @@
+<settings version="2">
+    <setting id="JOURNAL_SIZE" default="true">30</setting>
+    <setting id="DISABLE_RATE_LIMIT" default="true">true</setting>
+</settings>

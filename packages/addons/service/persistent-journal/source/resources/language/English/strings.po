@@ -1,0 +1,17 @@
+# Kodi Media Center language file
+# Addon id: service.persistent.journal
+# Addon Provider: Team LibreELEC
+msgid ""
+msgstr ""
+
+msgctxt "#30000"
+msgid "Settings"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Journal size in MiBytes"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Disable rate limit"
+msgstr ""

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+    <category label="30000">
+        <setting id="JOURNAL_SIZE" type="slider" option="int" range="30,300" label="30001" default="30" />
+        <setting id="DISABLE_RATE_LIMIT" type="bool" label="30002" default="true" />
+    </category>
+</settings>

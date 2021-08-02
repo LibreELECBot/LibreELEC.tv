@@ -1,0 +1,14 @@
+[Unit]
+Description=Persistent /var/log/journal symlink
+DefaultDependencies=false
+After=var.mount systemd-tmpfiles.service
+Before=systemd-journald.service shutdown.target
+Conflicts=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStart=/storage/.kodi/addons/service.persistent-journal/bin/persistent-journal.config
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target
