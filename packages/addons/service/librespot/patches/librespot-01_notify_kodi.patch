@@ -1,14 +1,8 @@
-commit 10489ef0b9de4241eb8e007596f3d62616120545
-Author: awiouy <awiouy@gmail.com>
-Date:   Fri May 29 07:40:19 2020 +0200
-
-    Notify Kodi
-
 diff --git a/core/src/spotify_id.rs b/core/src/spotify_id.rs
-index 1a5fcd2..c670977 100644
+index e6e2bae..63bb73e 100644
 --- a/core/src/spotify_id.rs
 +++ b/core/src/spotify_id.rs
-@@ -8,6 +8,12 @@ pub enum SpotifyAudioType {
+@@ -10,6 +10,12 @@ pub enum SpotifyAudioType {
      NonPlayable,
  }
  
@@ -18,34 +12,34 @@ index 1a5fcd2..c670977 100644
 +    }
 +}
 +
- #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
- pub struct SpotifyId {
-     pub id: u128,
+ impl From<&str> for SpotifyAudioType {
+     fn from(v: &str) -> Self {
+         match v {
 diff --git a/playback/src/config.rs b/playback/src/config.rs
-index 9d65042..6d098db 100644
+index c442fae..e73857d 100644
 --- a/playback/src/config.rs
 +++ b/playback/src/config.rs
-@@ -31,6 +31,7 @@ pub struct PlayerConfig {
-     pub normalisation: bool,
-     pub normalisation_pregain: f32,
-     pub gapless: bool,
+@@ -138,6 +138,7 @@ pub struct PlayerConfig {
+     pub normalisation_attack: Duration,
+     pub normalisation_release: Duration,
+     pub normalisation_knee: f64,
 +    pub notify_kodi: bool,
- }
  
- impl Default for PlayerConfig {
-@@ -40,6 +41,7 @@ impl Default for PlayerConfig {
-             normalisation: false,
-             normalisation_pregain: 0.0,
-             gapless: true,
+     // pass function pointers so they can be lazily instantiated *after* spawning a thread
+     // (thereby circumventing Send bounds that they might not satisfy)
+@@ -159,6 +160,7 @@ impl Default for PlayerConfig {
+             normalisation_knee: 1.0,
+             passthrough: false,
+             ditherer: Some(mk_ditherer::<TriangularDitherer>),
 +            notify_kodi: false,
          }
      }
  }
 diff --git a/playback/src/player.rs b/playback/src/player.rs
-index 2dd8f3b..67b3b28 100644
+index a7ff916..5a31bcb 100644
 --- a/playback/src/player.rs
 +++ b/playback/src/player.rs
-@@ -1442,6 +1442,10 @@ impl PlayerInternal {
+@@ -1868,6 +1868,10 @@ impl PlayerInternal {
          }
      }
  
@@ -56,7 +50,7 @@ index 2dd8f3b..67b3b28 100644
      fn send_event(&mut self, event: PlayerEvent) {
          let mut index = 0;
          while index < self.event_senders.len() {
-@@ -1452,6 +1456,16 @@ impl PlayerInternal {
+@@ -1878,6 +1882,16 @@ impl PlayerInternal {
                  }
              }
          }
@@ -74,35 +68,35 @@ index 2dd8f3b..67b3b28 100644
  
      fn load_track(
 diff --git a/src/main.rs b/src/main.rs
-index 2efd62b..ecee2ff 100644
+index a3522e8..3a0a9d4 100644
 --- a/src/main.rs
 +++ b/src/main.rs
-@@ -171,6 +171,11 @@ fn setup(args: &[String]) -> Setup {
-             "Pregain (dB) applied by volume normalisation",
-             "PREGAIN",
-         )
-+        .optflag(
-+            "",
-+            "notify-kodi",
-+            "Notify Kodi",
-+        )
-         .optflag(
-             "",
-             "linear-volume",
-@@ -282,6 +287,8 @@ fn setup(args: &[String]) -> Setup {
-         )
-     };
+@@ -424,6 +424,11 @@ fn get_setup(args: &[String]) -> Setup {
+         "",
+         PASSTHROUGH,
+         "Pass a raw stream to the output. Only works with the pipe and subprocess backends.",
++    )
++    .optflag(
++        "",
++       "notify-kodi",
++        "Notify Kodi",
+     );
  
-+    let notify_kodi = matches.opt_present("notify-kodi");
+     let matches = match opts.parse(&args[1..]) {
+@@ -750,6 +755,8 @@ fn get_setup(args: &[String]) -> Setup {
+ 
+         let passthrough = matches.opt_present(PASSTHROUGH);
+ 
++        let notify_kodi = matches.opt_present("notify-kodi");
 +
-     let session_config = {
-         let device_id = device_id(&name);
- 
-@@ -325,6 +332,7 @@ fn setup(args: &[String]) -> Setup {
-                 .opt_str("normalisation-pregain")
-                 .map(|pregain| pregain.parse::<f32>().expect("Invalid pregain float value"))
-                 .unwrap_or(PlayerConfig::default().normalisation_pregain),
-+            notify_kodi: notify_kodi,
+         PlayerConfig {
+             bitrate,
+             gapless,
+@@ -763,6 +770,7 @@ fn get_setup(args: &[String]) -> Setup {
+             normalisation_release,
+             normalisation_knee,
+             ditherer,
++            notify_kodi,
          }
      };
  
