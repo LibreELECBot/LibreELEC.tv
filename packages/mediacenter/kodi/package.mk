@@ -8,7 +8,7 @@ PKG_SHA256="440f47e475dd8a48e0a6d41349e83b74890f3fbe8275d3e401d3c50f5b9ea09b"
 PKG_LICENSE="GPL"
 PKG_SITE="http://www.kodi.tv"
 PKG_URL="https://github.com/xbmc/xbmc/archive/${PKG_VERSION}.tar.gz"
-PKG_DEPENDS_TARGET="toolchain JsonSchemaBuilder:host TexturePacker:host Python3 zlib systemd lzo pcre swig:host libass curl fontconfig fribidi tinyxml libjpeg-turbo freetype libcdio taglib libxml2 libxslt rapidjson sqlite ffmpeg crossguid libdvdnav libhdhomerun libfmt lirc libfstrcmp flatbuffers:host flatbuffers libudfread spdlog"
+PKG_DEPENDS_TARGET="toolchain JsonSchemaBuilder:host TexturePacker:host Python3 zlib systemd lzo pcre swig:host libass curl fontconfig fribidi tinyxml libjpeg-turbo freetype libcdio taglib libxml2 libxslt rapidjson sqlite ffmpeg crossguid libdvdnav libhdhomerun libfmt lirc libfstrcmp flatbuffers:host flatbuffers libudfread spdlog libpng giflib"
 PKG_LONGDESC="A free and open source cross-platform media player."
 PKG_BUILD_FLAGS="+speed"
 
