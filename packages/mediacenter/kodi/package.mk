@@ -353,6 +353,9 @@ post_makeinstall_target() {
   python_compile ${INSTALL}/usr/lib/${PKG_PYTHON_VERSION}/site-packages/kodi
 
   debug_strip ${INSTALL}/usr/lib/kodi/kodi.bin
+
+  # Work around kodi-TexturePacker with wrong libc found in sysroot on incremental build
+  rm -f ${SYSROOT_PREFIX}/usr/bin/kodi-TexturePacker
 }
 
 post_install() {
