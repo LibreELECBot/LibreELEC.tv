@@ -98,7 +98,7 @@ fi
 echo "image: creating filesystem on part1..."
 OFFSET=$(( ${SYSTEM_PART_START} * 512 ))
 HEADS=4
-TRACKS=32
+TRACKS=$(( ${SYSTEM_SIZE} / ${HEADS} / 4 ))
 SECTORS=$(( ${SYSTEM_SIZE} * 1024 * 1024 / 512 / ${HEADS} / ${TRACKS} ))
 
 shopt -s expand_aliases  # enables alias expansion in script
