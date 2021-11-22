@@ -15,7 +15,6 @@ PKG_TOOLCHAIN="meson"
 get_graphicdrivers
 
 PKG_MESON_OPTS_TARGET="-Dlibkms=false \
-                       -Dnouveau=false \
                        -Domap=false \
                        -Dexynos=false \
                        -Dtegra=false \
@@ -46,6 +45,9 @@ listcontains "${GRAPHIC_DRIVERS}" "freedreno" &&
 
 listcontains "${GRAPHIC_DRIVERS}" "etnaviv" &&
   PKG_MESON_OPTS_TARGET+=" -Detnaviv=true" || PKG_MESON_OPTS_TARGET+=" -Detnaviv=false"
+
+listcontains "${GRAPHIC_DRIVERS}" "nouveau" &&
+  PKG_MESON_OPTS_TARGET+=" -Dnouveau=true" || PKG_MESON_OPTS_TARGET+=" -Dnouveau=false"
 
 post_makeinstall_target() {
   mkdir -p ${INSTALL}/usr/bin
