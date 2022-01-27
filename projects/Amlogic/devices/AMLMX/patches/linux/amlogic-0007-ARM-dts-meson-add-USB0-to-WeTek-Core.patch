@@ -1,0 +1,32 @@
+From d3287e247033cd40668090ccb9dbc4c6f2902c89 Mon Sep 17 00:00:00 2001
+From: Christian Hewitt <christianshewitt@gmail.com>
+Date: Sat, 29 Jan 2022 08:36:19 +0000
+Subject: [PATCH 7/8] ARM: dts: meson: add USB0 to WeTek Core
+
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm/boot/dts/meson8m2-wetek-core.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/meson8m2-wetek-core.dts b/arch/arm/boot/dts/meson8m2-wetek-core.dts
+index 5b038a5f27fb..ced011088caa 100644
+--- a/arch/arm/boot/dts/meson8m2-wetek-core.dts
++++ b/arch/arm/boot/dts/meson8m2-wetek-core.dts
+@@ -596,6 +596,14 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&usb0 {
++	status = "okay";
++};
++
++&usb0_phy {
++	status = "okay";
++};
++
+ &usb1 {
+ 	status = "okay";
+ };
+-- 
+2.17.1
+
