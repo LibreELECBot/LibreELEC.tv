@@ -18,5 +18,6 @@ mediatek/mt7610u.bin
 ath6k/AR6004/hw1.?/bdata.bin
 ath9k_htc/*
 brcm/*
+cypress/*
 rtl_bt/*
 rtlwifi/*
