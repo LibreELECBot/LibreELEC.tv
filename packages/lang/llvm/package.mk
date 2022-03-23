@@ -3,8 +3,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="llvm"
-PKG_VERSION="13.0.1"
-PKG_SHA256="ec6b80d82c384acad2dc192903a6cf2cdbaffb889b84bfb98da9d71e630fc834"
+PKG_VERSION="14.0.1"
+PKG_SHA256="5b89017dec2729311ab143402f03da1dea6d0c79dd5c701bc939cf8b34f01ec2"
 PKG_ARCH="x86_64"
 PKG_LICENSE="Apache-2.0"
 PKG_SITE="http://llvm.org/"
@@ -22,6 +22,7 @@ PKG_CMAKE_OPTS_COMMON="-DLLVM_INCLUDE_TOOLS=ON \
                        -DLLVM_INCLUDE_TESTS=OFF \
                        -DLLVM_INCLUDE_GO_TESTS=OFF \
                        -DLLVM_BUILD_BENCHMARKS=OFF \
+                       -DLLVM_INCLUDE_BENCHMARKS=OFF \
                        -DLLVM_BUILD_DOCS=OFF \
                        -DLLVM_INCLUDE_DOCS=OFF \
                        -DLLVM_ENABLE_DOXYGEN=OFF \
@@ -34,13 +35,18 @@ PKG_CMAKE_OPTS_COMMON="-DLLVM_INCLUDE_TOOLS=ON \
                        -DLLVM_ENABLE_WERROR=OFF \
                        -DLLVM_ENABLE_ZLIB=ON \
                        -DLLVM_ENABLE_LIBXML2=OFF \
-                       -DLLVM_BUILD_LLVM_DYLIB=ON \
-                       -DLLVM_LINK_LLVM_DYLIB=ON \
+                       -DBUILD_SHARED_LIBS=ON \
                        -DLLVM_OPTIMIZED_TABLEGEN=ON \
                        -DLLVM_APPEND_VC_REV=OFF \
                        -DLLVM_ENABLE_RTTI=ON \
                        -DLLVM_ENABLE_UNWIND_TABLES=OFF \
                        -DLLVM_ENABLE_Z3_SOLVER=OFF"
+
+post_unpack() {
+  # the cmake/Modules/*.cmake are appended to the tar archive file.
+  # move these into llvm-pkgver/cmake/modules directory.
+  mv -n ${PKG_BUILD}/Modules/*.cmake ${PKG_BUILD}/cmake/modules/
+}
 
 pre_configure_host() {
   CXXFLAGS+=" -DLLVM_CONFIG_EXEC_PREFIX=\\\"${SYSROOT_PREFIX}/usr\\\""
@@ -58,7 +64,8 @@ make_host() {
 }
 
 makeinstall_host() {
-  cp -a lib/libLLVM-*.so ${TOOLCHAIN}/lib
+  cp -a lib/libLLVM*.so ${TOOLCHAIN}/lib
+  cp -a lib/libLLVM*.so.14 ${TOOLCHAIN}/lib
   cp -a bin/llvm-config ${TOOLCHAIN}/bin/llvm-config-host
   cp -a bin/llvm-tblgen ${TOOLCHAIN}/bin
 }
