@@ -96,7 +96,7 @@ post_makeinstall_target() {
     mv ${INSTALL}/usr/share/i18n/charmaps ${INSTALL}/.noinstall
 
 # we are linking against ld.so, so symlink
-  ln -sf $(basename ${INSTALL}/usr/lib/ld-*.so) ${INSTALL}/usr/lib/ld.so
+  ln -sf $(basename ${INSTALL}/usr/lib/ld-*.so.*) ${INSTALL}/usr/lib/ld.so
 
 # cleanup
 # remove any programs we don't want/need, keeping only those we want
