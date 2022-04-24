@@ -127,6 +127,9 @@ rm -rf ${INSTALL}
 rm -rf ${STAMPS_INSTALL}
 mkdir -p ${INSTALL}
 
+rm -rf ${SYSTEM_DEBUG_SYMBOLS}
+mkdir -p ${SYSTEM_DEBUG_SYMBOLS}
+
 # Create base layout of LibreELEC read-only file system
 for directory in etc dev proc run sys tmp usr var flash storage; do
   mkdir -p ${INSTALL}/${directory}
@@ -320,6 +323,12 @@ if [ "${1}" = "release" -o "${1}" = "mkimage" -o "${1}" = "noobs" ]; then
   ( cd ${TARGET_IMG}
     sha256sum ${IMAGE_NAME}.tar > ${IMAGE_NAME}.tar.sha256
   )
+
+  # Create debug symbol tarball if the global option is enabled
+  if [ "${BUILD_DEBUG_TARBALL}" == "yes" -a "${BUILD_WITH_DEBUG_SYMBOLS}" == "yes" ]; then
+    echo -e "\nGenerating debug symbol tarball: ${IMAGE_NAME}_debug_symbols.tar.gz"
+    tar c -C ${BUILD}/image/system_debug_symbols . | pigz --best --force > ${TARGET_IMG}/${IMAGE_NAME}_debug_symbols.tar.gz
+  fi
 
   # Create image files if requested
   if [[ ( "${1}" = "noobs" || "${1}" = "mkimage" ) && -n "${BOOTLOADER}" ]]; then

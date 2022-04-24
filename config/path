@@ -43,6 +43,8 @@ if [ -z "$INSTALL" ]; then
   INSTALL=$BUILD/image/system
 fi
 
+SYSTEM_DEBUG_SYMBOLS=$BUILD/image/system_debug_symbols
+
 . config/sources
 
 MAKE="$TOOLCHAIN/bin/make"

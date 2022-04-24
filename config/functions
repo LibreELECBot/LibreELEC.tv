@@ -1173,6 +1173,7 @@ source_package() {
 
     if [[ "${1}" =~ :target$ || "${1//:/}" = "${1}" ]]; then
       PKG_INSTALL="$BUILD/install_pkg/${PKG_NAME}-${PKG_VERSION}"
+      PKG_INSTALL_DEBUG="$BUILD/install_debug_pkg/${PKG_NAME}-${PKG_VERSION}"
     elif [[ "${1}" =~ :init$ ]]; then
       PKG_INSTALL="$BUILD/install_init/${PKG_NAME}-${PKG_VERSION}"
     fi
