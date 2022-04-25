@@ -355,6 +355,14 @@ devices = \
       },
     },
   },
+  'RPi' : {
+    'RPi': {
+    },
+    'RPi2': {
+    },
+    'RPi4': {
+    },
+  },
   'Samsung': {
     'Exynos': {
       'odroid-xu4': {
