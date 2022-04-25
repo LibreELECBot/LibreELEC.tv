@@ -26,7 +26,7 @@ make_target() {
     exit 0
   fi
 
-  CRUST_CONFIG=$(${ROOT}/${SCRIPTS}/build_matrix ${PROJECT} ${DEVICE} ${UBOOT_SYSTEM} crust_config)
+  CRUST_CONFIG=$(${ROOT}/${SCRIPTS}/build_matrix ${PROJECT} ${DEVICE} boards ${UBOOT_SYSTEM} crust_config)
   if [ -z "${CRUST_CONFIG}" ]; then
     echo "crust_config must be set to build crust firmware"
     echo "see './scripts/build_matrix' for more information"

@@ -15,7 +15,7 @@ if [ "${BOOTLOADER}" = "u-boot" -a -n "${DEVICE}" ]; then
   if [ -z "${UBOOT_SYSTEM}" ]; then
     ${SCRIPTS}/build_matrix ${PROJECT} ${DEVICE} >/dev/null
   else
-    ${SCRIPTS}/build_matrix ${PROJECT} ${DEVICE} ${UBOOT_SYSTEM} dtb >/dev/null
+    ${SCRIPTS}/build_matrix ${PROJECT} ${DEVICE} boards ${UBOOT_SYSTEM} dtb >/dev/null
   fi
 fi
 
