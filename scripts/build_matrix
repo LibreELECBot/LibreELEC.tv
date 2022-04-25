@@ -229,6 +229,18 @@ devices = \
       },
     },
   },
+  'Generic': {
+    'gbm': {
+    },
+    'Generic': {
+    },
+    'Generic-legacy': {
+    },
+    'wayland': {
+    },
+    'x11': {
+    },
+  },
   'NXP': {
     'iMX6': {
       'cubox': {
