@@ -105,6 +105,30 @@ pre_make_target() {
 
   cp ${PKG_KERNEL_CFG_FILE} ${PKG_BUILD}/.config
 
+  # can we do better than hardcode gcc?
+  CC_VERSION_TEXT="$(${TARGET_KERNEL_PREFIX}gcc --version 2>/dev/null | head -n 1)"
+  CONFIG_CC_VERSION_TEXT="$(sed -n 's/CONFIG_CC_VERSION_TEXT="\(.*\)"/\1/p' ${PKG_BUILD}/.config)"
+
+  # we don't want to die for the version mismatch, just throw a warning
+  if [ "${CONFIG_CC_VERSION_TEXT}" != "${CC_VERSION_TEXT}" ]; then
+    print_color CLR_WARNING_DIM "'${CONFIG_CC_VERSION_TEXT}' != '${CC_VERSION_TEXT}'\n"
+    print_color CLR_INFO "===================================================================================================\n"
+    print_color CLR_INFO "Please use the provided tools when adjusting the kernel config\n"
+    print_color CLR_INFO "For example: PROJECT=${PROJECT} ARCH=${ARCH} DEVICE=${DEVICE} ./tools/adjust_kernel_config\n"
+    print_color CLR_INFO "===================================================================================================\n"
+    print_color CLR_WARNING_DIM "WARNING: CONFIG_CC_VERSION_TEXT doesn't match compiler version\n"
+  fi
+
+  # we want to die if the compiler isn't the same as ours
+  if [ -z "$(echo "${CONFIG_CC_VERSION_TEXT}" | grep "$(basename ${TARGET_KERNEL_PREFIX}gcc)")" ]; then
+    print_color CLR_ERROR "'${CONFIG_CC_VERSION_TEXT%% *}' != '$(basename ${TARGET_KERNEL_PREFIX}gcc)'\n"
+    print_color CLR_INFO "===================================================================================================\n"
+    print_color CLR_INFO "Please use the provided tools when adjusting the kernel config\n"
+    print_color CLR_INFO "For example: PROJECT=${PROJECT} ARCH=${ARCH} DEVICE=${DEVICE} ./tools/adjust_kernel_config\n"
+    print_color CLR_INFO "===================================================================================================\n"
+    die "$(print_color CLR_ERROR "FAILURE: CONFIG_CC_VERSION_TEXT doesn't contain $(basename ${TARGET_KERNEL_PREFIX}gcc)")"
+  fi
+
   # set initramfs source
   ${PKG_BUILD}/scripts/config --set-str CONFIG_INITRAMFS_SOURCE "$(kernel_initramfs_confs) ${BUILD}/initramfs"
 
