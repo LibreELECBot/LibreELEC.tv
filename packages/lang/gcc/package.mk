@@ -13,6 +13,7 @@ PKG_DEPENDS_TARGET="toolchain"
 PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host zstd:host glibc"
 PKG_DEPENDS_INIT="toolchain"
 PKG_LONGDESC="This package contains the GNU Compiler Collection."
+PKG_BUILD_FLAGS="-rmwork"
 
 case ${TARGET_ARCH} in
   arm|riscv64)

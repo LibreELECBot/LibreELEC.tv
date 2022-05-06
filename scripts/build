@@ -461,6 +461,11 @@ for i in $(find "${SYSROOT_PREFIX}" -type l 2>/dev/null); do
   fi
 done
 
+if [ "${RM_WORK}" == "yes" -a -n "${PKG_REAL_BUILD}" -a -d "${PKG_REAL_BUILD}" ] && flag_enabled "rmwork" "yes"; then
+  print_color CLR_CLEAN "[RM_WORK] removing build directory: ${PKG_REAL_BUILD}\n"
+  rm -rf "${PKG_REAL_BUILD}"
+fi
+
 # Transfer the new sysroot content to the shared sysroot
 acquire_update_lock sysroot
 

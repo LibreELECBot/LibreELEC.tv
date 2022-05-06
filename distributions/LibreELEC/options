@@ -230,3 +230,8 @@
 # Space separated list is supported,
 # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
   ADDITIONAL_PACKAGES=""
+
+# Remove build directories while building to help reduce space requirements (no /yes)
+# This only works for packages that are built in a separate directory from the source (most packages).
+# Defaults to off as this may cause unexpected build errors. Be warned!
+  RM_WORK="no"
