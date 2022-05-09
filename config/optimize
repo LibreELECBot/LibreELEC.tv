@@ -32,7 +32,7 @@ LDFLAGS_OPTIM_GOLD="-fuse-ld=gold"
 
 # debug symbols
 if [ "${BUILD_WITH_DEBUG_SYMBOLS}" == "yes" ]; then
-  CFLAGS_DEBUG_FLAG="-g -ggdb"
+  CFLAGS_DEBUG_FLAG="-g -feliminate-unused-debug-types"
 fi
 
 # default compiler optimization
