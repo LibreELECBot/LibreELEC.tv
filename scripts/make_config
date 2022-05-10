@@ -1,0 +1,44 @@
+#!/bin/bash
+
+if [ -z "${1}" -a "${1}" != "--help" -a "${1}" != "-h" ]; then
+  echo -e "A kconfig command must be specified:\n"
+  echo -e "${0} menuconfig"
+  exit
+fi
+
+CONFIG_COMMAND="${1}"
+
+# include required variables
+. config/required_options
+
+export KCONFIG_CONFIG="${DISTRO}-${PROJECT}-${DEVICE}-${TARGET_ARCH}.config"
+
+# read DISTRO options
+if [ -f "${DISTRO_DIR}/${DISTRO}/options" ]; then
+  cat "${DISTRO_DIR}/${DISTRO}/options" > "${ROOT}/${KCONFIG_CONFIG}"
+fi
+
+# read PROJECT options
+if [ -f "${PROJECT_DIR}/${PROJECT}/options" ]; then
+  cat "${PROJECT_DIR}/${PROJECT}/options" >> "${ROOT}/${KCONFIG_CONFIG}"
+fi
+
+# read DEVICE options
+if [ -f "${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/options" ]; then
+  cat "${PROJECT_DIR}/${PROJECT}/devices/${DEVICE}/options" >> "${ROOT}/${KCONFIG_CONFIG}"
+fi
+
+# read local persistent options from $ROOT if available
+if [ -f "${ROOT}/.libreelec/options" ]; then
+  cat "${ROOT}/.libreelec/options" >> "${ROOT}/${KCONFIG_CONFIG}"
+fi
+
+# read global persistent options from $HOME if available
+if [ -f "${HOME}/.libreelec/options" ]; then
+  cat "${HOME}/.libreelec/options" >> "${ROOT}/${KCONFIG_CONFIG}"
+fi
+
+# hack until we change to CONFIG_ prefix (or maybe something else)
+export CONFIG_=""
+
+${CONFIG_COMMAND}
