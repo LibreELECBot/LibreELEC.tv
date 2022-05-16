@@ -36,6 +36,4 @@ pre_configure_target() {
 post_makeinstall_target() {
   rm -fr ${INSTALL}/etc
   rm -fr ${INSTALL}/storage
-
-  debug_strip ${INSTALL}/usr/bin
 }

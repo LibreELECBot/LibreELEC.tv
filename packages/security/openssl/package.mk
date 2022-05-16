@@ -85,8 +85,6 @@ post_makeinstall_target() {
   rm -rf ${INSTALL}/etc/ssl/misc
   rm -rf ${INSTALL}/usr/bin/c_rehash
 
-  debug_strip ${INSTALL}/usr/bin/openssl
-
   # cert from https://curl.haxx.se/docs/caextract.html
   mkdir -p ${INSTALL}/etc/ssl
     cp ${PKG_DIR}/cert/cacert.pem ${INSTALL}/etc/ssl/cacert.pem.system

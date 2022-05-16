@@ -44,7 +44,7 @@ if [ -f ${STAMP} ]; then
   . ${STAMP}
   PKG_DEEPHASH=$(calculate_stamp)
 
-  if [ "${PKG_DEEPHASH}" = "${STAMP_PKG_DEEPHASH}" -a "${BUILD_WITH_DEBUG}" = "${STAMP_BUILD_WITH_DEBUG}" ]; then
+  if [ "${PKG_DEEPHASH}" = "${STAMP_PKG_DEEPHASH}" ]; then
     # stamp matched: already built, do nothing
     pkg_lock_status "UNLOCK" "${PKG_NAME}:${TARGET}" "build" "already built"
     exit 0
@@ -73,7 +73,7 @@ fi
 # virtual packages are not built as they only contain dependencies, so dont go further here
 if [ "${PKG_SECTION}" = "virtual" ]; then
   PKG_DEEPHASH=$(calculate_stamp)
-  for i in PKG_NAME PKG_DEEPHASH BUILD_WITH_DEBUG; do
+  for i in PKG_NAME PKG_DEEPHASH; do
     echo "STAMP_${i}=\"${!i}\"" >> ${STAMP}
   done
 
@@ -82,11 +82,7 @@ if [ "${PKG_SECTION}" = "virtual" ]; then
 fi
 
 # build this package
-if [ "${BUILD_WITH_DEBUG}" = "yes" ]; then
-  build_msg "CLR_BUILD" "BUILD" "${PKG_NAME} $(print_color "CLR_TARGET" "(${TARGET})") [DEBUG]" "indent"
-else
-  build_msg "CLR_BUILD" "BUILD" "${PKG_NAME} $(print_color "CLR_TARGET" "(${TARGET})")" "indent"
-fi
+build_msg "CLR_BUILD" "BUILD" "${PKG_NAME} $(print_color "CLR_TARGET" "(${TARGET})")" "indent"
 
 # setup configure scripts
 PKG_CONFIGURE_SCRIPT="${PKG_CONFIGURE_SCRIPT:-${PKG_BUILD}/configure}"
@@ -122,16 +118,21 @@ setup_toolchain ${TARGET} ${PKG_TOOLCHAIN}
 
 # configure install directory
 [ -n "${PKG_INSTALL}" ] && INSTALL="${PKG_INSTALL}" || unset INSTALL
+[ -n "${PKG_INSTALL_DEBUG}" ] && INSTALL_DEBUG="${PKG_INSTALL_DEBUG}" || unset INSTALL_DEBUG
 
 # remove previous install files
 if [ -n "${INSTALL}" -a -d "${INSTALL}" ]; then
   rm -rf "${INSTALL}"
 fi
 
+if [ -n "${INSTALL_DEBUG}" -a -d "${INSTALL_DEBUG}" ]; then
+  rm -rf "${INSTALL_DEBUG}"
+fi
+
 # configure debug build defaults
-if [ "${BUILD_WITH_DEBUG}" = "yes" ]; then
-  CMAKE_BUILD_TYPE="Debug"
-  MESON_BUILD_TYPE="debug"
+if [ "${BUILD_WITH_DEBUG_SYMBOLS}" = "yes" ]; then
+  CMAKE_BUILD_TYPE="RelWithDebInfo"
+  MESON_BUILD_TYPE="debugoptimized"
 else
   CMAKE_BUILD_TYPE="MinSizeRel"
   MESON_BUILD_TYPE="plain"
@@ -165,10 +166,6 @@ TARGET_MESON_OPTS="--prefix=/usr \
                    --libexecdir=/usr/lib \
                    --localstatedir=/var \
                    --buildtype=${MESON_BUILD_TYPE}"
-if [ ${BUILD_WITH_DEBUG} != yes ] && flag_enabled "strip" "yes"; then
-  TARGET_MESON_OPTS+=" -Dstrip=true"
-fi
-
 
 # configure HOST build defaults
 HOST_CONFIGURE_OPTS="--host=${HOST_NAME} \
@@ -493,19 +490,43 @@ if [ "${TARGET}" = "target" -o "${TARGET}" = "init" ]; then
 
     python_fix_abi "${INSTALL}"
 
-    if [ ! "${BUILD_WITH_DEBUG}" = "yes" ]; then
-      ${STRIP} $(find ${INSTALL} \
-        -type f -name "*.so*" \
-        ! -name "ld-*.so" \
-        ! -name "libc-*.so" \
-        ! -name "libpthread-*.so" \
-        ! -name "libthread_db-*so" \
-        2>/dev/null) 2>/dev/null || :
-        if [ "${TARGET}" = "init" ]; then
-          ${STRIP} $(find ${INSTALL} -type f -name "*.so*" 2>/dev/null) 2>/dev/null || :
-        fi
-        ${STRIP} $(find ${INSTALL} ! -name "*.so*" ! -name "*.ko" \
-          -type f -executable 2>/dev/null) 2>/dev/null || :
+    if [ -d "${INSTALL}" ]; then
+
+      if [ "${TARGET}" = "target" ]; then
+
+        FILES_TO_STRIP="$(find ${INSTALL} \
+          -type f -executable \
+          ! -name "*.ko" \
+          ! -name "ld.so" \
+          ! -name "ld-*.so" \
+          ! -name "libc-*.so" \
+          ! -name "libpthread-*.so" \
+          ! -name "libthread_db-*so" \
+          2>/dev/null)"
+
+        for FILE_FULL_PATH in ${FILES_TO_STRIP}; do
+          [ -z "$(file -b --mime-type ${FILE_FULL_PATH} | grep 'application/')" ] && continue
+
+          FILE_PREFIX="$(dirname ${FILE_FULL_PATH/${INSTALL}/})"
+          FILE_NAME="$(basename ${FILE_FULL_PATH})"
+          FILE_FULL_DEBUG_PATH="${INSTALL_DEBUG}${FILE_PREFIX}/${FILE_NAME}.debug"
+
+          if [ "${BUILD_WITH_DEBUG_SYMBOLS}" == "yes" ]; then
+            mkdir -p ${INSTALL_DEBUG}${FILE_PREFIX}
+
+            ${OBJCOPY} --only-keep-debug ${FILE_FULL_PATH} ${FILE_FULL_DEBUG_PATH}
+            ${STRIP} ${FILE_FULL_PATH}
+            ${OBJCOPY} --add-gnu-debuglink=${FILE_FULL_DEBUG_PATH} ${FILE_FULL_PATH}
+          else
+            ${STRIP} ${FILE_FULL_PATH}
+          fi
+        done
+      fi
+
+      if [ "${TARGET}" = "init" ]; then
+        # strip everything for init (executables and libraries)
+        ${STRIP} $(find ${INSTALL} -type f -executable 2>/dev/null) 2>/dev/null || :
+      fi
     fi
   fi
 fi
@@ -517,7 +538,7 @@ fi
 cd ${ROOT}
 
 PKG_DEEPHASH=$(calculate_stamp)
-for i in PKG_NAME PKG_DEEPHASH BUILD_WITH_DEBUG; do
+for i in PKG_NAME PKG_DEEPHASH; do
   echo "STAMP_${i}=\"${!i}\"" >> ${STAMP}
 done
 

@@ -233,3 +233,10 @@
 # Space separated list is supported,
 # e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
   ADDITIONAL_PACKAGES=""
+
+# Build with debug symbols. Debug symbols will be split from all target binaries.
+# To install debug symbols use the DEBUG= environment variable.
+  BUILD_WITH_DEBUG_SYMBOLS="yes"
+
+# Generate a debug symbol tarball
+  BUILD_DEBUG_TARBALL="yes"

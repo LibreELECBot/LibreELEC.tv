@@ -167,6 +167,22 @@ if [ -n "${PKG_INSTALL}" -a -d "${PKG_INSTALL}" ]; then
     -cf - . | tar -C "${INSTALL}" -xf -
 fi
 
+if [ -n "${PKG_INSTALL_DEBUG}" -a -d "${PKG_INSTALL_DEBUG}" ]; then
+  tar \
+    -C "${PKG_INSTALL_DEBUG}" \
+    --exclude=./.* \
+    -cf - . | tar -C "${SYSTEM_DEBUG_SYMBOLS}" -xf -
+
+  if build_with_debug; then
+    mkdir -p ${INSTALL}/usr/lib/debug
+
+    tar \
+      -C "${PKG_INSTALL_DEBUG}" \
+      --exclude=./.* \
+      -cf - . | tar -C "${INSTALL}/usr/lib/debug" -xf -
+  fi
+fi
+
 if [ "${TARGET}" = "target" ] ; then
   pkg_call_exists_opt post_install && pkg_call
 fi
