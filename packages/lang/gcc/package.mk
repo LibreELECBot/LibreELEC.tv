@@ -78,6 +78,10 @@ PKG_CONFIGURE_OPTS_HOST="${GCC_COMMON_CONFIGURE_OPTS} \
                          --enable-clocale=gnu \
                          ${TARGET_ARCH_GCC_OPTS}"
 
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_CONFIGURE_OPTS_HOST+=" --disable-libsanitizer"
+fi
+
 pre_configure_host() {
   unset CPP
 }
