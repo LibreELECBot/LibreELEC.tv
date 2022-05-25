@@ -22,6 +22,14 @@ PKG_MAKE_OPTS_TARGET="free top/top proc/libprocps.la proc/libprocps.pc"
 
 PKG_MAKEINSTALL_OPTS_TARGET="install-libLTLIBRARIES install-pkgconfigDATA install-proc_libprocps_la_includeHEADERS"
 
+
+pre_make_target() {
+  if [ "${LIBC_VERSION}" = "musl" ]; then
+    sed -i '1i#include <utmp.h>' ${PKG_BUILD}/w.c
+    sed -i '1i#include <langinfo.h>' ${PKG_BUILD}/proc/escape.c
+  fi
+}
+
 makeinstall_target() {
   mkdir -p ${INSTALL}/usr/bin
     cp -P ${PKG_BUILD}/.${TARGET_NAME}/free ${INSTALL}/usr/bin
