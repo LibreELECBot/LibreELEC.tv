@@ -40,6 +40,12 @@ PKG_CONFIGURE_OPTS_TARGET="utrace_cv_cc_biarch=false \
                            --without-bzlib \
                            --without-lzma"
 
+pre_configure_target() {
+  if [ "${LIBC_VERSION}" = "musl" ]; then
+    CFLAGS+=" -Wno-error=null-dereference -DFNM_EXTMATCH=0"
+  fi
+}
+
 post_makeinstall_target() {
   # don't install progs into sysroot
   rm -fr ${SYSROOT_PREFIX}/usr/bin
