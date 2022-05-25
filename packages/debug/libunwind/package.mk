@@ -13,6 +13,7 @@ PKG_BUILD_FLAGS="+pic"
 PKG_TOOLCHAIN="autotools"
 
 PKG_CONFIGURE_OPTS_TARGET="--enable-static \
+                           --enable-cxx-exceptions \
                            --disable-shared \
                            --disable-minidebuginfo \
                            --disable-documentation \
