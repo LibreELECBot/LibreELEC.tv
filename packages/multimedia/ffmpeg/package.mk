@@ -20,8 +20,8 @@ case "${PROJECT}" in
     PKG_VERSION="4.4-N-Alpha1"
     PKG_SHA256="eb396f46ef7c5ac01b67818d0f2c0516fd4ab32aa9065a9ffa71eebede67ff20"
     PKG_URL="https://github.com/xbmc/FFmpeg/archive/${PKG_VERSION}.tar.gz"
-    PKG_FFMPEG_RPI="--disable-mmal --disable-rpi --enable-sand"
-    PKG_PATCH_DIRS="libreelec rpi"
+    #PKG_FFMPEG_RPI="--disable-mmal --disable-rpi --enable-sand"
+    PKG_PATCH_DIRS="libreelec" #rpi"
     ;;
   *)
     PKG_VERSION="4.4-N-Alpha1"
@@ -56,7 +56,7 @@ if [ "${V4L2_SUPPORT}" = "yes" ]; then
   if [ "${PKG_V4L2_REQUEST}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" systemd"
     PKG_NEED_UNPACK+=" $(get_pkg_directory systemd)"
-    PKG_FFMPEG_V4L2+=" --enable-libudev --enable-v4l2-request"
+    #PKG_FFMPEG_V4L2+=" --enable-libudev --enable-v4l2-request"
   else
     PKG_FFMPEG_V4L2+=" --disable-libudev --disable-v4l2-request"
   fi
