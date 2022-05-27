@@ -12,6 +12,6 @@ PKG_DEPENDS_TARGET="toolchain"
 PKG_LONGDESC="libdvdread is a library which provides a simple foundation for reading DVDs."
 PKG_TOOLCHAIN="manual"
 
-if [ "${KODI_DVDCSS_SUPPORT}" = yes ]; then
+if [ "${KODI_DVDCSS_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" libdvdcss"
 fi

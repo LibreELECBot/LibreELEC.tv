@@ -16,7 +16,7 @@ PKG_BUILD_FLAGS="-gold"
 configure_package() {
   #PKG_WAF_VERBOSE="-v"
 
-  if [ "${AVAHI_DAEMON}" = yes ]; then
+  if [ "${AVAHI_DAEMON}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" avahi"
     SMB_AVAHI="--enable-avahi"
   else

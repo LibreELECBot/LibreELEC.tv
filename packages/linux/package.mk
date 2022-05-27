@@ -112,22 +112,22 @@ pre_make_target() {
   ${PKG_BUILD}/scripts/config --set-str CONFIG_DEFAULT_HOSTNAME "${DISTRONAME}"
 
   # disable swap support if not enabled
-  if [ ! "${SWAP_SUPPORT}" = yes ]; then
+  if [ ! "${SWAP_SUPPORT}" = "yes" ]; then
     ${PKG_BUILD}/scripts/config --disable CONFIG_SWAP
   fi
 
   # disable nfs support if not enabled
-  if [ ! "${NFS_SUPPORT}" = yes ]; then
+  if [ ! "${NFS_SUPPORT}" = "yes" ]; then
     ${PKG_BUILD}/scripts/config --disable CONFIG_NFS_FS
   fi
 
   # disable cifs support if not enabled
-  if [ ! "${SAMBA_SUPPORT}" = yes ]; then
+  if [ ! "${SAMBA_SUPPORT}" = "yes" ]; then
     ${PKG_BUILD}/scripts/config --disable CONFIG_CIFS
   fi
 
   # disable iscsi support if not enabled
-  if [ ! "${ISCSI_SUPPORT}" = yes ]; then
+  if [ ! "${ISCSI_SUPPORT}" = "yes" ]; then
     ${PKG_BUILD}/scripts/config --disable CONFIG_SCSI_ISCSI_ATTRS
     ${PKG_BUILD}/scripts/config --disable CONFIG_ISCSI_TCP
     ${PKG_BUILD}/scripts/config --disable CONFIG_ISCSI_BOOT_SYSFS
@@ -142,7 +142,7 @@ pre_make_target() {
   fi
 
   # disable wireguard support if not enabled
-  if [ ! "${WIREGUARD_SUPPORT}" = yes ]; then
+  if [ ! "${WIREGUARD_SUPPORT}" = "yes" ]; then
     ${PKG_BUILD}/scripts/config --disable CONFIG_WIREGUARD
   fi
 

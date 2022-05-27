@@ -77,7 +77,7 @@ else
                          -DVIDEO_X11=OFF"
 fi
 
-if [ ! "${OPENGL}" = "no" ]; then
+if [ "${OPENGL}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" ${OPENGL}"
 
   PKG_CMAKE_OPTS_TARGET="${PKG_CMAKE_OPTS_TARGET} \
@@ -89,7 +89,7 @@ else
                          -DVIDEO_OPENGLES=ON"
 fi
 
-if [ "${PULSEAUDIO_SUPPORT}" = yes ]; then
+if [ "${PULSEAUDIO_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" pulseaudio"
 
   PKG_CMAKE_OPTS_TARGET="${PKG_CMAKE_OPTS_TARGET} \
