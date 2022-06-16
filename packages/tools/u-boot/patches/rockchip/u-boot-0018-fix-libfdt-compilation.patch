@@ -1,0 +1,12 @@
+diff --git a/include/libfdt_env.h b/include/libfdt_env.h
+index 273b5d30f8..bbb6d6a759 100644
+--- a/include/libfdt_env.h
++++ b/include/libfdt_env.h
+@@ -9,6 +9,7 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
+ 
++#define LIBFDT_ENV_H
+ #include "compiler.h"
+ #include "linux/types.h"
+ 
