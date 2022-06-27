@@ -14,7 +14,7 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform p8-platform systemd"
 PKG_SECTION=""
 PKG_SHORTDESC="peripheral.joystick: Joystick support in Kodi"
 PKG_LONGDESC="peripheral.joystick provides joystick support and button mapping"
-PKG_BUILD_FLAGS="+lto"
+PKG_BUILD_FLAGS="+lto -mold"
 
 PKG_IS_ADDON="embedded"
 PKG_ADDON_TYPE="kodi.peripheral"

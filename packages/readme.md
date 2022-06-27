@@ -127,6 +127,7 @@ Set the variable `PKG_BUILD_FLAGS` in the `package.mk` to enable/disable the sin
 | lto-fat  | disabled | target, init      | same as `lto` but compile fat LTO objects (bytecode plus optimized assembly). This increases compile time but can be useful to create static libraries suitable both for LTO and non-LTO linking |
 | lto-off  | disabled | target, init      | explicitly disable LTO in the compiler and linker |
 | gold     | enabled by `GOLD_SUPPORT` | target, init | do not use GOLD-Llinker (can only disable) |
+| mold     | enabled by `MOLD_SUPPORT` | target, init | do not use the MOLD linker (can only disable) |
 | parallel | enabled  | all | `make` or `ninja` builds with multiple threads/processes (or not) |
 | strip    | enabled  | target | strips executables (or not) |
 | sysroot  | enabled  | target | installs the package to the sysroot folder (or not) |

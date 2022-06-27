@@ -30,6 +30,9 @@ LDFLAGS_OPTIM_LTO_COMMON="-fuse-linker-plugin"
 # gold flags
 LDFLAGS_OPTIM_GOLD="-fuse-ld=gold"
 
+# mold flags (todo: update after gcc 12.1.0)"
+LDFLAGS_OPTIM_MOLD="-B${TOOLCHAIN}/libexec/mold"
+
 # default compiler optimization
 CFLAGS_OPTIM_DEFAULT="-O2 -fomit-frame-pointer -DNDEBUG"
 CXXFLAGS_OPTIM_DEFAULT="$CFLAGS_OPTIM_DEFAULT"

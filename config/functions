@@ -284,6 +284,12 @@ setup_toolchain() {
     have_gold="yes"
   fi
 
+  # mold flag
+  if flag_enabled "mold" "${MOLD_SUPPORT}" "only-disable"; then
+    TARGET_LDFLAGS+=" ${LDFLAGS_OPTIM_MOLD}"
+    have_mold="yes"
+  fi
+
   # compiler optimization, descending priority: speed, size, default
   if [ "${BUILD_WITH_DEBUG}" = "yes" ]; then
     if [ "${SPLIT_DEBUG_INFO}" = "yes" -a "${have_gold}" = "yes" ]; then

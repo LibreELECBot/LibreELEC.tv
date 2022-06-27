@@ -10,7 +10,7 @@ PKG_SITE="http://www.remotesensing.org/libtiff/"
 PKG_URL="http://download.osgeo.org/libtiff/${PKG_NAME}-${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libjpeg-turbo zlib"
 PKG_LONGDESC="libtiff is a library for reading and writing TIFF files."
-PKG_BUILD_FLAGS="+pic -gold"
+PKG_BUILD_FLAGS="+pic -gold -mold"
 
 PKG_CMAKE_OPTS_TARGET="-DBUILD_SHARED_LIBS=OFF \
                        -Dtiff-tools=OFF \

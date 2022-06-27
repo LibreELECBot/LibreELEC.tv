@@ -11,6 +11,7 @@ PKG_URL="https://github.com/python-pillow/${PKG_NAME}/archive/${PKG_VERSION}.tar
 PKG_DEPENDS_TARGET="toolchain Python3 distutilscross:host zlib freetype libjpeg-turbo tiff"
 PKG_LONGDESC="The Python Imaging Library adds image processing capabilities to your Python interpreter."
 PKG_TOOLCHAIN="manual"
+PKG_BUILD_FLAGS="-mold"
 
 pre_make_target() {
   export PYTHONXCPREFIX="${SYSROOT_PREFIX}/usr"
