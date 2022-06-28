@@ -171,6 +171,33 @@ pre_make_target() {
 
   kernel_make oldconfig
 
+  KERNEL_CONFIG_DIFF="$(${PKG_BUILD}/scripts/diffconfig ${PKG_KERNEL_CFG_FILE} .config)"
+
+  KERNEL_CONFIG_DIFF_WHITELIST="CONFIG_INITRAMFS_SOURCE \
+                                CONFIG_DEFAULT_HOSTNAME \
+                                CONFIG_SWAP \
+                                CONFIG_NFS_FS \
+                                CONFIG_CIFS \
+                                CONFIG_SCSI_ISCSI_ATTRS \
+                                CONFIG_ISCSI_TCP \
+                                CONFIG_ISCSI_BOOT_SYSFS \
+                                CONFIG_ISCSI_IBFT_FIND \
+                                CONFIG_ISCSI_IBFT \
+                                CONFIG_DRM_LIMA \
+                                CONFIG_DRM_PANFROST \
+                                CONFIG_WIREGUARD \
+                                CONFIG_EXTRA_FIRMWARE \
+                                CONFIG_EXTRA_FIRMWARE_DIR \
+                               "
+
+  for CONFIG_OPTION in ${KERNEL_CONFIG_DIFF_WHITELIST}; do
+    KERNEL_CONFIG_DIFF="$(echo "${KERNEL_CONFIG_DIFF}" | sed "/${CONFIG_OPTION/CONFIG_}/d")"
+  done
+
+  if [ -n "${KERNEL_CONFIG_DIFF}" ]; then
+    print_color CLR_WARNING "LINUX: kernel options diff detected: \n\n${KERNEL_CONFIG_DIFF}\n\nPlease run ./tools/check_kernel_config\n"
+  fi
+
   if [ -f "${DISTRO_DIR}/${DISTRO}/kernel_options" ]; then
     while read OPTION; do
       [ -z "${OPTION}" -o -n "$(echo "${OPTION}" | grep '^#')" ] && continue
