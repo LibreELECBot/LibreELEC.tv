@@ -114,7 +114,7 @@ post_makeinstall_target() {
   mkdir -p ${INSTALL}/usr/share/i18n/charmaps
     cp -PR ${INSTALL}/.noinstall/charmaps/UTF-8.gz ${INSTALL}/usr/share/i18n/charmaps
 
-  if [ ! "${GLIBC_LOCALES}" = yes ]; then
+  if [ ! "${GLIBC_LOCALES}" = "yes" ]; then
     safe_remove ${INSTALL}/usr/share/i18n/locales
 
     mkdir -p ${INSTALL}/usr/share/i18n/locales

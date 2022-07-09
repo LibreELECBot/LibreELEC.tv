@@ -1,0 +1,558 @@
+menu "Basic Options"
+
+config DISTRO
+	string "Distro to use"
+	option env="DISTRO"
+	default "LibreELEC"
+
+config PROJECT
+	string "Project to build"
+	option env="PROJECT"
+	default "Generic"
+
+config DEVICE
+	string "Device to build"
+	option env="DEVICE"
+	default "Generic" if PROJECT = "Generic"
+
+config ARCH
+	string "Arch to build for"
+	option env="ARCH"
+	default "x86_64" if PROJECT = "Generic"
+
+endmenu
+
+menu "Distro Features"
+
+config DISTRONAME
+	string "Distro Name"
+	default ""
+	help
+	  Name of the Distro to build (full name, without special characters)
+
+config DESCRIPTION
+	string "Project Description"
+	default ""
+	help
+	  short project description
+
+config GREETING0
+	string "Greeting Line 0"
+	default ""
+
+config GREETING1
+        string "Greeting Line 1"
+        default ""
+
+config GREETING2
+        string "Greeting Line 2"
+        default ""
+
+config GREETING3
+        string "Greeting Line 3"
+        default ""
+
+config GREETING4
+        string "Greeting Line 4"
+        default ""
+
+config ROOT_PASSWORD
+	string "Root Password"
+	default ""
+	help
+	  Root password to integrate in the target system
+
+config DISTRO_BOOTLABEL
+	string "Boot Partition Label"
+	default "boot"
+
+config DISTRO_DISKLABEL
+	string "Disk Partition Label"
+	default "disk"
+
+endmenu
+
+menu "Buildsystem Settings"
+
+config LTO_SUPPORT
+	string "LTO (Link Time Optimization) support"
+	default "yes"
+
+config GOLD_SUPPORT
+	string "GOLD (Google Linker) support"
+	default "yes"
+
+config HARDENING_SUPPORT
+	string "Extra hardening options"
+	default "no"
+	help
+	  HARDENING (security relevant linker and compiler flags) support
+
+config GET_HANDLER_SUPPORT
+	string "Default supported get handlers"
+	default "archive"
+
+config CCACHE_CACHE_SIZE
+	string "ccache cache size"
+	default "10G"
+	help
+	  Set the maximum size of the files stored in the cache. You can specify a
+          value in gigabytes, megabytes or kilobytes by appending a G, M or K to the
+          value. The default is gigabytes. The actual value stored is rounded down to
+          the nearest multiple of 16 kilobytes.  Keep in mind this per project .ccache
+          directory.
+
+config VERBOSE
+	string "increase build verbosity"
+	default "yes"
+
+config LOCAL_CC
+	string "local CC"
+	default "$(shell,command -v gcc)"
+
+config LOCAL_CXX
+	string "local CXX"
+	default "$(shell,command -v g++)"
+
+config DISTRO_SRC
+	string "distro source url"
+	default "http://sources.libreelec.tv/$LIBREELEC_VERSION"
+
+config DISTRO_MIRROR
+	string "distro source mirror url"
+	default "http://sources.libreelec.tv/mirror"
+
+endmenu
+
+menu "OS Features"
+
+config ARM_MEM_SUPPORT
+	string "build and install arm-mem support"
+	default "yes" if ARCH = "arm"
+
+config GLIBC_LOCALES
+	string "Install glibc locales to the build"
+	default "yes"
+
+config ADDITIONAL_DRIVERS
+	string "additional drivers to install"
+	default ""
+	help
+	  for a list of additional drivers see packages/linux-drivers.
+          Space separated list is supported.
+
+config ADDITIONAL_DRIVERS_PROJECT
+	string "additional drivers to install (project specific)"
+	default ""
+	help
+          for a list of additional drivers see packages/linux-drivers.
+          Space separated list is supported.
+
+config SYSTEM_SIZE
+	string "System Partition Size in Mega Bytes"
+	default "512"
+	help
+	  Default size of system partition, in MB, eg. 512
+
+config SYSTEM_PART_START
+	string "System Partition Offset"
+	default "8192"
+	help
+	  Default system partition offset, in sectors, eg. 2048
+
+config SWAP_SUPPORT
+	string "Swap Support"
+	default "yes"
+
+config SWAP_ENABLED_DEFAULT
+	string "Swap Support Enabled"
+	default "no"
+	depends on SWAP_SUPPORT = "yes"
+
+config SWAPFILESIZE
+	string "Swap File Size in MB"
+	default "128"
+	depends on SWAP_SUPPORT = "yes"
+
+config DEBUG_TTY
+	string "Debug TTY Path"
+	default ""
+
+endmenu
+
+config MEDIACENTER
+	string "Mediacenter to use"
+	default "kodi"
+
+if MEDIACENTER = kodi
+
+menu "Kodi Settings"
+
+config SKINS
+	string "Skins to install"
+	default "Estuary"
+	help
+	  Space separated list is supported
+
+config SKIN_DEFAULT
+	string "Default Skin"
+	default "Estuary"
+
+config KODI_EXTRA_FONTS
+	string "install extra subtitle Fonts for KODI"
+	default "yes"
+
+config KODI_ALSA_SUPPORT
+	string "build kodi with alsa support"
+	default "yes"
+
+config KODI_PULSEAUDIO_SUPPORT
+	string "build kodi with pulseaudio support"
+	default "yes"
+
+config KODI_PIPEWIRE_SUPPORT
+	string "build kodi with pipewire support"
+	default "no"
+
+config KODI_BLURAY_SUPPORT
+	string "Enable BluRay support"
+	default "yes"
+	help
+	  "build and install with BluRay support"
+
+config BLURAY_BDPLUS_SUPPORT
+	string "Enable BD+ Support"
+	default "yes"
+	depends on KODI_BLURAY_SUPPORT = "yes"
+	help
+	  "build and install with BD+ support"
+
+config BLURAY_AACS_SUPPORT
+	string "Enable Bluray AACS Support"
+	default "yes"
+	depends on KODI_BLURAY_SUPPORT = "yes"
+	help
+	  build and install with AACS support
+
+config KODI_DVDCSS_SUPPORT
+	string "Enable dvdcss Support"
+	default "yes"
+	help
+	  build and install with DVDCSS support
+
+config KODI_WEBSERVER_SUPPORT
+	string "Enable Kodi webserver"
+	default "yes"
+	help
+	  build and install with KODI webfrontend
+
+config KODI_UPNP_SUPPORT
+	string "Enable Kodi UPnP Support"
+	default "yes"
+	help
+	  build with UPnP support
+
+config KODI_MYSQL_SUPPORT
+	string "Enable mysql support"
+	default "mariadb"
+	help
+	  build with MySQL support
+
+config KODI_OPTICAL_SUPPORT
+	string "Enable Kodi optical drive support"
+	default "yes"
+
+config KODI_AIRPLAY_SUPPORT
+	string "Enable Kodi airplay support"
+	default "yes"
+	help
+	  build with AirPlay support (stream videos from iDevices to KODI
+
+config KODI_AIRTUNES_SUPPORT
+	string "Enable Kodi airtunes support"
+	default "yes"
+	help
+	  build with AirTunes support (stream music from iDevices to KODI)
+
+config KODI_NFS_SUPPORT
+	string "Enable Kodi NFS support"
+	default "yes"
+	help
+	  build with libnfs support (mounting nfs shares with KODI)
+
+config KODI_SAMBA_SUPPORT
+	string "Enable Kodi SMB support"
+	default "yes"
+	help
+	  build with Samba Client support (mounting SAMBA shares with KODI)
+
+config DISTRO_PKG_SETTINGS
+	string "distro settings package"
+	default "LibreELEC-settings"
+
+config DISTRO_PKG_SETTINGS_ID
+	string "distro settings add-on id"
+	default "service.libreelec.settings"
+
+endmenu
+
+endif # MEDIACENTER = kodi
+
+menu "Package Features"
+
+config ALSA_SUPPORT
+	string "ALSA Support"
+	default "yes"
+	help
+	  This option enables alsa support
+
+config BLUETOOTH_SUPPORT
+	string "Bluetooth Support"
+	default "yes"
+	help
+	  This option enables bluetooth support
+
+config PULSEAUDIO_SUPPORT
+	string "Pulseaudio Support"
+	default "yes"
+	help
+	  build and install PulseAudio support
+
+config PIPEWIRE_SUPPORT
+	string "pipewire support"
+	default "no"
+	help
+	  build and install pipewire support
+
+config ESPEAK_SUPPORT
+	string "Espeak Support"
+	default "no"
+	help
+	  build and install eSpeak-NG support
+
+config AVAHI_DAEMON
+	string "Avahi Support"
+	default "yes"
+	help
+	  build and install Avahi Support
+
+config WIRELESS_DAEMON
+	string "Wireless daemon to use"
+	default "iwd"
+
+config ISCSI_SUPPORT
+	string "build and install iscsi support"
+	default "no"
+
+config NFS_SUPPORT
+	string "build with NFS support"
+	default "yes"
+	help
+	  build with NFS support (mounting nfs shares via the OS)
+
+config SAMBA_SUPPORT
+	string "build with SMB support"
+	default "yes"
+	help
+	  build with Samba Client support (mounting samba shares via the OS)
+
+config SAMBA_SERVER
+	string "build and install samba server"
+	default "yes"
+	depends on SAMBA_SUPPORT = "yes"
+
+config SFTP_SERVER
+	string "build and install sftp server"
+	default "yes"
+
+config OPENVPN_SUPPORT
+	string "build and install openvpn support"
+	default "yes"
+
+config WIREGUARD_SUPPORT
+	string "build and install wireguard support"
+	default "yes"
+
+config UDEVIL
+	string "build and install diskmounter support"
+	default "yes"
+	help
+	  this service provide auto mounting support for external drives in the mediacenter also automount internally drives at boottime via udev
+
+config INITRAMFS_PARTED_SUPPORT
+	string "Install parted in initramfs"
+	default "no"
+	help
+	  Support for partitioning and formating disks in initramfs
+	  This adds support for parted and mkfs.ext3/4 to initramfs for OEM usage
+
+config HFSTOOLS
+	string "build and install hfs filesystem utilities"
+	default "yes"
+
+config NANO_EDITOR
+	string "build and install nano text editor"
+	default "yes"
+
+config CRON_SUPPORT
+	string "cron support"
+	default "yes"
+
+config INSTALLER_SUPPORT
+	string "build with installer"
+	default "yes"
+
+config REMOTE_SUPPORT
+	string "build and install remote support"
+	default "yes"
+
+config IR_REMOTE_KEYMAPS
+	string "ir remote keymaps supported in default config"
+	default "rc6_mce xbox_360 xbox_one"
+
+config JOYSTICK_SUPPORT
+	string "build and install joystick support"
+	default "yes"
+
+config CEC_SUPPORT
+	string "build and install CEC adapter support"
+	default "yes"
+
+config CEC_FRAMEWORK_SUPPORT
+	string "build and install CEC framework support"
+	default "no"
+
+config OEM_SUPPORT
+	string "Install OEM packages"
+	default "no"
+
+config ADDITIONAL_PACKAGES
+	string "additional packages to install"
+	help
+	  Space separated list is supported
+
+endmenu
+
+menu "Device Options"
+
+config ADDON_PROJECT
+	string "Addon project"
+
+config ATF_PLATFORM
+	string "ATF Platform"
+
+config BOOTLOADER
+	string "Bootloader"
+
+config DISPLAYSERVER
+	string "Displayserver"
+
+config DRIVER_ADDONS
+	string "Driver add-ons"
+
+config DRIVER_ADDONS_SUPPORT
+	string "Enable driver add-ons"	
+
+config EXTRA_CMDLINE
+	string "Extra cmdline params"
+
+config FIRMWARE
+	string "firmware"
+
+config FIRMWARE_DEVICE
+	string "device specific firmware packages"
+
+config GRAPHIC_DRIVERS
+	string "Graphic Drivers"
+
+config KERNEL_EXTRA_DEPENDS_TARGET
+	string "kernel extra depends"
+
+config KERNEL_MAKE_EXTRACMD
+	string "kernel make extra"
+
+config KERNEL_NAME
+	string "Project Specfic linux kernel name"
+	default "KERNEL"
+
+config KERNEL_TARGET
+	string "Kernel Target"
+
+config KERNEL_UIMAGE_ENTRYADDR
+	string "Kernel uImage entry address"
+
+config KERNEL_UIMAGE_LOADADDR
+	string "Kernel uImage load address"
+
+config KODIPLAYER_DRIVER
+	string "Kodi player driver"
+
+config LINUX
+	string "Project Specfic linux version name"
+
+config MALI_FAMILY
+	string "Mali family"
+
+config NOOBS_HEX
+	string "Noobs hex"
+
+config NOOBS_SUPPORTED_MODELS
+	string "Noobs supported models"
+
+config OPENGL
+	string "OpenGL Support"
+	default "no"
+
+config OPENGLES
+	string "OpenGLES Support"
+	default "no"
+
+config OVA_SIZE
+	string "OVA size"
+	default "4096"
+
+config PROJECT_CFLAGS
+	string "Project specific CFLAGS"
+
+config SQUASHFS_COMPRESSION
+	string "SquashFS compression Method"
+
+config TARGET_KERNEL_PATCH_ARCH
+	string "Target kernel patch arch"
+
+config UBOOT_FIRMWARE
+	string "u-boot firmware"
+
+config UBOOT_TARGET
+	string "u-boot target"
+
+config UVESAFB_SUPPORT
+	string "uvesafb support"
+
+config VULKAN
+        string "Vulkan Support"
+	default "no"
+
+config WINDOWMANAGER
+	string "WindowManager"
+
+endmenu
+
+menu "Arch Configuration"
+
+config TARGET_CPU
+        string "Target CPU"
+
+config TARGET_CPU_FLAGS
+        string "Target CPU Flags"
+
+config TARGET_FLOAT
+        string "Target Float"
+
+config TARGET_FPU
+        string "Target FPU"
+
+config TARGET_KERNEL_ARCH
+        string "Target Kernel Arch"
+
+endmenu

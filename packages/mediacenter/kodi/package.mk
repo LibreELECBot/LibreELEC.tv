@@ -44,29 +44,29 @@ configure_package() {
     PKG_DEPENDS_TARGET+=" ${OPENGL} glu"
   fi
 
-  if [ "${OPENGLES_SUPPORT}" = yes ]; then
+  if [ "${OPENGLES_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" ${OPENGLES}"
   fi
 
-  if [ "${KODI_ALSA_SUPPORT}" = yes ]; then
+  if [ "${KODI_ALSA_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" alsa-lib"
     KODI_ALSA="-DENABLE_ALSA=ON"
   else
     KODI_ALSA="-DENABLE_ALSA=OFF"
  fi
 
-  if [ "${KODI_PULSEAUDIO_SUPPORT}" = yes ]; then
+  if [ "${KODI_PULSEAUDIO_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" pulseaudio"
     KODI_PULSEAUDIO="-DENABLE_PULSEAUDIO=ON"
   else
     KODI_PULSEAUDIO="-DENABLE_PULSEAUDIO=OFF"
   fi
 
-  if [ "${ESPEAK_SUPPORT}" = yes ]; then
+  if [ "${ESPEAK_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" espeak-ng"
   fi
 
-  if [ "${KODI_PIPEWIRE_SUPPORT}" = yes ]; then
+  if [ "${KODI_PIPEWIRE_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" pipewire"
     KODI_PIPEWIRE="-DENABLE_PIPEWIRE=ON"
 
@@ -77,7 +77,7 @@ configure_package() {
     KODI_PIPEWIRE="-DENABLE_PIPEWIRE=OFF"
   fi
 
-  if [ "${CEC_SUPPORT}" = yes ]; then
+  if [ "${CEC_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libcec"
     KODI_CEC="-DENABLE_CEC=ON"
   else
@@ -88,27 +88,27 @@ configure_package() {
     PKG_PATCH_DIRS+=" cec-framework"
   fi
 
-  if [ "${KODI_OPTICAL_SUPPORT}" = yes ]; then
+  if [ "${KODI_OPTICAL_SUPPORT}" = "yes" ]; then
     KODI_OPTICAL="-DENABLE_OPTICAL=ON"
   else
     KODI_OPTICAL="-DENABLE_OPTICAL=OFF"
   fi
 
-  if [ "${KODI_DVDCSS_SUPPORT}" = yes ]; then
+  if [ "${KODI_DVDCSS_SUPPORT}" = "yes" ]; then
     KODI_DVDCSS="-DENABLE_DVDCSS=ON \
                  -DLIBDVDCSS_URL=${SOURCES}/libdvdcss/libdvdcss-$(get_pkg_version libdvdcss).tar.gz"
   else
     KODI_DVDCSS="-DENABLE_DVDCSS=OFF"
   fi
 
-  if [ "${KODI_BLURAY_SUPPORT}" = yes ]; then
+  if [ "${KODI_BLURAY_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libbluray"
     KODI_BLURAY="-DENABLE_BLURAY=ON"
   else
     KODI_BLURAY="-DENABLE_BLURAY=OFF"
   fi
 
-  if [ "${AVAHI_DAEMON}" = yes ]; then
+  if [ "${AVAHI_DAEMON}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" avahi nss-mdns"
     KODI_AVAHI="-DENABLE_AVAHI=ON"
   else
@@ -125,39 +125,39 @@ configure_package() {
     *)       KODI_MYSQL="-DENABLE_MYSQLCLIENT=OFF -DENABLE_MARIADBCLIENT=OFF"
   esac
 
-  if [ "${KODI_AIRPLAY_SUPPORT}" = yes ]; then
+  if [ "${KODI_AIRPLAY_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libplist"
     KODI_AIRPLAY="-DENABLE_PLIST=ON"
   else
     KODI_AIRPLAY="-DENABLE_PLIST=OFF"
   fi
 
-  if [ "${KODI_AIRTUNES_SUPPORT}" = yes ]; then
+  if [ "${KODI_AIRTUNES_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libshairplay"
     KODI_AIRTUNES="-DENABLE_AIRTUNES=ON"
   else
     KODI_AIRTUNES="-DENABLE_AIRTUNES=OFF"
   fi
 
-  if [ "${KODI_NFS_SUPPORT}" = yes ]; then
+  if [ "${KODI_NFS_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libnfs"
     KODI_NFS="-DENABLE_NFS=ON"
   else
     KODI_NFS="-DENABLE_NFS=OFF"
   fi
 
-  if [ "${KODI_SAMBA_SUPPORT}" = yes ]; then
+  if [ "${KODI_SAMBA_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" samba"
     KODI_SAMBA="-DENABLE_SMBCLIENT=ON"
   else
     KODI_SAMBA="-DENABLE_SMBCLIENT=OFF"
   fi
 
-  if [ "${KODI_WEBSERVER_SUPPORT}" = yes ]; then
+  if [ "${KODI_WEBSERVER_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libmicrohttpd"
   fi
 
-  if [ "${KODI_UPNP_SUPPORT}" = yes ]; then
+  if [ "${KODI_UPNP_SUPPORT}" = "yes" ]; then
     KODI_UPNP="-DENABLE_UPNP=ON"
   else
     KODI_UPNP="-DENABLE_UPNP=OFF"
@@ -176,7 +176,7 @@ configure_package() {
     KODI_VDPAU="-DENABLE_VDPAU=OFF"
   fi
 
-  if [ "${VAAPI_SUPPORT}" = yes ]; then
+  if [ "${VAAPI_SUPPORT}" = "yes" ]; then
     PKG_DEPENDS_TARGET+=" libva"
     KODI_VAAPI="-DENABLE_VAAPI=ON"
   else
@@ -377,7 +377,7 @@ post_makeinstall_target() {
       -e "s:CMAKE_MODULE_PATH /usr/lib/kodi /usr/share/kodi/cmake:CMAKE_MODULE_PATH ${SYSROOT_PREFIX}/usr/share/kodi/cmake:g" \
       -i ${SYSROOT_PREFIX}/usr/lib/kodi/cmake/KodiConfig.cmake
 
-  if [ "${KODI_EXTRA_FONTS}" = yes ]; then
+  if [ "${KODI_EXTRA_FONTS}" = "yes" ]; then
     mkdir -p ${INSTALL}/usr/share/kodi/media/Fonts
       cp ${PKG_DIR}/fonts/*.ttf ${INSTALL}/usr/share/kodi/media/Fonts
   fi

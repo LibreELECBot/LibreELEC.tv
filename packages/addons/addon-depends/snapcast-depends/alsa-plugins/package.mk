@@ -11,7 +11,7 @@ PKG_URL="ftp://ftp.alsa-project.org/pub/plugins/${PKG_NAME}-${PKG_VERSION}.tar.b
 PKG_DEPENDS_TARGET="toolchain alsa-lib"
 PKG_LONGDESC="Alsa plugins."
 
-if [ "${PULSEAUDIO_SUPPORT}" = yes ]; then
+if [ "${PULSEAUDIO_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" pulseaudio"
   SUBDIR_PULSEAUDIO="pulse"
 fi

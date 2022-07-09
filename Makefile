@@ -20,3 +20,9 @@ distclean:
 
 src-pkg:
 	tar cvJf sources.tar.xz sources
+
+menuconfig:
+	./scripts/make_config menuconfig
+
+olddefconfig:
+	./scripts/make_config olddefconfig

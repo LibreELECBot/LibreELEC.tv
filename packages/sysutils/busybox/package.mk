@@ -20,7 +20,7 @@ if [ "${NANO_EDITOR}" = "yes" ]; then
 fi
 
 # nfs support
-if [ "${NFS_SUPPORT}" = yes ]; then
+if [ "${NFS_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" rpcbind"
 fi
 
@@ -65,7 +65,7 @@ configure_target() {
       sed -i -e "s|^CONFIG_FEATURE_CROND_SPECIAL_TIMES=.*$|# CONFIG_FEATURE_CROND_SPECIAL_TIMES is not set|" .config
     fi
 
-    if [ ! "${SAMBA_SUPPORT}" = yes ]; then
+    if [ ! "${SAMBA_SUPPORT}" = "yes" ]; then
       sed -i -e "s|^CONFIG_FEATURE_MOUNT_CIFS=.*$|# CONFIG_FEATURE_MOUNT_CIFS is not set|" .config
     fi
 
