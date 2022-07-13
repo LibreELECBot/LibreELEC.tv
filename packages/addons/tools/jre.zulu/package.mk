@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# Copyright (C) 2019-present Peter Vicman (peter.vicman@gmail.com)
+# Copyright (C) 2019 Peter Vicman (peter.vicman@gmail.com)
 
 PKG_NAME="jre.zulu"
 PKG_VERSION="1.0"

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
-# Copyright (C) 2017-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2017 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="bcm2835-bootloader"
 PKG_VERSION="ecc243c52789f4d8e837c7300b6effb059dc18c0"

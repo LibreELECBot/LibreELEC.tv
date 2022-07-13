@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2016 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="squeezelite"
 PKG_VERSION="874e4f97d979fbe9b396c1997730a1a2d6797964" # 2022-01-06 # 1.9.9.1395

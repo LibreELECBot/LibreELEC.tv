@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2016 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="libretro-stella"
 PKG_VERSION="1a2e96bc6ccf91de6fb4322048da05f67a9d21d4"

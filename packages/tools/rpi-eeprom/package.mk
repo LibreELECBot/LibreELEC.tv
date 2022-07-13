@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2019 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="rpi-eeprom"
 PKG_VERSION="e4f90a89e62051ff658c40c57150d13c7e67553b"

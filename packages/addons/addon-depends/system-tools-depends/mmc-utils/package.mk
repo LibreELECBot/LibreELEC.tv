@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2022-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2022 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="mmc-utils"
 PKG_VERSION="4303889c8bd9a2357587eb6ebacecb70098a264d"
