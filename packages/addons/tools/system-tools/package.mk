@@ -3,7 +3,7 @@
 
 PKG_NAME="system-tools"
 PKG_VERSION="1.0"
-PKG_REV="131"
+PKG_REV="132"
 PKG_ARCH="any"
 PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
@@ -11,7 +11,7 @@ PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
 PKG_SECTION="virtual"
 PKG_SHORTDESC="A bundle of system tools and programs"
-PKG_LONGDESC="This bundle currently includes autossh, bottom, diffutils, dstat, dtach, efibootmgr, encfs, evtest, fdupes, file, getscancodes, hddtemp, hd-idle, hid_mapper, htop, i2c-tools, inotify-tools, jq, kmsxx, libgpiod, lm_sensors, lshw, mc, mmc-utils, mtpfs, nmon, p7zip, patch, pv, screen, smartmontools, stress-ng, unrar, usb-modeswitch and vim."
+PKG_LONGDESC="This bundle currently includes autossh, bottom, diffutils, dislocker, dstat, dtach, efibootmgr, encfs, evtest, fdupes, file, getscancodes, hddtemp, hd-idle, hid_mapper, htop, i2c-tools, inotify-tools, jq, kmsxx, libgpiod, lm_sensors, lshw, mc, mmc-utils, mtpfs, nmon, p7zip, patch, pv, screen, smartmontools, stress-ng, unrar, usb-modeswitch and vim."
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_NAME="System Tools"
@@ -21,6 +21,7 @@ PKG_DEPENDS_TARGET="toolchain \
                     autossh \
                     bottom \
                     diffutils \
+                    dislocker \
                     dstat \
                     dtach \
                     encfs \
@@ -69,6 +70,10 @@ addon() {
 
     # diffutils
     cp -P $(get_install_dir diffutils)/usr/bin/{cmp,diff,diff3,sdiff} ${ADDON_BUILD}/${PKG_ADDON_ID}/bin
+
+    # dislocker
+    cp -P $(get_install_dir dislocker)/usr/bin/dislocker{,-bek,-file,-fuse,-metadata} ${ADDON_BUILD}/${PKG_ADDON_ID}/bin
+    cp -P $(get_install_dir dislocker)/usr/lib/libdislocker.so* ${ADDON_BUILD}/${PKG_ADDON_ID}/lib
 
     # dstat
     cp -P $(get_install_dir dstat)/usr/bin/dstat ${ADDON_BUILD}/${PKG_ADDON_ID}/bin

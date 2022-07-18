@@ -1,3 +1,6 @@
+132
+- add dislocker
+
 131
 - Add kmsxx (kmsprint, kmstest)
 
