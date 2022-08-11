@@ -10,7 +10,7 @@ PKG_SITE="https://gcc.gnu.org/"
 PKG_URL="https://ftpmirror.gnu.org/gcc/${PKG_NAME}-${PKG_VERSION}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_BOOTSTRAP="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host zstd:host"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host zstd:host glibc"
+PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host zstd:host ${LIBC_VERSION}"
 PKG_DEPENDS_INIT="toolchain"
 PKG_LONGDESC="This package contains the GNU Compiler Collection."
 
@@ -77,6 +77,10 @@ PKG_CONFIGURE_OPTS_HOST="${GCC_COMMON_CONFIGURE_OPTS} \
                          --enable-libstdcxx-time \
                          --enable-clocale=gnu \
                          ${TARGET_ARCH_GCC_OPTS}"
+
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_CONFIGURE_OPTS_HOST+=" --disable-libsanitizer"
+fi
 
 pre_configure_host() {
   unset CPP

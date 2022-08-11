@@ -11,6 +11,10 @@ PKG_URL="https://github.com/systemd/systemd-stable/archive/v${PKG_VERSION}.tar.g
 PKG_DEPENDS_TARGET="toolchain libcap kmod util-linux entropy libidn2 wait-time-sync Jinja2:host"
 PKG_LONGDESC="A system and session manager for Linux, compatible with SysV and LSB init scripts."
 
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_PATCH_DIRS+=" musl"
+fi
+
 PKG_MESON_OPTS_TARGET="--libdir=/usr/lib \
                        -Drootprefix=/usr \
                        -Dsplit-usr=false \
@@ -103,8 +107,17 @@ PKG_MESON_OPTS_TARGET="--libdir=/usr/lib \
                        -Dpkgconfigdatadir=/usr/lib/pkgconfig \
                        -Dversion-tag=${PKG_VERSION}"
 
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_MESON_OPTS_TARGET+=" -Dutmp=false"
+fi
+
 pre_configure_target() {
   export TARGET_CFLAGS="${TARGET_CFLAGS} -fno-schedule-insns -fno-schedule-insns2 -Wno-format-truncation"
+
+  if [ "${LIBC_VERSION}" = "musl" ]; then
+    TARGET_CFLAGS+=" -D__UAPI_DEF_ETHHDR=0"
+  fi
+
   export LC_ALL=en_US.UTF-8
 }
 

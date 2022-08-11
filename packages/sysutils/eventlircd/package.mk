@@ -12,6 +12,10 @@ PKG_DEPENDS_TARGET="toolchain systemd lirc"
 PKG_LONGDESC="The eventlircd daemon provides four functions for LIRC devices"
 PKG_TOOLCHAIN="autotools"
 
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_PATCH_DIRS+=" musl"
+fi
+
 PKG_CONFIGURE_OPTS_TARGET="--with-udev-dir=/usr/lib/udev \
                            --with-lircd-socket=/run/lirc/lircd"
 

@@ -1,0 +1,48 @@
+diff -Naur a/src/input.c b/src/input.c
+--- a/src/input.c	2018-01-23 09:39:35.000000000 -0800
++++ b/src/input.c	2022-05-24 15:44:08.714586048 -0700
+@@ -55,6 +55,12 @@
+ #include "lircd.h"
+ #include "monitor.h"
+ 
++#ifndef input_event_sec
++#define input_event_sec time.tv_sec
++#define input_event_usec time.tv_usec
++#endif
++
++
+ /*
+  * The lircd_handler does not use the id parameter, so we need to let gcc's
+  * -Wused know that it is ok.
+@@ -1100,8 +1106,8 @@
+                 if (device->repeat_filter == true)
+                 {
+ 		     if (evkey_type[device->current.event_out.code] == EVENTLIRCD_EVKEY_TYPE_KEY) {
+-			     time_delta = 1000000 * (device->current.event_out.time.tv_sec  - previous->event_out.time.tv_sec ) +
+-			                            (device->current.event_out.time.tv_usec - previous->event_out.time.tv_usec);
++			     time_delta = 1000000 * (device->current.event_out.input_event_sec  - previous->event_out.input_event_sec ) +
++			                            (device->current.event_out.input_event_usec - previous->event_out.input_event_usec);
+ 			     if (((previous->repeat_count == 0) && (time_delta <  900000)) ||
+ 			         ((previous->repeat_count == 1) && (time_delta <  500000)) ||
+ 			         ((previous->repeat_count == 2) && (time_delta <  300000)) ||
+@@ -1116,7 +1122,8 @@
+ 		     }
+                 }
+ 		previous->repeat_count++;
+-		previous->event_out.time = device->current.event_out.time;
++                previous->event_out.input_event_sec = device->current.event_out.input_event_sec;
++		previous->event_out.input_event_usec = device->current.event_out.input_event_usec;
+ 		device->current.repeat_count = previous->repeat_count;
+ 		break;
+ 	/*
+diff -Naur a/src/lircd.c b/src/lircd.c
+--- a/src/lircd.c	2018-01-23 09:39:35.000000000 -0800
++++ b/src/lircd.c	2022-05-24 15:39:52.890634260 -0700
+@@ -30,6 +30,7 @@
+ #include <sys/un.h>       /* XSI */
+ #include <syslog.h>       /* XSI */
+ #include <unistd.h>       /* POSIX */
++#include <string.h>
+ /*
+  * Linux header files.
+  */

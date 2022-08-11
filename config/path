@@ -14,7 +14,12 @@ set -e
   ADDONS=addons
 
 [ -z "${HOST_NAME}" ] && export HOST_NAME="$($LOCAL_CC -dumpmachine)"
-TARGET_NAME=$TARGET_GCC_ARCH-libreelec-linux-gnu${TARGET_ABI}
+
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  TARGET_NAME=$TARGET_GCC_ARCH-libreelec-linux-musl${TARGET_ABI}
+else
+  TARGET_NAME=$TARGET_GCC_ARCH-libreelec-linux-gnu${TARGET_ABI}
+fi
 
 BUILD=${BUILD_ROOT}/${BUILD_BASE}.${DISTRONAME}-${DEVICE:-$PROJECT}.${TARGET_ARCH}-${LIBREELEC_VERSION}
 if [ "${LIBREELEC_VERSION}" = "devel" ] ; then

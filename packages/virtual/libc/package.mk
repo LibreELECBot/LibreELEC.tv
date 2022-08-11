@@ -7,12 +7,16 @@ PKG_VERSION=""
 PKG_LICENSE="GPL"
 PKG_SITE="https://libreelec.tv"
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain glibc tz libidn2"
-PKG_DEPENDS_INIT="toolchain glibc:init"
+PKG_DEPENDS_TARGET="gcc:host"
+PKG_DEPENDS_INIT="toolchain ${LIBC_VERSION}:init"
 PKG_SECTION="virtual"
 PKG_LONGDESC="Meta package for installing various tools and libs needed for libc"
 
 if [ "${ARM_MEM_SUPPORT}" = "yes" ]; then
   PKG_DEPENDS_TARGET+=" arm-mem"
   PKG_DEPENDS_INIT+=" arm-mem:init"
+fi
+
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_DEPENDS_TARGET+=" argp-standalone musl-fts musl-bsd-headers musl-obstack musl-gcompat"
 fi

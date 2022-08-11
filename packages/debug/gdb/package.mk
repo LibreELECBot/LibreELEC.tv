@@ -13,6 +13,11 @@ PKG_DEPENDS_HOST="toolchain:host zlib:host ncurses:host expat:host gmp:host"
 PKG_LONGDESC="GNU Project debugger, allows you to see what is going on inside another program while it executes."
 PKG_BUILD_FLAGS="+size"
 
+if [ "${LIBC_VERSION}" = "musl" ]; then
+  PKG_PATCH_DIRS+=" musl"
+  PKG_DEPENDS_TARGET+=" libunwind"
+fi
+
 PKG_CONFIGURE_OPTS_COMMON="bash_cv_have_mbstate_t=set \
                            --disable-shared \
                            --enable-static \
