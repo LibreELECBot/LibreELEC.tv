@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
-# Copyright (C) 2022 Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2022-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="mimalloc"
 PKG_VERSION="2.0.6"

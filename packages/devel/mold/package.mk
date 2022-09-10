@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-only
-# Copyright (C) 2022 Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2022=present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="mold"
 PKG_VERSION="1.3.0"
