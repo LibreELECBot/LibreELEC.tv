@@ -8,11 +8,13 @@ PKG_SHA256="1e3a251bb112632553b8255a78661fe526c3a16598496d51128c32b218fd8b22"
 PKG_LICENSE="GPL"
 PKG_SITE="https://ccache.dev/download.html"
 PKG_URL="https://github.com/ccache/ccache/releases/download/v${PKG_VERSION}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
-PKG_DEPENDS_HOST="cmake:host make:host"
+PKG_DEPENDS_HOST="cmake:host make:host zstd:host"
 PKG_LONGDESC="A compiler cache to speed up re-compilation of C/C++ code by caching."
+# Override toolchain as ninja is not built yet
 PKG_TOOLCHAIN="cmake-make"
 
 configure_host() {
+  # custom cmake build to override the LOCAL_CC/CXX
   setup_toolchain host:cmake-make
   cp ${CMAKE_CONF} cmake-ccache.conf
 
