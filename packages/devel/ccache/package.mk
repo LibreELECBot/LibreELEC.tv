@@ -36,6 +36,7 @@ post_makeinstall_host() {
 # setup ccache
   if [ -z "${CCACHE_DISABLE}" ]; then
     ${TOOLCHAIN}/bin/ccache --max-size=${CCACHE_CACHE_SIZE}
+    ${TOOLCHAIN}/bin/ccache --set-config compression_level=${CCACHE_COMPRESSLEVEL}
   fi
 
   cat > ${TOOLCHAIN}/bin/host-gcc <<EOF
