@@ -9,7 +9,7 @@ PKG_SITE="https://gstreamer.freedesktop.org/modules/gst-plugins-base.html"
 PKG_URL="https://gstreamer.freedesktop.org/src/gst-plugins-base/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_TARGET="toolchain gstreamer"
 PKG_LONGDESC="Base GStreamer plugins and helper libraries"
-PKG_BUILD_FLAGS="-gold"
+PKG_BUILD_FLAGS="+bfd"
 
 pre_configure_target() {
   PKG_MESON_OPTS_TARGET="-Dgl=disabled \

@@ -11,7 +11,7 @@ PKG_URL="https://github.com/rhboot/efivar/archive/${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_HOST="toolchain:host"
 PKG_DEPENDS_TARGET="toolchain efivar:host"
 PKG_LONGDESC="Tools and library to manipulate EFI variables."
-PKG_BUILD_FLAGS="-gold"
+PKG_BUILD_FLAGS="+bfd"
 
 pre_make_host() {
   export TOPDIR=${PKG_BUILD}

@@ -19,8 +19,8 @@ configure_package() {
     PKG_KODI_USE_LTO="-DUSE_LTO=${CONCURRENCY_MAKE_LEVEL}"
   fi
 
-  # Set linker options
-  if [ "${GOLD_SUPPORT}" = "yes" ]; then
+  # Set linker matching DEFAULT_LINKER
+  if [ "${DEFAULT_LINKER}" = "gold" ]; then
     PKG_KODI_LINKER="-DENABLE_GOLD=ON \
                      -DENABLE_MOLD=OFF"
   else

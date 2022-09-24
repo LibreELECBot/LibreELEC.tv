@@ -12,7 +12,7 @@ PKG_DEPENDS_TARGET="toolchain kodi-platform ${PKG_NAME}:host"
 PKG_DEPENDS_UNPACK="cyclone68000"
 PKG_LONGDESC="Fast MegaDrive/MegaCD/32X emulator"
 PKG_TOOLCHAIN="manual"
-PKG_BUILD_FLAGS="-gold"
+PKG_BUILD_FLAGS="+bfd"
 
 PKG_LIBNAME="picodrive_libretro.so"
 PKG_LIBPATH="${PKG_LIBNAME}"

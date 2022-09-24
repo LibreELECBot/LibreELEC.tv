@@ -13,7 +13,7 @@ PKG_DEPENDS_TARGET="toolchain binutils boost bzip2 libaio libfmt libxml2 lz4 lzo
 PKG_SHORTDESC="MariaDB is a community-developed fork of the MySQL."
 PKG_LONGDESC="MariaDB (${PKG_VERSION}) is a fast SQL database server and a drop-in replacement for MySQL."
 PKG_TOOLCHAIN="cmake"
-PKG_BUILD_FLAGS="-gold -sysroot"
+PKG_BUILD_FLAGS="+bfd -sysroot"
 
 PKG_IS_ADDON="yes"
 PKG_SECTION="service"
