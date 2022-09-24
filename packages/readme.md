@@ -126,14 +126,15 @@ Set the variable `PKG_BUILD_FLAGS` in the `package.mk` to enable/disable the sin
 | lto-parallel | disabled | target, init  | same as `lto` but enables parallel optimization at link stage. Only enable this if the package build doesn't run multiple linkers in parallel otherwise this can result in lots of parallel processes! |
 | lto-fat  | disabled | target, init      | same as `lto` but compile fat LTO objects (bytecode plus optimized assembly). This increases compile time but can be useful to create static libraries suitable both for LTO and non-LTO linking |
 | lto-off  | disabled | target, init      | explicitly disable LTO in the compiler and linker |
-| gold     | enabled by `GOLD_SUPPORT` | target, init | do not use GOLD-Llinker (can only disable) |
+| bfd   | disabled | target, init | use the BFD-Linker (can only enable) |
+| gold  | disabled | target, init | use the GOLD-Linker (can only enable) |
 | parallel | enabled  | all | `make` or `ninja` builds with multiple threads/processes (or not) |
 | strip    | enabled  | target | strips executables (or not) |
 | sysroot  | enabled  | target | installs the package to the sysroot folder (or not) |
 
 ###### Example
 ```
-PKG_BUILD_FLAGS="+pic -gold"
+PKG_BUILD_FLAGS="+pic +bfd"
 PKG_BUILD_FLAGS="-parallel"
 ```
 
@@ -293,7 +294,7 @@ PKG_SITE="https://mariadb.org/"
 PKG_URL="https://github.com/MariaDB/mariadb-connector-c/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain zlib openssl"
 PKG_LONGDESC="mariadb-connector: library to conntect to mariadb/mysql database server"
-PKG_BUILD_FLAGS="-gold"
+PKG_BUILD_FLAGS="+bfd"
 
 PKG_CMAKE_OPTS_TARGET="-DWITH_EXTERNAL_ZLIB=ON \
                        -DAUTH_CLEARTEXT=STATIC \

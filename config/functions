@@ -278,11 +278,19 @@ setup_toolchain() {
     TARGET_LDFLAGS+=" $FLAGS_OPTIM_LTO_OFF"
   fi
 
+  # Linker flags
+  DEFAULT_LINKER="${DEFAULT_LINKER:-bfd}"
+  TARGET_LINKER_FLAGS="-fuse-ld=${DEFAULT_LINKER}"
+
+  # bfd flag
+  if flag_enabled "bfd" "no"; then
+    TARGET_LINKER_FLAGS=" ${LDFLAGS_OPTIM_BFD}"
   # gold flag
-  if flag_enabled "gold" "$GOLD_SUPPORT" "only-disable"; then
-    TARGET_LDFLAGS+=" $LDFLAGS_OPTIM_GOLD"
+  elif flag_enabled "gold" "no"; then
+    TARGET_LINKER_FLAGS=" ${LDFLAGS_OPTIM_GOLD}"
     have_gold="yes"
   fi
+  TARGET_LDFLAGS+=" ${TARGET_LINKER_FLAGS}"
 
   # compiler optimization, descending priority: speed, size, default
   if [ "${BUILD_WITH_DEBUG}" = "yes" ]; then

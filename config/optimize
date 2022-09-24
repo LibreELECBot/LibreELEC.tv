@@ -27,6 +27,9 @@ FLAGS_OPTIM_LTO_FAT="-ffat-lto-objects"
 FLAGS_OPTIM_LTO_OFF="-fno-lto"
 LDFLAGS_OPTIM_LTO_COMMON="-fuse-linker-plugin"
 
+# bfd flags
+LDFLAGS_OPTIM_BFD="-fuse-ld=bfd"
+
 # gold flags
 LDFLAGS_OPTIM_GOLD="-fuse-ld=gold"
 
