@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# Copyright (C) 2019-present Peter Vicman (peter.vicman@gmail.com)
+# Copyright (C) 2019 Peter Vicman (peter.vicman@gmail.com)
 
 PKG_NAME="jdk-arm-zulu"
 PKG_VERSION="8.38.0.163-1.8.0_212"

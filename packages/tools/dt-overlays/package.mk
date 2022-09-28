@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2021-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2021 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="dt-overlays"
 PKG_VERSION="4352d87db6e85d285673359e80cce87d5e025c64"

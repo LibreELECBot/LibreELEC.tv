@@ -17,7 +17,7 @@ index 00000000..f3caaed0
 +++ b/src/conf/cards/axg-sound-card.conf
 @@ -0,0 +1,87 @@
 +# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020-present Team LibreELEC (https://libreelec.tv)
++# Copyright (C) 2020 Team LibreELEC (https://libreelec.tv)
 +
 +#
 +# Configuration for Amlogic AXG audio
@@ -110,7 +110,7 @@ index 00000000..b669a260
 +++ b/src/conf/cards/gx-sound-card.conf
 @@ -0,0 +1,87 @@
 +# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2020-present Team LibreELEC (https://libreelec.tv)
++# Copyright (C) 2020 Team LibreELEC (https://libreelec.tv)
 +
 +#
 +# Configuration for Amlogic AIU audio

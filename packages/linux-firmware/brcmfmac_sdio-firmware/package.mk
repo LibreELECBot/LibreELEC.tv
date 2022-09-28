@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2019-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2019 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="brcmfmac_sdio-firmware"
 PKG_VERSION="afc477e807c407736cfaff6a6188d09197dfbceb"

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0
-# Copyright (C) 2016-present Team LibreELEC (https://libreelec.tv)
+# Copyright (C) 2016 Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="game.libretro.vba-next"
 PKG_VERSION="1.0.2.21-Leia"
