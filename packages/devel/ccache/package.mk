@@ -3,8 +3,8 @@
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
 PKG_NAME="ccache"
-PKG_VERSION="4.7.1"
-PKG_SHA256="04ccc746524cb7fb914ccdfc66e7c54504204afee0e270ac75e8f66196521b6d"
+PKG_VERSION="4.7.2"
+PKG_SHA256="17ca75a577d49c1e4f2ac86d53126859de52b789cfe85dd532758518db114eaf"
 PKG_LICENSE="GPL"
 PKG_SITE="https://ccache.dev/download.html"
 PKG_URL="https://github.com/ccache/ccache/releases/download/v${PKG_VERSION}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
@@ -23,8 +23,9 @@ configure_host() {
 
   cmake -DCMAKE_TOOLCHAIN_FILE=cmake-ccache.conf \
         -DCMAKE_INSTALL_PREFIX=${TOOLCHAIN} \
-        -DZSTD_FROM_INTERNET=OFF \
+        -DENABLE_DOCUMENTATION=OFF \
         -DREDIS_STORAGE_BACKEND=OFF \
+        -DZSTD_FROM_INTERNET=OFF \
         ..
 }
 
