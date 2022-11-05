@@ -19,11 +19,11 @@ configure_package() {
 
 pre_configure_target() {
   PKG_MESON_OPTS_TARGET="-Dcompat-rules=true \
+                         -Dxkb-base=${XORG_PATH_XKB} \
                          -Ddatadir=lib"
 
   if [ "${DISPLAYSERVER}" = "x11" ]; then
-    PKG_MESON_OPTS_TARGET+=" -Dxkb-base=${XORG_PATH_XKB} \
-                            -Dxorg-rules-symlinks=true"
+    PKG_MESON_OPTS_TARGET+=" -Dxorg-rules-symlinks=true"
   else
     PKG_MESON_OPTS_TARGET+=" -Dxorg-rules-symlinks=false"
   fi
