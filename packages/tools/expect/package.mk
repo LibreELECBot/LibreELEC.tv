@@ -1,4 +1,8 @@
-49a7da83b0bdd9f46d04a04deec19c7767bb9a323e40c4781f89caf760b92c34  expect5.45.4.tar.gz
-https://sourceforge.net/projects/expect/files/Expect/5.45.4/expect5.45.4.tar.gz
-/usr/local/src/tcl8.0		(actual version may be different)
-/usr/local/src/expect-5.24
+PKG_NAME="expect"
+PKG_VERSION="5.45.4"
+PKG_SHA256="49a7da83b0bdd9f46d04a04deec19c7767bb9a323e40c4781f89caf760b92c34"
+PKG_LICENSE="GPL"
+PKG_SITE="https://core.tcl-lang.org/expect/index"
+PKG_URL="https://sourceforge.net/projects/expect/files/Expect/5.45.4/expect5.45.4.tar.gz"
+PKG_DEPENDS_TARGET="toolchain tcl"
+PKG_LONGDESC="Expect is a tool for automating interactive applications such as telnet, ftp, passwd, fsck, rlogin, tip, etc."
