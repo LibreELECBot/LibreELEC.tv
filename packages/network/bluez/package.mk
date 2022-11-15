@@ -56,7 +56,7 @@ post_makeinstall_target() {
   safe_remove ${INSTALL}/usr/bin/bluemoon
   safe_remove ${INSTALL}/usr/bin/ciptool
   safe_remove ${INSTALL}/usr/share/dbus-1
-
+  
   mkdir -p ${INSTALL}/etc/bluetooth
     cp src/main.conf ${INSTALL}/etc/bluetooth
     sed -i ${INSTALL}/etc/bluetooth/main.conf \
@@ -73,6 +73,10 @@ post_makeinstall_target() {
   # pulseaudio checks for bluez via pkgconfig but lib is not actually needed
     sed -i 's/-lbluetooth//g' ${PKG_BUILD}/lib/bluez.pc
     cp -P ${PKG_BUILD}/lib/bluez.pc ${SYSROOT_PREFIX}/usr/lib/pkgconfig
+
+# some bluetooth adapters needs mac change by btmgmt
+  cp tools/btmgmt ${INSTALL}/usr/bin/btmgmt
+
 }
 
 post_install() {
