@@ -13,6 +13,10 @@ PKG_DEPENDS_TARGET="toolchain linux bcmstat"
 PKG_LONGDESC="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
 PKG_TOOLCHAIN="manual"
 
+post_unpack() {
+  cp -PRv /home/hias/rpi/firmware/rpi-fw-new-sdhci-all-variants/* "${PKG_BUILD}"
+}
+
 makeinstall_target() {
   mkdir -p ${INSTALL}/usr/share/bootloader
     cp -PRv LICENCE* ${INSTALL}/usr/share/bootloader
