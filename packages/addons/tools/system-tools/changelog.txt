@@ -1,3 +1,6 @@
+135
+- drop p7zip and replace with 7-zip
+
 134
 - efibootmgr: update to 18
 - fdupes: update to 2.2.1
