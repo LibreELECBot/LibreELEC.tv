@@ -1,0 +1,312 @@
+From e204356ab082a217b25e90bc0e2d7061d838c5f7 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <47257594+wagnerch@users.noreply.github.com>
+Date: Fri, 29 Sep 2023 18:34:01 -0400
+Subject: [PATCH 1/7] arm64: dts: allwinner: h6: Orange Pi 3 LTS: adjust
+ regulator ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Fixes: ebae33c3f6ce ("arm64: dts: allwinner: h6: Enable CPU opp tables for Orange Pi 3")
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
+index 7def6ab1e9cb..dd5dcac858fa 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3-lts.dts
+@@ -255,7 +255,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1160000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -263,7 +263,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From dd9cd461b9908f9615ec29ab0566c40420941aa2 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:19:06 -0400
+Subject: [PATCH 2/7] arm64: dts: allwinner: h6: orange pi 3: adjust regulator
+ ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Fixes: ebae33c3f6ce ("arm64: dts: allwinner: h6: Enable CPU opp tables for Orange Pi 3")
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 2df859f7735d..f24258654c43 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -261,6 +261,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -268,7 +269,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From 5693c78746dbd6779380428ddb87f583ce0bee75 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:20:53 -0400
+Subject: [PATCH 3/7] arm64: dts: allwinner: h6: beelink gs1: adjust regulator
+ ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Fixes: 67533f873ad7 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Beelink GS1")
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+index 9ec49ac2f6fd..96e028678d5f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-beelink-gs1.dts
+@@ -257,7 +257,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1160000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -265,7 +265,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From 82a09dba183ad617e9a9efb7ce2b10161a2e6196 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:22:11 -0400
+Subject: [PATCH 4/7] arm64: dts: allwinner: h6: pine h64: adjust regulator
+ ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Fixes: fe79ea577be8 ("arm64: dts: allwinner: h6: Enable CPU opp tables for Pine H64")
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+index d13ed7b1c17f..cce6d6c0736f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
+@@ -249,7 +249,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1160000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -257,7 +257,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
+-				regulator-ramp-delay = <2500>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From 79e428a7d2d5f30a81d3e38d730fd99c39ada459 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:23:48 -0400
+Subject: [PATCH 5/7] arm64: dts: allwinner: h616: orange pi zero 2: adjust
+ regulator ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-zero2.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-zero2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-zero2.dts
+index cb8600d0ea1e..47f79564974a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-zero2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-orangepi-zero2.dts
+@@ -173,6 +173,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1100000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -180,6 +181,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <990000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu-sys";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From 63c010da9e3af1a1b86b2fef7ff0eca629f3fa63 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:24:11 -0400
+Subject: [PATCH 6/7] arm64: dts: allwinner: h616: x96 mate: adjust regulator
+ ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h616-x96-mate.dts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616-x96-mate.dts b/arch/arm64/boot/dts/allwinner/sun50i-h616-x96-mate.dts
+index 07424c28b696..2e853d213a56 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h616-x96-mate.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h616-x96-mate.dts
+@@ -155,6 +155,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1100000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -162,6 +163,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <990000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu-sys";
+ 			};
+ 
+-- 
+2.34.1
+
+
+From eff6b5621a9027195c4fe8660903b57e5ac39634 Mon Sep 17 00:00:00 2001
+From: Chad Wagner <wagnerch42@gmail.com>
+Date: Fri, 6 Oct 2023 18:24:46 -0400
+Subject: [PATCH 7/7] arm64: dts: allwinner: h6: adjust regulator ramp delay
+
+The AXP805 datasheet[1] indicates the DCDC Mode Control 1 (REG 1A)
+register comes out of system reset initialized to 0, which means the DVM
+voltage ramp control is 1 step/15.625us.  Using the lesser step voltage
+of 10mV for DCDC-A and DCDC-C regulator gives us a regulator ramp delay
+of 640uV/us.
+
+[1]: https://linux-sunxi.org/images/b/bc/AXP805_Datasheet_V1.0_en.pdf
+
+Signed-off-by: Chad Wagner <wagnerch42@gmail.com>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+index 92745128fcfe..2ddd72140f97 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi.dtsi
+@@ -209,6 +209,7 @@ reg_dcdca: dcdca {
+ 				regulator-always-on;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-cpu";
+ 			};
+ 
+@@ -216,6 +217,7 @@ reg_dcdcc: dcdcc {
+ 				regulator-enable-ramp-delay = <32000>;
+ 				regulator-min-microvolt = <810000>;
+ 				regulator-max-microvolt = <1080000>;
++				regulator-ramp-delay = <640>;
+ 				regulator-name = "vdd-gpu";
+ 			};
+ 
+-- 
+2.34.1
+
