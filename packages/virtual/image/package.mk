@@ -28,6 +28,9 @@ fi
 # Automounter support
 [ "${UDEVIL}" = "yes" ] && PKG_DEPENDS_TARGET+=" udevil"
 
+# NTFS tools support
+[ "${NTFSPROGS}" = "yes" ] && PKG_DEPENDS_TARGET+=" ntfs-3g_ntfsprogs"
+
 # Remote support
 [ "${REMOTE_SUPPORT}" = "yes" ] && PKG_DEPENDS_TARGET+=" remote"
 
