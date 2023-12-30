@@ -20,6 +20,7 @@ This project is for Rockchip SoC devices
 * [Khadas Edge](devices/RK3399)
 * [FriendlyARM NanoPC-T4](devices/RK3399)
 * [FriendlyARM NanoPi M4](devices/RK3399)
+* [FriendlyARM NanoPi M4 2GB](devices/RK3399)
 * [Orange Pi RK3399](devices/RK3399)
 * [PINE64 RockPro64](devices/RK3399)
 * [Radxa ROCK Pi 4](devices/RK3399)
