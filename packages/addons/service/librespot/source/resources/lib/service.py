@@ -24,6 +24,7 @@ _FANART_DIR = os.path.join(tempfile.gettempdir(), 'librespot.fanart')
 
 
 def get_fanart(url, max_fanarts):
+    return url
     name = os.path.basename(url)
     target = os.path.join(_FANART_DIR, f'{name}_16x9')
     if not os.path.exists(target):
