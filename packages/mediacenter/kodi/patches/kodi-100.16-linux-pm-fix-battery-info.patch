@@ -1,0 +1,80 @@
+From 8a92110b21fc2f039b6a990024e3f15f3e25961f Mon Sep 17 00:00:00 2001
+From: Ronald Brown <rbrown4014@yahoo.com>
+Date: Fri, 9 Feb 2024 05:28:54 +0100
+Subject: [PATCH] Linux PM: Logind/Upower Fix Battery information
+
+---
+ .../powermanagement/LogindUPowerSyscall.cpp   | 29 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp b/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp
+index bd04197a51..2bbdea7bc9 100644
+--- a/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp
++++ b/xbmc/platform/linux/powermanagement/LogindUPowerSyscall.cpp
+@@ -60,8 +60,7 @@ CLogindUPowerSyscall::CLogindUPowerSyscall()
+   dbus_bus_add_match(m_connection, "type='signal',interface='org.freedesktop.login1.Manager',member='PrepareForSleep'", error);
+ 
+   if (!error && m_hasUPower)
+-    dbus_bus_add_match(m_connection, "type='signal',interface='org.freedesktop.UPower',member='DeviceChanged'", error);
+-
++    dbus_bus_add_match(m_connection, "type='signal',interface='org.freedesktop.DBus.Properties',member='PropertiesChanged'", error);
+   dbus_connection_flush(m_connection);
+ 
+   if (error)
+@@ -75,6 +74,8 @@ CLogindUPowerSyscall::~CLogindUPowerSyscall()
+ {
+   ReleaseDelayLockSleep();
+   ReleaseDelayLockShutdown();
++  if(m_connection)
++    m_connection.Destroy();
+ }
+ 
+ bool CLogindUPowerSyscall::Powerdown()
+@@ -209,21 +210,27 @@ void CLogindUPowerSyscall::UpdateBatteryLevel()
+   {
+     CVariant properties = CDBusUtil::GetAll("org.freedesktop.UPower", source[i], "org.freedesktop.UPower.Device");
+     bool isRechargeable = properties["IsRechargeable"].asBoolean();
+-
+-    if (isRechargeable)
++    bool isPowerSupply = properties["PowerSupply"].asBoolean();
++    if (isPowerSupply && isRechargeable)
+     {
+       batteryCount++;
+-      batteryLevelSum += properties["Percentage"].asDouble();
++      if(batteryCount > 1)
++        continue;
++      m_batteryLevel = (int)properties["Percentage"].asDouble();
+     }
+   }
+ 
+   dbus_free_string_array(source);
+ 
+-  if (batteryCount > 0)
+-  {
+-    m_batteryLevel = (int)(batteryLevelSum / (double)batteryCount);
+-    m_lowBattery = CDBusUtil::GetVariant("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", "OnLowBattery").asBoolean();
+-  }
++  if(batteryCount > 1)
++    //TODO Fix multiple battiery setups.
++    CLog::Log(LOGWARNING, "LogindUPowerSyscall: Multiple Batteries detected as system batteries, only using first detected");
++
++  if(m_batteryLevel < 6)
++    m_lowBattery = true;
++  else
++    m_lowBattery=false;
++
+ }
+ 
+ bool CLogindUPowerSyscall::PumpPowerEvents(IPowerEventsCallback *callback)
+@@ -257,7 +264,7 @@ bool CLogindUPowerSyscall::PumpPowerEvents(IPowerEventsCallback *callback)
+ 
+         result = true;
+       }
+-      else if (dbus_message_is_signal(msg.get(), "org.freedesktop.UPower", "DeviceChanged"))
++      else if (dbus_message_is_signal(msg.get(), "org.freedesktop.DBUS.Properties", "PropertiesChanged"))
+       {
+         bool lowBattery = m_lowBattery;
+         UpdateBatteryLevel();
+-- 
+2.25.1
+
