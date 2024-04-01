@@ -9,7 +9,7 @@ oe_setup_addon browser.chrome
 ICON="$ADDON_DIR/resources/icon.png"
 CONTROL_FILE="/tmp/curl.done"
 DATA_FILE="/tmp/curl.data"
-CHROME_FILE="google-chrome-stable_@CHROME_VERSION@-1_amd64.deb"
+CHROME_FILE="google-chrome-stable_current_amd64.deb"
 
 # check for enough free disk space
 if [ $(df -P . | awk 'END {print $4}') -lt 400000 ]; then
@@ -39,7 +39,7 @@ echo "Downloading Chrome"
 # download chrome
 rm -f ${CONTROL_FILE} ${DATA_FILE}
 (
-  curl -# -O -C - https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/${CHROME_FILE} 2>${DATA_FILE}
+  curl -# -O -C - https://dl.google.com/linux/direct/${CHROME_FILE} 2>${DATA_FILE}
   touch ${CONTROL_FILE}
 ) | \
   while [ : ]; do
