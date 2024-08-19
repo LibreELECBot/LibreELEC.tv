@@ -76,7 +76,7 @@ fi
 
 get_gh_token
 
-if [ -z "${GITHUB_API_TOKEN}" ]; then
+if [ -z "${GH_API_TOKEN}" ]; then
   git_clone https://github.com/xbmc/xbmc ${KODI_DIR} ${KODI_BRANCH}
   ADDONS_REPO_LOCATION="${KODI_DIR}/cmake/addons/bootstrap/repositories"
 else
@@ -86,7 +86,7 @@ else
 
   TMP_REPO_DIR="${TMPDIR}/bootstrap-repos"
 
-  curl -s -L -H "Authorization: token ${GITHUB_API_TOKEN}" \
+  curl -s -L -H "Authorization: token ${GH_API_TOKEN}" \
     "https://api.github.com/repos/xbmc/xbmc/contents/cmake/addons/bootstrap/repositories?ref=${KODI_BRANCH}" | awk \
     '/download_url/ { gsub("\"|,", "", $2); system("mkdir -p '${TMP_REPO_DIR}'; (cd '${TMP_REPO_DIR}'; curl -O "$2")"); }' \
     2>/dev/null
@@ -129,7 +129,7 @@ for addontxt in ${ADDONS_REPO_LOCATION}/*-addons.txt; do
       validate_pkg_url "${ADDON}" "${GIT_REPO}" || continue
 
       NO_TAG=""
-      if [ -z "${GITHUB_API_TOKEN}" ]; then
+      if [ -z "${GH_API_TOKEN}" ]; then
         git_clone ${GIT_REPO} ${GIT_DIR} ${GIT_BRANCH}
         PARAMS="resolve_tag_in_branch ${GIT_DIR} ${GIT_BRANCH}"
       else
@@ -141,7 +141,7 @@ for addontxt in ${ADDONS_REPO_LOCATION}/*-addons.txt; do
 
       if [ -z "${NEW_VERSION}" ]; then
         NO_TAG="yes"
-        if [ -z "${GITHUB_API_TOKEN}" ]; then
+        if [ -z "${GH_API_TOKEN}" ]; then
           PARAMS="resolve_hash_in_branch ${GIT_DIR} ${GIT_BRANCH}"
         else
           PARAMS="resolve_hash_on_gh ${GIT_REPO} ${GIT_BRANCH}"
@@ -209,7 +209,7 @@ for ADDON in $(ls -1 "${ROOT}/packages/mediacenter/kodi-binary-addons"); do
   GIT_DIR="${ADDON}.git"
   GIT_REPO="$(geturl "${ADDON}")" || continue
 
-  if [ -z "${GITHUB_API_TOKEN}" ]; then
+  if [ -z "${GH_API_TOKEN}" ]; then
     git_clone ${GIT_REPO} ${GIT_DIR}
     RESOLVE_UNOFFICIAL_BRANCH="resolve_hash_in_branch ${ADDON}.git ${UNOFFICIAL_ADDON_BRANCH}"
     RESOLVE_HEAD="resolve_hash_in_branch ${ADDON}.git HEAD"
