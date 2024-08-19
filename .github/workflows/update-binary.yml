@@ -1,0 +1,27 @@
+name: update-binary-addons
+on:
+  workflow_dispatch:
+    inputs:
+      input_addon-version:
+        description: "Add-on version to update"
+        default: 12.0.0
+        required: true
+        type: string
+
+jobs:
+  update_addon_repo:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: libreelec-12
+      - name: update-binary
+        run: |
+          echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
+          cd "tools/mkpkg/"
+          ./update_binary-addons Omega -x
+          echo "----------------------------------------"
+          echo "----------------------------------------"
+          git status
+          echo "----------------------------------------"
+          echo "----------------------------------------"
