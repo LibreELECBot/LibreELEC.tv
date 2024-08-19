@@ -1,13 +1,3 @@
-name: update-binary-addons
-on:
-  workflow_dispatch:
-    inputs:
-      input_addon-version:
-        description: "Add-on version to update"
-        default: 12.0.0
-        required: true
-        type: string
-
 jobs:
   update_addon_repo:
     runs-on: ubuntu-latest
