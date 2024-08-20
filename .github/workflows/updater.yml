@@ -18,13 +18,10 @@ jobs:
         env: 
           GH_API_KEY: ${{ secrets.GH_API_KEY }}
         run: |
-          echo "-------1234------"
-          export GH_API_TOKEN="$GH_API_KEY"
-          echo "${#GH_API_KEY}"
-          echo "-------1234------"
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
+          export GH_API_TOKEN="$GH_API_KEY"
           cd "tools/mkpkg/"
-          ./update_binary-addons Omega -x
+          ./update_binary-addons -x Omega
           echo "----------------------------------------"
           echo "----------------------------------------"
           git status
