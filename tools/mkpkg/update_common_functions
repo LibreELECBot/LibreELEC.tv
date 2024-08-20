@@ -2,6 +2,13 @@
 # Copyright (C) 2009-2016 Stephan Raue (stephan@openelec.tv)
 # Copyright (C) 2018-present Team LibreELEC (https://libreelec.tv)
 
+die() {
+  if [ -n "$1" ]; then
+    echo -e "$1" >&2
+  fi
+  exit "${2:-1}"
+}
+
 msg_color() {
   echo $(
     cd "${ROOT}"
