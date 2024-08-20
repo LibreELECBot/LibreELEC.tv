@@ -22,7 +22,7 @@ jobs:
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
           export GH_API_TOKEN="$GH_API_KEY"
           cd "tools/mkpkg/"
-          ./update_binary-addons -x Omega
+          ./update_binary-addons -x Omega; echo "script exit value is -- $?"
           echo "----------------------------------------"
           echo "----------------------------------------"
           git status
