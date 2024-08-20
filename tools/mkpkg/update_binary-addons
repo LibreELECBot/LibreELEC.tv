@@ -210,10 +210,14 @@ for ADDON in $(ls -1 "${ROOT}/packages/mediacenter/kodi-binary-addons"); do
   GIT_REPO="$(geturl "${ADDON}")" || continue
 
   if [ -z "${GH_API_TOKEN}" ]; then
+    echo "---- no api key used ----"
+    echo "-------------------------"
     git_clone ${GIT_REPO} ${GIT_DIR}
     RESOLVE_UNOFFICIAL_BRANCH="resolve_hash_in_branch ${ADDON}.git ${UNOFFICIAL_ADDON_BRANCH}"
     RESOLVE_HEAD="resolve_hash_in_branch ${ADDON}.git HEAD"
   else
+    echo "---- api key used ----"
+    echo "-------------------------"
     RESOLVE_UNOFFICIAL_BRANCH="resolve_hash_on_gh ${GIT_REPO%.git} ${UNOFFICIAL_ADDON_BRANCH}"
     RESOLVE_HEAD="resolve_hash_on_gh ${GIT_REPO%.git} HEAD"
   fi
