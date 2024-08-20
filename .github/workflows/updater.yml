@@ -17,6 +17,7 @@ jobs:
       - name: update-binary
         env: 
           GH_API_KEY: ${{ secrets.GH_API_KEY }}
+        continue-on-error: true
         run: |
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
           export GH_API_TOKEN="$GH_API_KEY"
