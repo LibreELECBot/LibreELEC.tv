@@ -261,5 +261,6 @@ validate_pkg_url() {
 get_gh_token() {
   if [ -z "${GH_API_TOKEN}" ]; then
     GH_API_TOKEN=$(get_pkg_var "" GH_API_TOKEN)
+echo "api token is $GH_API_TOKEN"
   fi
 }
