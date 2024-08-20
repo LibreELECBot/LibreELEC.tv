@@ -7,6 +7,8 @@ on:
         default: 12.0
         required: true
         type: string
+env: 
+  GH_API_KEY: ${{ secrets.GH_API_KEY }}
 
 jobs:
   update_addon_repo:
@@ -17,6 +19,9 @@ jobs:
           ref: libreelec-12.0
       - name: update-binary
         run: |
+          export $GH_API_KEY
+          echo ${#GH_API_KEY}
+          echo "-------1234------"
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
           cd "tools/mkpkg/"
           ./update_binary-addons Omega -x
