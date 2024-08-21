@@ -22,7 +22,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
-          export GH_API_TOKEN="$GITHUB_API_TOKEN"
+          export GITHUB_API_TOKEN="$GH_API_KEY"
           temp_file=$(mktemp)
           ./tools/mkpkg/update_binary-addons -x master > "${temp_file}" | true
           echo "----------------------------------------"
