@@ -43,7 +43,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
-          #token: ${{ secrets.LIBREELECBOT_GITHUB_TOKEN }}
+          token: ${{ secrets.LIBREELECBOT_GITHUB_TOKEN }}
           commit-message: |
             kodi-binary-addons: update to latest versions
 
