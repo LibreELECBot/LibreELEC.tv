@@ -25,6 +25,7 @@ jobs:
         run: |
           echo "----------------------------------------"
           pwd
+          git status
           echo "----------------------------------------"
           ls -lah
           echo "----------------------------------------"
@@ -39,6 +40,11 @@ jobs:
           echo "git_commit_msg<<EOF" >> $GITHUB_OUTPUT
           echo "${git_commit_msg}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+
+          echo "----------------------------------------"
+          pwd
+          git status
+          echo "----------------------------------------"
 
       - name: Get SHA of the branch that triggered the workflow run
         id: head_branch
