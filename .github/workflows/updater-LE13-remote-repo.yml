@@ -18,7 +18,7 @@ jobs:
         with:
           ref: master
           fetch-depth: 2
-          repository: "${{ github.repository_owner }}/LibreELEC.tv"
+          repository: "LibreELEC/LibreELEC.tv"
           path: "LibreELEC.tv"
       - name: Update Binary Addons
         id: update_binary_addons
