@@ -24,6 +24,11 @@ jobs:
         id: update_binary_addons
         continue-on-error: true
         run: |
+          echo "----------------------------------------"
+          pwd
+          echo "----------------------------------------"
+          ls -lah
+          echo "----------------------------------------"
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
           export GITHUB_API_TOKEN="$GH_API_KEY"
           temp_file=$(mktemp)
