@@ -1,10 +1,10 @@
-name: update-binary-addons-LE13-remote-repo
+name: update-binary-addons-LE12-remote-repo
 on:
   workflow_dispatch:
     inputs:
       input_addon-version:
         description: "Add-on version to update"
-        default: "13.0"
+        default: "12.0"
         required: true
         type: string
 jobs:
@@ -16,35 +16,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: master
+          ref: libreelec-12.0
           fetch-depth: 2
           repository: "LibreELEC/LibreELEC.tv"
       - name: Update Binary Addons
         id: update_binary_addons
         continue-on-error: true
         run: |
-          echo "----------------------------------------"
+          echo "------------------1---------------------"
           pwd
           git status
-          echo "----------------------------------------"
+          git remote show origin
+          echo "------------------2---------------------"
           ls -lah
-          echo "----------------------------------------"
+          echo "------------------3---------------------"
           echo "Updating Add-on version ${{ github.event.inputs.input_addon-version }}"
           export GITHUB_API_TOKEN="$GH_API_KEY"
           temp_file=$(mktemp)
           ./tools/mkpkg/update_binary-addons -x master > "${temp_file}" | true
-          echo "----------------------------------------"
-          echo "----------------------------------------"
+          echo "-------------------1--------------------"
+          echo "-------------------2--------------------"
 
           git_commit_msg=$(cat ${temp_file} | grep "^UPDATED " | sed 's/^UPDATED /- /' | sed 's/ from /: update /')
           echo "git_commit_msg<<EOF" >> $GITHUB_OUTPUT
           echo "${git_commit_msg}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-          echo "----------------------------------------"
+          echo "------------------1---------------------"
           pwd
           git status
-          echo "----------------------------------------"
+          echo "------------------2---------------------"
 
       - name: Get SHA of the branch that triggered the workflow run
         id: head_branch
